@@ -1,0 +1,3 @@
+rootProject.name = 'retromock'
+include 'retromock'
+include 'samples'
