@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import java.net.HttpURLConnection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -148,9 +149,10 @@ public final class Retromock {
           Call<?> mockedCall = Calls.defer(new Callable<Call<T>>() {
             @Override
             public Call<T> call() throws IOException {
-              return Calls.response(createResponse(retrofit.<T>responseBodyConverter(
-                callAdapter.responseType(),
-                method.getAnnotations()
+              return Calls.response(createResponse(
+                retrofit.<T>responseBodyConverter(
+                  callAdapter.responseType(),
+                  method.getAnnotations()
                 ), producer.produce()
               ));
             }
@@ -258,7 +260,12 @@ public final class Retromock {
       return Response.error(rawResponse.body(), rawResponse);
     } else {
       try {
-        return Response.success(converter.convert(rawResponse.body()), rawResponse);
+        T body = null;
+        if (rawResponse.code() != HttpURLConnection.HTTP_NO_CONTENT
+          && rawResponse.code() != HttpURLConnection.HTTP_RESET) {
+          body = converter.convert(rawResponse.body());
+        }
+        return Response.success(body, rawResponse);
       } catch (IOException e) {
         throw new RuntimeException("Error while converting mocked response!", e);
       }
