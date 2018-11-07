@@ -264,6 +264,9 @@ public final class Retromock {
         if (rawResponse.code() != HttpURLConnection.HTTP_NO_CONTENT
           && rawResponse.code() != HttpURLConnection.HTTP_RESET) {
           body = converter.convert(rawResponse.body());
+        } else {
+          // 204 and 205 must not include a body
+          rawResponse.close();
         }
         return Response.success(body, rawResponse);
       } catch (IOException e) {
