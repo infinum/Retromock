@@ -74,20 +74,12 @@ final class RetromockCall<T> implements Call<T> {
             delegate.enqueue(new Callback<T>() {
               @Override
               public void onResponse(final Call<T> call, final Response<T> response) {
-                try {
-                  callback.onResponse(call, response);
-                } catch (Throwable throwable) {
-                  callback.onFailure(RetromockCall.this, new IOException("canceled"));
-                }
+                callback.onResponse(call, response);
               }
 
               @Override
               public void onFailure(final Call<T> call, final Throwable t) {
-                try {
-                  callback.onFailure(call, t);
-                } catch (Throwable throwable) {
-                  callback.onFailure(RetromockCall.this, new IOException("canceled"));
-                }
+                callback.onFailure(call, t);
               }
             });
           } catch (Throwable error) {

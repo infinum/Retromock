@@ -17,6 +17,7 @@ public final class PassThroughBodyFactory implements BodyFactory {
 
   @Override
   public InputStream create(@Nonnull final String input) {
+    Preconditions.checkNotNull(input, "Input is null.");
     return Okio.buffer(Okio.source(
       new ByteArrayInputStream(input.getBytes(StandardCharsets.UTF_8)))
     ).inputStream();

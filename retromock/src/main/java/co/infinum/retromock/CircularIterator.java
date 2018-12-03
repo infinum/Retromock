@@ -2,20 +2,19 @@ package co.infinum.retromock;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-import co.infinum.retromock.meta.MockResponse;
+final class CircularIterator<T> implements ResponseIterator<T> {
 
-final class CircularIterator implements ResponseIterator {
-
-  private final MockResponse[] responses;
+  private final T[] responses;
 
   private AtomicInteger index = new AtomicInteger();
 
-  CircularIterator(final MockResponse[] responses) {
+  CircularIterator(final T[] responses) {
+    Preconditions.checkNotEmpty(responses, "Responses should contain at least one response.");
     this.responses = responses;
   }
 
   @Override
-  public MockResponse next() {
+  public T next() {
     return responses[index.getAndIncrement() % responses.length];
   }
 }

@@ -2,18 +2,16 @@ package co.infinum.retromock;
 
 import java.util.concurrent.ThreadLocalRandom;
 
-import co.infinum.retromock.meta.MockResponse;
+final class RandomIterator<T> implements ResponseIterator<T> {
 
-final class RandomIterator implements ResponseIterator {
+  private final T[] responses;
 
-  private final MockResponse[] responses;
-
-  RandomIterator(final MockResponse[] responses) {
+  RandomIterator(final T[] responses) {
     this.responses = responses;
   }
 
   @Override
-  public MockResponse next() {
+  public T next() {
     return responses[ThreadLocalRandom.current().nextInt(responses.length)];
   }
 }

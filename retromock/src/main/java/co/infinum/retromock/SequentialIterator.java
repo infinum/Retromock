@@ -2,25 +2,23 @@ package co.infinum.retromock;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-import co.infinum.retromock.meta.MockResponse;
+final class SequentialIterator<T> implements ResponseIterator<T> {
 
-final class SequentialIterator implements ResponseIterator {
-
-  private final MockResponse[] responses;
+  private final T[] responses;
 
   private AtomicInteger index = new AtomicInteger();
 
-  SequentialIterator(final MockResponse[] responses) {
+  SequentialIterator(final T[] responses) {
     this.responses = responses;
   }
 
   @Override
-  public MockResponse next() {
-    int index = this.index.getAndIncrement();
-    if (index >= responses.length) {
+  public T next() {
+    int currentIndex = this.index.getAndIncrement();
+    if (currentIndex >= responses.length) {
       return responses[responses.length - 1];
     } else {
-      return responses[index];
+      return responses[currentIndex];
     }
   }
 }

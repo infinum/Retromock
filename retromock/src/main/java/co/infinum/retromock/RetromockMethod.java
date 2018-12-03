@@ -74,21 +74,21 @@ final class RetromockMethod {
       if (mockSequential != null || mockRandom != null) {
         throw new IllegalStateException("Cannot specify more than one response iterator.");
       }
-      return new CircularIterator(responses);
+      return new CircularIterator<>(responses);
     }
 
     if (mockSequential != null) {
       if (mockRandom != null) {
         throw new IllegalStateException("Cannot specify more than one response iterator.");
       }
-      return new SequentialIterator(responses);
+      return new SequentialIterator<>(responses);
     }
 
     if (mockRandom != null) {
-      return new RandomIterator(responses);
+      return new RandomIterator<>(responses);
     }
 
-    return new SequentialIterator(responses);
+    return new SequentialIterator<>(responses);
   }
 
   private final ParamsProducer producer;
