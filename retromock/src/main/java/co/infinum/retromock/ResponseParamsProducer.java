@@ -10,13 +10,13 @@ import okhttp3.Headers;
 final class ResponseParamsProducer implements ParamsProducer {
 
   private final Retromock retromock;
-  private final ResponseIterator iterator;
+  private final ResponseIterator<MockResponse> iterator;
   private final Map<MockResponse, ResponseParams> cache;
   private final ResponseParams defaults;
 
   ResponseParamsProducer(
     final Retromock retromock,
-    final ResponseIterator iterator,
+    final ResponseIterator<MockResponse> iterator,
     final ResponseParams defaults) {
 
     this.retromock = retromock;

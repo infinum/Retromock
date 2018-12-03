@@ -9,6 +9,10 @@ repositories {
     mavenCentral()
 }
 
+sourceSets {
+    test.java.srcDirs += 'src/test/kotlin'
+}
+
 dependencies {
 
     compileOnly 'com.google.code.findbugs:annotations:3.0.1'
@@ -16,6 +20,14 @@ dependencies {
     implementation "com.squareup.retrofit2:retrofit:2.4.0"
 
     testCompile 'junit:junit:4.12'
+    testCompile 'org.assertj:assertj-core:3.8.0'
+    testCompile 'org.mockito:mockito-core:2.13.0'
+    testCompile group: 'com.google.guava', name: 'guava', version: '27.0-jre'
+    testCompileOnly 'com.google.code.findbugs:annotations:3.0.1'
+
+    testRuntimeClasspath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.0.5'
+    testCompile "org.jetbrains.kotlin:kotlin-stdlib:1.0.5"
+    testCompile "org.jetbrains.kotlin:kotlin-test:1.0.5"
 }
 
 task sourceJar(type: Jar) {

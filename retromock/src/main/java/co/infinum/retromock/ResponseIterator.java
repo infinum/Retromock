@@ -1,9 +1,7 @@
 package co.infinum.retromock;
 
-import co.infinum.retromock.meta.MockResponse;
+interface ResponseIterator<T> {
 
-interface ResponseIterator {
-
-  MockResponse next();
+  T next();
 
 }

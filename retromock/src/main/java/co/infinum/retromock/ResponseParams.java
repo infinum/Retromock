@@ -92,7 +92,6 @@ final class ResponseParams {
       return this;
     }
 
-    @SuppressWarnings("UnusedReturnValue")
     Builder bodyFactory(@Nullable final RetromockBodyFactory bodyFactory) {
       this.bodyFactory = bodyFactory;
       return this;
