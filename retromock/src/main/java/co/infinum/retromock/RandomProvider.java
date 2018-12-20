@@ -4,4 +4,6 @@ interface RandomProvider {
 
   long nextLong(long bound);
 
+  int nextInt(int bound);
+
 }
