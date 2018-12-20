@@ -65,7 +65,9 @@ final class RetromockMethod {
     return null;
   }
 
-  private static ResponseIterator loadResponseIterator(Method method, MockResponse[] responses) {
+  private static ResponseIterator<MockResponse> loadResponseIterator(
+    Method method, MockResponse[] responses) {
+
     MockCircular mockCircular = method.getAnnotation(MockCircular.class);
     MockSequential mockSequential = method.getAnnotation(MockSequential.class);
     MockRandom mockRandom = method.getAnnotation(MockRandom.class);

@@ -6,13 +6,13 @@ import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
 
 @RunWith(MockitoJUnitRunner::class)
-class CircularIteratorTest {
+class SequentialIteratorTest {
 
     @Test
     fun iterateThroughAllResponses() {
         val responses = arrayOf(Any(), Any(), Any())
 
-        val iterator = CircularIterator<Any>(responses)
+        val iterator = SequentialIterator<Any>(responses)
 
         assertThat(iterator.next()).isSameAs(responses[0])
         assertThat(iterator.next()).isSameAs(responses[1])
@@ -23,20 +23,21 @@ class CircularIteratorTest {
     fun repeatAfterLastResponse() {
         val responses = arrayOf(Any(), Any(), Any())
 
-        val iterator = CircularIterator<Any>(responses)
+        val iterator = SequentialIterator<Any>(responses)
 
         iterator.next()
-        iterator.next()
 
-        assertThat(iterator.next()).isSameAs(responses[2])
-        assertThat(iterator.next()).isSameAs(responses[0])
         assertThat(iterator.next()).isSameAs(responses[1])
+        assertThat(iterator.next()).isSameAs(responses[2])
+        assertThat(iterator.next()).isSameAs(responses[2])
+        assertThat(iterator.next()).isSameAs(responses[2])
     }
 
     @Test(expected = IllegalArgumentException::class)
     fun emptyArrayThrows() {
         val responses = arrayOf<Any>()
-        CircularIterator<Any>(responses)
+
+        SequentialIterator<Any>(responses)
     }
 
 }
