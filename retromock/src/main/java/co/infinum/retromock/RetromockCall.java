@@ -69,6 +69,7 @@ final class RetromockCall<T> implements Call<T> {
             try {
               delay();
             } catch (InterruptedException interrupt) {
+              Thread.currentThread().interrupt();
               callback.onFailure(RetromockCall.this, new IOException("canceled"));
             }
             delegate.enqueue(new Callback<T>() {
@@ -138,6 +139,7 @@ final class RetromockCall<T> implements Call<T> {
     try {
       latch.await();
     } catch (InterruptedException e) {
+      Thread.currentThread().interrupt();
       throw new IOException("canceled");
     }
 
