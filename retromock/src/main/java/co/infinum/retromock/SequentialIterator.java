@@ -9,6 +9,7 @@ final class SequentialIterator<T> implements ResponseIterator<T> {
   private AtomicInteger index = new AtomicInteger();
 
   SequentialIterator(final T[] responses) {
+    Preconditions.checkNotEmpty(responses, "Responses should contain at least one response.");
     this.responses = responses;
   }
 
