@@ -9,7 +9,6 @@ import java.util.Random;
 
 import co.infinum.retromock.Behavior;
 import co.infinum.retromock.BodyFactory;
-import co.infinum.retromock.PassThroughBodyFactory;
 import co.infinum.retromock.Retromock;
 import co.infinum.retromock.meta.Mock;
 import co.infinum.retromock.meta.MockResponse;
@@ -36,7 +35,6 @@ public final class SimpleService {
           return 0;
         }
       })
-      .defaultBodyFactory(new PassThroughBodyFactory())
       .addBodyFactory(new RandomBodyFactory())
       .build();
 
