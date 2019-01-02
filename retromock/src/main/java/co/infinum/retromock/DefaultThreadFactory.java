@@ -5,7 +5,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 final class DefaultThreadFactory implements ThreadFactory {
 
-  private static final AtomicInteger POOL_INDEX = new AtomicInteger();
+  static final AtomicInteger POOL_INDEX = new AtomicInteger();
 
   @Override
   public Thread newThread(final Runnable r) {

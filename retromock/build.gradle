@@ -25,9 +25,9 @@ dependencies {
     testCompile group: 'com.google.guava', name: 'guava', version: '27.0-jre'
     testCompileOnly 'com.google.code.findbugs:annotations:3.0.1'
 
-    testRuntimeClasspath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.0.5'
-    testCompile "org.jetbrains.kotlin:kotlin-stdlib:1.0.5"
-    testCompile "org.jetbrains.kotlin:kotlin-test:1.0.5"
+    testRuntimeClasspath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.2.0'
+    testCompile "org.jetbrains.kotlin:kotlin-stdlib:1.2.0"
+    testCompile "org.jetbrains.kotlin:kotlin-test:1.2.0"
 }
 
 task sourceJar(type: Jar) {
