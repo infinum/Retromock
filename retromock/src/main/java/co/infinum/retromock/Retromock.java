@@ -15,6 +15,9 @@ import java.util.concurrent.Executors;
 
 import javax.annotation.Nullable;
 
+import co.infinum.retromock.meta.Mock;
+import co.infinum.retromock.meta.MockBehavior;
+import co.infinum.retromock.meta.MockResponse;
 import okhttp3.MediaType;
 import okhttp3.Protocol;
 import okhttp3.Request;
@@ -26,7 +29,6 @@ import retrofit2.Callback;
 import retrofit2.Converter;
 import retrofit2.Response;
 import retrofit2.Retrofit;
-import co.infinum.retromock.meta.*;
 
 /**
  * Retromock adapts {@link Retrofit} created Java interface using annotations on declared methods
@@ -205,6 +207,18 @@ public final class Retromock {
     return defaultBehavior;
   }
 
+  Map<Class<? extends BodyFactory>, BodyFactory> bodyFactories() {
+    return bodyFactories;
+  }
+
+  ExecutorService backgroundExecutor() {
+    return backgroundExecutor;
+  }
+
+  Executor callbackExecutor() {
+    return callbackExecutor;
+  }
+
   private static <T> DelegateFactory<T> createDelegate(
     final Retrofit retrofit, final Class<T> service) {
 
@@ -275,6 +289,14 @@ public final class Retromock {
     }
   }
 
+  /**
+   * Creates a new builder instance with state same as in this instance.
+   * @return A new builder.
+   */
+  public Builder newBuilder() {
+    return new Builder(this);
+  }
+
   private static class SyncExecutor implements Executor {
 
     @Override
@@ -297,6 +319,30 @@ public final class Retromock {
     private Executor callbackExecutor;
     private Behavior defaultBehavior;
     private BodyFactory defaultBodyFactory;
+
+    /**
+     * Creates default instance of Builder.
+     */
+    public Builder() {
+    }
+
+    /**
+     * Creates a new Builder instance using state from provided Retromock instance.
+     * @param retromock Instance to read the state from.
+     */
+    Builder(Retromock retromock) {
+      this.retrofit = retromock.retrofit;
+      this.loadEagerly = retromock.eagerlyLoad;
+      this.backgroundExecutor = retromock.backgroundExecutor;
+      this.callbackExecutor = retromock.callbackExecutor;
+      this.defaultBehavior = retromock.defaultBehavior;
+      this.defaultBodyFactory = retromock.defaultBodyFactory;
+
+      bodyFactories.putAll(retromock.bodyFactories);
+
+      // remove default body factory added by build()
+      bodyFactories.remove(PassThroughBodyFactory.class);
+    }
 
     /**
      * The retrofit instance used to adapt calls and parse responses.
