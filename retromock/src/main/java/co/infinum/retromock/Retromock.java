@@ -313,12 +313,12 @@ public final class Retromock {
   public static class Builder {
 
     private Retrofit retrofit;
-    private Map<Class<? extends BodyFactory>, BodyFactory> bodyFactories = new HashMap<>();
+    Map<Class<? extends BodyFactory>, BodyFactory> bodyFactories = new HashMap<>();
     private boolean loadEagerly;
     private ExecutorService backgroundExecutor;
     private Executor callbackExecutor;
     private Behavior defaultBehavior;
-    private BodyFactory defaultBodyFactory;
+    BodyFactory defaultBodyFactory;
 
     /**
      * Creates default instance of Builder.
