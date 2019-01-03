@@ -11,8 +11,7 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
-import org.mockito.Mockito.verify
-import org.mockito.Mockito.verifyNoMoreInteractions
+import org.mockito.Mockito.*
 import org.mockito.junit.MockitoJUnitRunner
 import retrofit2.Call
 import retrofit2.Callback
@@ -156,6 +155,105 @@ class RetromockCallTest {
         whenever(behavior.delayMillis()).thenReturn(0)
 
         val actualResponse = retromockCall.execute()
+
+        assertThat(actualResponse.body()).isEqualTo(body)
+    }
+
+    @Test
+    fun requestIsEqualToRaw() {
+        val body = "Response body content"
+        val delegate = Calls.response(body)
+
+        retromockCall = RetromockCall(behavior, backgroundExecutor, callbackExecutor, delegate)
+
+        assertThat(retromockCall.request()).isEqualTo(delegate.request())
+    }
+
+    @Test(expected = IllegalStateException::class)
+    fun cannotExecuteTwice() {
+        val body = "Response body content"
+        val delegate = Calls.response(body)
+
+        retromockCall = RetromockCall(behavior, backgroundExecutor, callbackExecutor, delegate)
+        whenever(behavior.delayMillis()).thenReturn(0)
+
+        retromockCall.execute()
+        retromockCall.execute()
+    }
+
+    @Test(expected = IllegalStateException::class)
+    fun cannotEnqueueTwice() {
+        val body = "Response body content"
+        val delegate = Calls.response(body)
+
+        retromockCall = RetromockCall(behavior, backgroundExecutor, callbackExecutor, delegate)
+        whenever(behavior.delayMillis()).thenReturn(0)
+
+        retromockCall.execute()
+        retromockCall.enqueue(mock())
+    }
+
+    @Test(expected = IOException::class)
+    fun cannotExecuteCancelledCall() {
+        val body = "Response body content"
+        val delegate = Calls.response(body)
+
+        retromockCall = RetromockCall(behavior, backgroundExecutor, callbackExecutor, delegate)
+
+        retromockCall.cancel()
+        retromockCall.execute()
+    }
+
+    @Test
+    fun cannotEnqueueCancelledCall() {
+        val body = "Response body content"
+        val delegate = Calls.response(body)
+
+        retromockCall = RetromockCall(behavior, backgroundExecutor, callbackExecutor, delegate)
+        val callback = mock<Callback<String>>()
+
+        retromockCall.cancel()
+        retromockCall.enqueue(callback)
+
+        verify(callback).onFailure(any(), any(IOException::class.java))
+        verifyNoMoreInteractions(callback)
+    }
+
+    @Test
+    fun executeFlagIsSet() {
+        val body = "Response body content"
+        val delegate = Calls.response(body)
+
+        retromockCall = RetromockCall(behavior, backgroundExecutor, callbackExecutor, delegate)
+        retromockCall.execute()
+
+        assertThat(retromockCall.isExecuted).isTrue()
+    }
+
+    @Test
+    fun cancelFlagIsSet() {
+        val body = "Response body content"
+        val delegate = Calls.response(body)
+
+        retromockCall = RetromockCall(behavior, backgroundExecutor, callbackExecutor, delegate)
+        retromockCall.cancel()
+
+        assertThat(retromockCall.isCanceled).isTrue()
+    }
+
+    @Test
+    fun cloneBuildCleanState() {
+        val body = "Response body content"
+        val delegate = Calls.response(body)
+
+        retromockCall = RetromockCall(behavior, backgroundExecutor, callbackExecutor, delegate)
+        retromockCall.execute()
+        retromockCall.cancel()
+
+        val cloned = retromockCall.clone()
+
+        assertThat(cloned.isCanceled).isFalse()
+        assertThat(cloned.isExecuted).isFalse()
     }
 
 }
