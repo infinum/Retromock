@@ -34,7 +34,6 @@ final class Calls {
   }
 
   private Calls() {
-    throw new AssertionError("No instances.");
   }
 
   static final class FakeCall<T> implements Call<T> {
