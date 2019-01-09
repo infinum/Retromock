@@ -16,6 +16,7 @@ import retrofit2.http.GET
 import java.nio.charset.StandardCharsets
 import java.util.concurrent.Executor
 import java.util.concurrent.ExecutorService
+import java.util.concurrent.Executors
 import java.util.concurrent.atomic.AtomicInteger
 
 class RetromockTest {
@@ -353,6 +354,100 @@ class RetromockTest {
         val response3 = service.getResponseBody().execute().body()!!
         assertThat(response3.string()).isEqualTo("Body example 3.")
         assertThat(countDown.get()).isEqualTo(0)
+    }
+
+    @Test
+    fun builderInjectsPassThroughBodyFactory() {
+        val retromock = Retromock.Builder()
+            .retrofit(Retrofit.Builder()
+                .baseUrl("http://infinum.co/")
+                .build())
+            .build()
+
+        assertThat(retromock.bodyFactories()).containsKey(PassThroughBodyFactory::class.java)
+    }
+
+    @Test
+    fun builderCreatesDefaultExecutorIfNotExplicitlySet() {
+        val retromock = Retromock.Builder()
+            .retrofit(Retrofit.Builder()
+                .baseUrl("http://infinum.co/")
+                .build())
+            .build()
+
+        assertThat(retromock.backgroundExecutor()).isNotNull()
+    }
+
+    @Test
+    fun builderUsesExecutorIfExplicitlySet() {
+        val backgroundExecutor = Executors.newSingleThreadExecutor()
+        val retromock = Retromock.Builder()
+            .retrofit(Retrofit.Builder()
+                .baseUrl("http://infinum.co/")
+                .build())
+            .backgroundExecutor(backgroundExecutor)
+            .build()
+
+        assertThat(retromock.backgroundExecutor()).isSameAs(backgroundExecutor)
+    }
+
+    @Test
+    fun builderCreatesDefaultCallbackExecutorIfNotExplicitlySet() {
+        val retromock = Retromock.Builder()
+            .retrofit(Retrofit.Builder()
+                .baseUrl("http://infinum.co/")
+                .build())
+            .build()
+
+        assertThat(retromock.callbackExecutor()).isInstanceOf(Retromock.SyncExecutor::class.java)
+    }
+
+    @Test
+    fun builderUsesCallbackExecutorIfExplicitlySet() {
+        val callbackExecutor = Executors.newSingleThreadExecutor()
+        val retromock = Retromock.Builder()
+            .retrofit(Retrofit.Builder()
+                .baseUrl("http://infinum.co/")
+                .build())
+            .callbackExecutor(callbackExecutor)
+            .build()
+
+        assertThat(retromock.callbackExecutor()).isSameAs(callbackExecutor)
+    }
+
+    @Test
+    fun builderUsesRetrofitCallbackExecutorIfNotExplicitlySetInRetromock() {
+        val callbackExecutor = Executors.newSingleThreadExecutor()
+        val retromock = Retromock.Builder()
+            .retrofit(Retrofit.Builder()
+                .baseUrl("http://infinum.co/")
+                .callbackExecutor(callbackExecutor)
+                .build())
+            .build()
+
+        assertThat(retromock.callbackExecutor()).isSameAs(callbackExecutor)
+    }
+
+    @Test
+    fun builderCreatesBehaviorIfNotExplicitlySet() {
+        val retromock = Retromock.Builder()
+            .retrofit(Retrofit.Builder()
+                .baseUrl("http://infinum.co/")
+                .build())
+            .build()
+
+        assertThat(retromock.defaultBehavior()).isSameAs(DefaultBehavior.INSTANCE)
+    }
+
+    @Test
+    fun builderCreatesPassThroughBodyFactoryIfDefaultFactoryIsNotSet() {
+        val retromock = Retromock.Builder()
+            .retrofit(Retrofit.Builder()
+                .baseUrl("http://infinum.co/")
+                .build())
+            .build()
+
+        assertThat(retromock.defaultBodyFactory()).isInstanceOf(PassThroughBodyFactory::class.java)
     }
 
 }
