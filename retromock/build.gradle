@@ -1,14 +1,30 @@
 group = 'co.infinum'
 version = '0.0.1'
 
-apply plugin: 'java'
-apply from: 'config/quality.gradle'
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+        jcenter()
+        maven { url "https://plugins.gradle.org/m2/" } // needed for gradle-errorprone-plugin
+    }
 
-sourceCompatibility = 1.8
+    dependencies {
+        classpath 'net.ltgt.gradle:gradle-errorprone-plugin:0.0.10'
+    }
+}
 
 repositories {
     mavenCentral()
 }
+
+apply plugin: 'java'
+apply plugin: 'java-library'
+
+apply from: 'config/quality.gradle'
+apply plugin: 'net.ltgt.errorprone'
+
+sourceCompatibility = 1.8
 
 sourceSets {
     test.java.srcDirs += 'src/test/kotlin'
