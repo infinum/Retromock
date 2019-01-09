@@ -6,7 +6,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import co.infinum.retromock.*;
+import co.infinum.retromock.Retromock;
 
 /**
  * Use this annotation on a service method when you want to specify if this method should be

@@ -17,19 +17,19 @@ final class Calls {
    * Invokes {@code callable} once for the returned {@link Call} and once for each instance that is
    * obtained from {@linkplain Call#clone() cloning} the returned {@link Call}.
    */
-  static <T> Call<T> defer(Callable<Call<T>> callable) {
+  static <T> Call<T> defer(final Callable<Call<T>> callable) {
     return new DeferredCall<>(callable);
   }
 
-  static <T> Call<T> response(T successValue) {
+  static <T> Call<T> response(final T successValue) {
     return new FakeCall<>(Response.success(successValue), null);
   }
 
-  static <T> Call<T> response(Response<T> response) {
+  static <T> Call<T> response(final Response<T> response) {
     return new FakeCall<>(response, null);
   }
 
-  static <T> Call<T> failure(IOException failure) {
+  static <T> Call<T> failure(final IOException failure) {
     return new FakeCall<>(null, failure);
   }
 
@@ -43,7 +43,7 @@ final class Calls {
     private final AtomicBoolean canceled = new AtomicBoolean();
     private final AtomicBoolean executed = new AtomicBoolean();
 
-    FakeCall(@Nullable Response<T> response, @Nullable IOException error) {
+    FakeCall(final @Nullable Response<T> response, final @Nullable IOException error) {
       if ((response == null) == (error == null)) {
         throw new AssertionError("Only one of response or error can be set.");
       }
@@ -67,7 +67,7 @@ final class Calls {
     }
 
     @Override
-    public void enqueue(Callback<T> callback) {
+    public void enqueue(final Callback<T> callback) {
       if (!executed.compareAndSet(false, true)) {
         throw new IllegalStateException("Already executed");
       }
@@ -116,7 +116,7 @@ final class Calls {
     private final Callable<Call<T>> callable;
     private Call<T> delegate;
 
-    DeferredCall(Callable<Call<T>> callable) {
+    DeferredCall(final Callable<Call<T>> callable) {
       this.callable = callable;
     }
 
@@ -141,7 +141,7 @@ final class Calls {
     }
 
     @Override
-    public void enqueue(Callback<T> callback) {
+    public void enqueue(final Callback<T> callback) {
       getDelegate().enqueue(callback);
     }
 

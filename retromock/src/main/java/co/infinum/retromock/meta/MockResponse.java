@@ -10,7 +10,7 @@ import java.net.HttpURLConnection;
 
 import co.infinum.retromock.BodyFactory;
 
-import co.infinum.retromock.*;
+import co.infinum.retromock.Retromock;
 
 /**
  * Use this annotation to specify parameters to define {@link MockResponse}.

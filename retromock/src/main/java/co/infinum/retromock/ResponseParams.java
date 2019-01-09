@@ -14,7 +14,7 @@ final class ResponseParams {
 
   private final Headers headers;
 
-  private ResponseParams(Builder builder) {
+  private ResponseParams(final Builder builder) {
     this(
       builder.code,
       builder.message,
@@ -65,7 +65,7 @@ final class ResponseParams {
     return new Builder(this);
   }
 
-  static class Builder {
+  static final class Builder {
 
     private int code;
     private String message;
@@ -75,7 +75,7 @@ final class ResponseParams {
     Builder() {
     }
 
-    private Builder(ResponseParams params) {
+    private Builder(final ResponseParams params) {
       this.code = params.code;
       this.message = params.message;
       this.bodyFactory = params.bodyFactory;
@@ -123,7 +123,7 @@ final class ResponseParams {
   }
 
   @Nullable
-  private static String contentTypeInternal(Headers headers) {
+  private static String contentTypeInternal(final Headers headers) {
     String value = headers.get("Content-Type");
     if (value != null) {
       return value;
@@ -132,7 +132,7 @@ final class ResponseParams {
     }
   }
 
-  private static long contentLengthInternal(Headers headers) {
+  private static long contentLengthInternal(final Headers headers) {
     String value = headers.get("Content-Length");
     if (value == null) {
       return -1;

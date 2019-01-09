@@ -53,7 +53,7 @@ final class ResponseParamsProducer implements ParamsProducer {
         annotation.body()));
   }
 
-  private static Headers convertHeaders(MockHeader[] headers) {
+  private static Headers convertHeaders(final MockHeader[] headers) {
     Headers.Builder builder = new Headers.Builder();
     for (MockHeader header : headers) {
       builder.add(header.name(), header.value());
