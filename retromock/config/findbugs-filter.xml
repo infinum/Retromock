@@ -14,4 +14,12 @@
             <Bug code="IJU" />
         </Not>
     </Match>
+    <Match>
+        <Bug pattern="CN_IMPLEMENTS_CLONE_BUT_NOT_CLONEABLE" />
+    </Match>
+    <Match>
+        <Class name="~.*\.*Preconditions"/>
+        <Bug pattern="NP_PARAMETER_MUST_BE_NONNULL_BUT_MARKED_AS_NULLABLE" />
+    </Match>
+
 </FindBugsFilter>
