@@ -297,7 +297,7 @@ public final class Retromock {
     return new Builder(this);
   }
 
-  private static class SyncExecutor implements Executor {
+  static class SyncExecutor implements Executor {
 
     @Override
     public void execute(final Runnable command) {
