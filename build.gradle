@@ -1,8 +1,0 @@
-apply plugin: 'java'
-
-group 'co.infinum'
-version '0.0.1'
-
-subrojects {
-    apply plugin: 'java'
-}
