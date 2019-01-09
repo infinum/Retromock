@@ -2,6 +2,7 @@ group = 'co.infinum'
 version = '0.0.1'
 
 apply plugin: 'java'
+apply from: 'config/quality.gradle'
 
 sourceCompatibility = 1.8
 
