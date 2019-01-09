@@ -236,6 +236,7 @@ public final class Retromock {
       try {
         findRetromockMethod(method);
       } catch (DisabledException ignored) {
+        // retromock disabled on this method, moving on
       }
     }
   }

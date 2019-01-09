@@ -104,11 +104,11 @@ final class RetromockCall<T> implements Call<T> {
       }
 
       @Override
-      public void onFailure(final Call<T> call, final Throwable t) {
+      public void onFailure(final Call<T> call, final Throwable error) {
         callbackExecutor.execute(new Runnable() {
           @Override
           public void run() {
-            callback.onFailure(call, t);
+            callback.onFailure(call, error);
           }
         });
       }
@@ -129,8 +129,8 @@ final class RetromockCall<T> implements Call<T> {
       }
 
       @Override
-      public void onFailure(final Call<T> call, final Throwable t) {
-        errorRef.set(t);
+      public void onFailure(final Call<T> call, final Throwable error) {
+        errorRef.set(error);
         latch.countDown();
       }
     });
