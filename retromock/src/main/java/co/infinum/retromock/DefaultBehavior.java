@@ -32,14 +32,14 @@ public class DefaultBehavior implements Behavior {
    * @param randomProvider    Provides random generator
    */
   DefaultBehavior(final long durationMillis, final int durationDeviation,
-    RandomProvider randomProvider) {
+    final RandomProvider randomProvider) {
     this.durationMillis = durationMillis;
     this.durationDeviation = durationDeviation;
     this.randomProvider = randomProvider;
   }
 
   @Override
-  public long delayMillis() {
+  public final long delayMillis() {
     return durationMillis
       + randomProvider.nextLong(durationDeviation * 2)
       - durationDeviation;

@@ -84,7 +84,8 @@ import retrofit2.Retrofit;
  */
 public final class Retromock {
 
-  static final class DisabledException extends Exception {}
+  static final class DisabledException extends Exception {
+  }
 
   private final Retrofit retrofit;
   private final Map<Class<? extends BodyFactory>, BodyFactory> bodyFactories;
@@ -120,7 +121,7 @@ public final class Retromock {
   }
 
   @SuppressWarnings({"unchecked", "WeakerAccess"})
-  public <T> T create(final DelegateFactory<T> factory, Class<T> service) {
+  public <T> T create(final DelegateFactory<T> factory, final Class<T> service) {
     if (eagerlyLoad) {
       loadService(service);
     }
@@ -170,7 +171,7 @@ public final class Retromock {
       });
   }
 
-  private RetromockMethod findRetromockMethod(Method method) throws DisabledException {
+  private RetromockMethod findRetromockMethod(final Method method) throws DisabledException {
     RetromockMethod result = methodCache.get(method);
     if (result != null) {
       return result;
@@ -230,7 +231,7 @@ public final class Retromock {
     };
   }
 
-  private void loadService(Class<?> service) {
+  private void loadService(final Class<?> service) {
     for (Method method : service.getDeclaredMethods()) {
       try {
         findRetromockMethod(method);
@@ -240,8 +241,8 @@ public final class Retromock {
   }
 
   private static <T> Response<T> createResponse(
-    Converter<ResponseBody, T> converter,
-    ResponseParams params) throws IOException {
+    final Converter<ResponseBody, T> converter,
+    final ResponseParams params) throws IOException {
 
     RetromockBodyFactory factory = params.bodyFactory();
 
@@ -291,6 +292,7 @@ public final class Retromock {
 
   /**
    * Creates a new builder instance with state same as in this instance.
+   *
    * @return A new builder.
    */
   public Builder newBuilder() {
@@ -310,7 +312,7 @@ public final class Retromock {
    * Calling {@link #retrofit(Retrofit)} is required before calling {@link #build()}. All other
    * methods are optional.
    */
-  public static class Builder {
+  public static final class Builder {
 
     private Retrofit retrofit;
     Map<Class<? extends BodyFactory>, BodyFactory> bodyFactories = new HashMap<>();
@@ -328,9 +330,10 @@ public final class Retromock {
 
     /**
      * Creates a new Builder instance using state from provided Retromock instance.
+     *
      * @param retromock Instance to read the state from.
      */
-    Builder(Retromock retromock) {
+    Builder(final Retromock retromock) {
       this.retrofit = retromock.retrofit;
       this.loadEagerly = retromock.eagerlyLoad;
       this.backgroundExecutor = retromock.backgroundExecutor;

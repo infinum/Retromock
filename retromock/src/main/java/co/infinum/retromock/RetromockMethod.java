@@ -51,7 +51,7 @@ final class RetromockMethod {
   }
 
   @Nullable
-  private static MockResponse[] loadMockResponses(Method method) {
+  private static MockResponse[] loadMockResponses(final Method method) {
     MockResponses mockResponses = method.getAnnotation(MockResponses.class);
     if (mockResponses != null) {
       return mockResponses.value();
@@ -66,7 +66,7 @@ final class RetromockMethod {
   }
 
   private static ResponseIterator<MockResponse> loadResponseIterator(
-    Method method, MockResponse[] responses) {
+    final Method method, final MockResponse[] responses) {
 
     MockCircular mockCircular = method.getAnnotation(MockCircular.class);
     MockSequential mockSequential = method.getAnnotation(MockSequential.class);

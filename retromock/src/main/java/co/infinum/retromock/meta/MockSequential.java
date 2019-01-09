@@ -6,7 +6,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import co.infinum.retromock.*;
+import co.infinum.retromock.Retromock;
 
 /**
  * Use this to specify resolution strategy when applying multiple responses. If service method

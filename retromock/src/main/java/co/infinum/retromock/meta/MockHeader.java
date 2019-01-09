@@ -6,7 +6,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import co.infinum.retromock.*;
+import co.infinum.retromock.Retromock;
 
 /**
  * Use this annotation to specify a header in a {@link MockResponse} annotation. This annotation
