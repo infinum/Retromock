@@ -2,18 +2,12 @@ apply plugin: 'checkstyle'
 apply plugin: 'findbugs'
 apply plugin: 'pmd'
 
-check.dependsOn 'findbugs', 'checkstyle', 'pmd'
-
-task checkstyle(type: Checkstyle) {
+checkstyle {
+    toolVersion "7.6.1"
     configFile file("${project.rootDir}/config/checkstyle.xml")
     configProperties = [
             'checkstyle.cache.file': rootProject.file('build/checkstyle.cache'),
     ]
-    source 'src'
-    include '**/*.java'
-    exclude '**/gen/**'
-
-    classpath = files()
 }
 
 task findbugs(type: FindBugs) {
@@ -21,7 +15,7 @@ task findbugs(type: FindBugs) {
     effort = "max"
     reportLevel = "high"
     excludeFilter = new File("${project.rootDir}/config/findbugs-filter.xml")
-    classes = files("$project.buildDir/intermediates/classes/")
+    classes = files("$project.buildDir/classes/")
     maxHeapSize = "512m"
 
     source 'src'
