@@ -451,7 +451,7 @@ public final class Retromock {
       Preconditions.checkNotNull(retrofit, "Retrofit is null.");
 
       Map<Class<? extends BodyFactory>, BodyFactory> bodyFactories =
-        new HashMap<>((this.bodyFactories));
+        new HashMap<>(this.bodyFactories);
       bodyFactories.put(PassThroughBodyFactory.class, new PassThroughBodyFactory());
 
       ExecutorService backgroundExecutor = this.backgroundExecutor;
