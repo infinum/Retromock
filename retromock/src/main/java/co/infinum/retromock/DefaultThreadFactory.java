@@ -8,8 +8,8 @@ final class DefaultThreadFactory implements ThreadFactory {
   static final AtomicInteger POOL_INDEX = new AtomicInteger();
 
   @Override
-  public Thread newThread(final Runnable r) {
-    Thread thread = new Thread(r, "Retromock-" + POOL_INDEX.getAndIncrement() + "-thread");
+  public Thread newThread(final Runnable runnable) {
+    Thread thread = new Thread(runnable, "Retromock-" + POOL_INDEX.getAndIncrement() + "-thread");
     thread.setDaemon(true);
     return thread;
   }

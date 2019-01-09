@@ -43,13 +43,6 @@ task pmd(type: Pmd) {
     ruleSetFiles = files("${project.rootDir}/config/pmd-ruleset.xml")
     ignoreFailures = false
 
-    ruleSets = [
-            'java-android',
-            'java-braces',
-            'java-clone',
-            'java-finalizers'
-    ]
-
     source 'src'
     include '**/*.java'
     exclude '**/gen/**'

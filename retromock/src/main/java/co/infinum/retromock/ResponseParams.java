@@ -97,7 +97,7 @@ final class ResponseParams {
       return this;
     }
 
-    Builder headers(Headers headers) {
+    Builder headers(final Headers headers) {
       this.headers = headers;
       return this;
     }
