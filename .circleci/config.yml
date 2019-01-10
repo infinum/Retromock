@@ -24,6 +24,8 @@ jobs:
     steps:
       - checkout
 
+      - run: cd retromock
+
       # Download and cache dependencies
       - restore_cache:
           keys:
