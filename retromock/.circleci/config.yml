@@ -37,9 +37,9 @@ jobs:
           key: v1-dependencies-{{ checksum "build.gradle" }}
 
       - run: ./gradlew assemble
-      - run: ./gradlew checkstyle
-      - run: ./gradlew pmd
-      - run: ./gradlew findbugs
+      - run: ./gradlew checkstyleMain
+      - run: ./gradlew pmdMain
+      - run: ./gradlew findbugsMain
       - run: ./gradlew test
       - run: ./gradlew jar
       - run: ./gradlew sourceJar
