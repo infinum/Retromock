@@ -1,12 +1,9 @@
 package co.infinum.retromock
 
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.Test
-import org.junit.runner.RunWith
-import org.mockito.junit.MockitoJUnitRunner
+import org.junit.jupiter.api.Test
 import java.nio.charset.StandardCharsets
 
-@RunWith(MockitoJUnitRunner::class)
 class PassThroughBodyFactoryTest {
 
     @Test

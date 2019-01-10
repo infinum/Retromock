@@ -2,13 +2,13 @@ package co.infinum.retromock
 
 import okhttp3.Headers
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.Before
-import org.junit.Test
-import org.junit.runner.RunWith
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
-import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.junit.jupiter.MockitoExtension
 
-@RunWith(MockitoJUnitRunner::class)
+@ExtendWith(MockitoExtension::class)
 class ResponseParamsTest {
 
     @Mock
@@ -16,7 +16,7 @@ class ResponseParamsTest {
 
     private lateinit var retromockBodyFactory: RetromockBodyFactory;
 
-    @Before
+    @BeforeEach
     fun setup() {
         retromockBodyFactory = RetromockBodyFactory(bodyFactory, "")
     }

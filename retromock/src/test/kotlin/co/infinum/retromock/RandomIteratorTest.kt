@@ -1,13 +1,14 @@
 package co.infinum.retromock
 
 import org.assertj.core.api.Java6Assertions.assertThat
-import org.junit.Test
-import org.junit.runner.RunWith
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
+import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
 import org.mockito.Mockito.*
-import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.junit.jupiter.MockitoExtension
 
-@RunWith(MockitoJUnitRunner::class)
+@ExtendWith(MockitoExtension::class)
 class RandomIteratorTest {
 
     @Mock
@@ -38,10 +39,13 @@ class RandomIteratorTest {
         assertThat(iterator.next()).isIn(*responses)
     }
 
-    @Test(expected = IllegalArgumentException::class)
+    @Test
     fun emptyArrayThrows() {
         val responses = arrayOf<Any>()
-        RandomIterator<Any>(responses)
+
+        assertThrows<IllegalArgumentException> {
+            RandomIterator<Any>(responses)
+        }
     }
 
     @Test

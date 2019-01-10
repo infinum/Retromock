@@ -7,12 +7,13 @@ import com.google.common.util.concurrent.MoreExecutors
 import okhttp3.MediaType
 import okhttp3.ResponseBody
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.Before
-import org.junit.Test
-import org.junit.runner.RunWith
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
+import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
 import org.mockito.Mockito.*
-import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.junit.jupiter.MockitoExtension
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -20,7 +21,7 @@ import java.io.IOException
 import java.util.concurrent.Executor
 import java.util.concurrent.ExecutorService
 
-@RunWith(MockitoJUnitRunner::class)
+@ExtendWith(MockitoExtension::class)
 class RetromockCallTest {
 
     @Mock
@@ -31,7 +32,7 @@ class RetromockCallTest {
 
     private lateinit var retromockCall: RetromockCall<String>
 
-    @Before
+    @BeforeEach
     fun setup() {
         backgroundExecutor = MoreExecutors.newDirectExecutorService()
         callbackExecutor = MoreExecutors.directExecutor()
@@ -113,14 +114,16 @@ class RetromockCallTest {
         verifyNoMoreInteractions(callback)
     }
 
-    @Test(expected = IOException::class)
+    @Test
     fun transportProblem() {
         val delegate = Calls.failure<String>(IOException("Socket closed."))
 
         retromockCall = RetromockCall(behavior, backgroundExecutor, callbackExecutor, delegate)
         whenever(behavior.delayMillis()).thenReturn(0)
 
-        retromockCall.execute()
+        assertThrows<IOException> {
+            retromockCall.execute()
+        }
     }
 
     @Test
@@ -169,7 +172,7 @@ class RetromockCallTest {
         assertThat(retromockCall.request()).isEqualTo(delegate.request())
     }
 
-    @Test(expected = IllegalStateException::class)
+    @Test
     fun cannotExecuteTwice() {
         val body = "Response body content"
         val delegate = Calls.response(body)
@@ -178,10 +181,13 @@ class RetromockCallTest {
         whenever(behavior.delayMillis()).thenReturn(0)
 
         retromockCall.execute()
-        retromockCall.execute()
+
+        assertThrows<IllegalStateException> {
+            retromockCall.execute()
+        }
     }
 
-    @Test(expected = IllegalStateException::class)
+    @Test
     fun cannotEnqueueTwice() {
         val body = "Response body content"
         val delegate = Calls.response(body)
@@ -190,10 +196,13 @@ class RetromockCallTest {
         whenever(behavior.delayMillis()).thenReturn(0)
 
         retromockCall.execute()
-        retromockCall.enqueue(mock())
+
+        assertThrows<IllegalStateException> {
+            retromockCall.enqueue(mock())
+        }
     }
 
-    @Test(expected = IOException::class)
+    @Test
     fun cannotExecuteCancelledCall() {
         val body = "Response body content"
         val delegate = Calls.response(body)
@@ -201,7 +210,10 @@ class RetromockCallTest {
         retromockCall = RetromockCall(behavior, backgroundExecutor, callbackExecutor, delegate)
 
         retromockCall.cancel()
-        retromockCall.execute()
+
+        assertThrows<IOException> {
+            retromockCall.execute()
+        }
     }
 
     @Test

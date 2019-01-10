@@ -1,7 +1,7 @@
 package co.infinum.retromock
 
 import org.assertj.core.api.Java6Assertions.assertThat
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import kotlin.test.assertTrue
 
 class ThreadFactoryTest {

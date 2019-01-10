@@ -3,27 +3,34 @@ package co.infinum.retromock
 import co.infinum.retromock.helpers.mock
 import co.infinum.retromock.helpers.whenever
 import org.assertj.core.api.Java6Assertions.assertThat
-import org.junit.Test
-import org.junit.runner.RunWith
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
+import org.junit.jupiter.api.extension.ExtendWith
+import org.mockito.ArgumentMatchers
+import org.mockito.Mockito
 import org.mockito.Mockito.*
-import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.junit.jupiter.MockitoExtension
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.io.IOException
 import java.util.concurrent.Callable
 
-@RunWith(MockitoJUnitRunner::class)
+@ExtendWith(MockitoExtension::class)
 class CallsTest {
 
-    @Test(expected = AssertionError::class)
+    @Test
     fun fakeCallCannotBeCreatedWithBothResponseAndError() {
-        Calls.FakeCall(Response.success(""), IOException())
+        assertThrows<AssertionError> {
+            Calls.FakeCall(Response.success(""), IOException())
+        }
     }
 
-    @Test(expected = AssertionError::class)
+    @Test
     fun fakeCallCannotBeCreatedWithNonOfResponseAndError() {
-        Calls.FakeCall<String>(null, null)
+        assertThrows<AssertionError> {
+            Calls.FakeCall<String>(null, null)
+        }
     }
 
     @Test
@@ -40,18 +47,24 @@ class CallsTest {
         assertThat(call.isCanceled).isTrue()
     }
 
-    @Test(expected = IllegalStateException::class)
+    @Test
     fun fakeCallCannotExecuteCallMoreThanOnce() {
         val call = Calls.FakeCall(Response.success(""), null)
         call.execute()
-        call.execute()
+
+        assertThrows<IllegalStateException> {
+            call.execute()
+        }
     }
 
-    @Test(expected = IOException::class)
+    @Test
     fun fakeCallCannotExecuteCanceledCall() {
         val call = Calls.FakeCall(Response.success(""), null)
         call.cancel()
-        call.execute()
+
+        assertThrows<IOException> {
+            call.execute()
+        }
     }
 
     @Test
@@ -65,17 +78,23 @@ class CallsTest {
         assertThat(clone.isCanceled).isFalse()
     }
 
-    @Test(expected = IOException::class)
+    @Test
     fun fakeCallExecuteThrows() {
         val call = Calls.FakeCall<String>(null, IOException())
-        call.execute()
+
+        assertThrows<IOException> {
+            call.execute()
+        }
     }
 
-    @Test(expected = IllegalStateException::class)
+    @Test
     fun fakeCallCannotEnqueueCallMoreThanOnce() {
         val call = Calls.FakeCall(Response.success(""), null)
         call.execute()
-        call.enqueue(mock())
+
+        assertThrows<IllegalStateException> {
+            call.enqueue(mock())
+        }
     }
 
     @Test
@@ -85,7 +104,7 @@ class CallsTest {
         call.cancel()
         call.enqueue(callback)
 
-        verify(callback).onFailure(eq(call), any(IOException::class.java))
+        Mockito.verify(callback).onFailure(ArgumentMatchers.eq(call), any(IOException::class.java))
         verifyNoMoreInteractions(callback)
     }
 
@@ -136,14 +155,17 @@ class CallsTest {
         verify(callback).onFailure(any(), any(IOException::class.java))
     }
 
-    @Test(expected = IllegalStateException::class)
+    @Test
     fun deferredCallCallableThrowsFatal() {
         val callable = mock<Callable<Call<String>>>()
         whenever(callable.call()).thenThrow(Exception::class.java)
         val call = Calls.DeferredCall(callable)
 
         val callback = mock<Callback<String>>()
-        call.enqueue(callback)
+
+        assertThrows<IllegalStateException> {
+            call.enqueue(callback)
+        }
 
         verifyZeroInteractions(callback)
     }
@@ -166,22 +188,28 @@ class CallsTest {
         assertThat(call.isCanceled).isTrue()
     }
 
-    @Test(expected = IllegalStateException::class)
+    @Test
     fun deferredCallCannotExecuteCallMoreThanOnce() {
         val callable = mock<Callable<Call<String>>>()
         whenever(callable.call()).thenReturn(Calls.response(""))
         val call = Calls.DeferredCall(callable)
         call.execute()
-        call.execute()
+
+        assertThrows<IllegalStateException> {
+            call.execute()
+        }
     }
 
-    @Test(expected = IOException::class)
+    @Test
     fun deferredCallCannotExecuteCanceledCall() {
         val callable = mock<Callable<Call<String>>>()
         whenever(callable.call()).thenReturn(Calls.response(""))
         val call = Calls.DeferredCall(callable)
         call.cancel()
-        call.execute()
+
+        assertThrows<IOException> {
+            call.execute()
+        }
     }
 
     @Test

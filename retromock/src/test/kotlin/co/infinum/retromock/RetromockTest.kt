@@ -8,7 +8,8 @@ import co.infinum.retromock.meta.MockSequential
 import okhttp3.ResponseBody
 import org.assertj.core.api.Java6Assertions.assertThat
 import org.assertj.core.api.Java6Assertions.entry
-import org.junit.Test
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.mockito.Mockito.*
 import retrofit2.Call
 import retrofit2.Retrofit
@@ -294,7 +295,7 @@ class RetromockTest {
         assertThat(countDown.get()).isEqualTo(0)
     }
 
-    @Test(expected = IllegalStateException::class)
+    @Test
     fun noMatchingBodyFactoryExceptionThrown() {
 
         val retromock = Retromock.Builder()
@@ -306,7 +307,9 @@ class RetromockTest {
 
         val service = retromock.create(ResponseMethodWithCustomBodyFactory::class.java)
 
-        service.getResponseBody().execute()
+        assertThrows<IllegalStateException> {
+            service.getResponseBody().execute()
+        }
     }
 
     @Test

@@ -1,11 +1,10 @@
 package co.infinum.retromock
 
 import org.assertj.core.api.Java6Assertions.assertThat
-import org.junit.Test
-import org.junit.runner.RunWith
-import org.mockito.junit.MockitoJUnitRunner
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
+import java.lang.IllegalArgumentException
 
-@RunWith(MockitoJUnitRunner::class)
 class SequentialIteratorTest {
 
     @Test
@@ -33,11 +32,13 @@ class SequentialIteratorTest {
         assertThat(iterator.next()).isSameAs(responses[2])
     }
 
-    @Test(expected = IllegalArgumentException::class)
+    @Test
     fun emptyArrayThrows() {
         val responses = arrayOf<Any>()
 
-        SequentialIterator<Any>(responses)
+        assertThrows<IllegalArgumentException> {
+            SequentialIterator<Any>(responses)
+        }
     }
 
 }
