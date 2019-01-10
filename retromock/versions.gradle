@@ -1,0 +1,35 @@
+buildscript {
+
+    ext.versions = [
+            "retromock": "0.0.1",
+            "retrofit" : "2.4.0",
+            "junit"    : "5.1.1",
+            "assertj"  : "3.8.0",
+            "mockito"  : "2.23.0",
+            "kotlin"   : "1.2.0",
+            "google"   : [
+                    "annotations": "3.0.1"
+            ]
+    ]
+
+    ext.deps = [
+            "retrofit": "com.squareup.retrofit2:retrofit:${versions.retrofit}",
+            "junit"   : [
+                    "api"   : "org.junit.jupiter:junit-jupiter-api:${versions.junit}",
+                    "engine": "org.junit.jupiter:junit-jupiter-engine:${versions.junit}"
+            ],
+            "assertj" : "org.assertj:assertj-core:${versions.assertj}",
+            "mockito" : [
+                    "core" : "org.mockito:mockito-core:${versions.mockito}",
+                    "junit": "org.mockito:mockito-junit-jupiter:${versions.mockito}"
+            ],
+            "google"  : [
+                    "annotations": "com.google.code.findbugs:annotations:${versions.google.annotations}"
+            ],
+            "kotlin"  : [
+                    "stdlib": "org.jetbrains.kotlin:kotlin-stdlib:${versions.kotlin}",
+                    "test"  : "org.jetbrains.kotlin:kotlin-test:${versions.kotlin}"
+            ]
+    ]
+
+}
