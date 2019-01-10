@@ -1,13 +1,10 @@
 package co.infinum.retromock
 
 import org.assertj.core.api.Java6Assertions.assertThat
-import org.junit.Test
-import org.junit.runner.RunWith
-import org.mockito.junit.MockitoJUnitRunner
+import org.junit.jupiter.api.Test
 import retrofit2.Retrofit
 import java.nio.charset.StandardCharsets
 
-@RunWith(MockitoJUnitRunner::class)
 class NoResponseProducerTest {
 
     @Test

@@ -1,11 +1,12 @@
 package co.infinum.retromock
 
 import org.assertj.core.api.Java6Assertions.assertThat
-import org.junit.Test
-import org.junit.runner.RunWith
-import org.mockito.junit.MockitoJUnitRunner
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
+import org.junit.jupiter.api.extension.ExtendWith
+import org.mockito.junit.jupiter.MockitoExtension
 
-@RunWith(MockitoJUnitRunner::class)
+@ExtendWith(MockitoExtension::class)
 class CircularIteratorTest {
 
     @Test
@@ -33,10 +34,13 @@ class CircularIteratorTest {
         assertThat(iterator.next()).isSameAs(responses[1])
     }
 
-    @Test(expected = IllegalArgumentException::class)
+    @Test
     fun emptyArrayThrows() {
         val responses = arrayOf<Any>()
-        CircularIterator<Any>(responses)
+
+        assertThrows<IllegalArgumentException> {
+            CircularIterator<Any>(responses)
+        }
     }
 
 }
