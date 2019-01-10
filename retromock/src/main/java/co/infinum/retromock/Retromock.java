@@ -412,12 +412,12 @@ public final class Retromock {
   public static final class Builder {
 
     private Retrofit retrofit;
-    Map<Class<? extends BodyFactory>, BodyFactory> bodyFactories = new HashMap<>();
+    private final Map<Class<? extends BodyFactory>, BodyFactory> bodyFactories = new HashMap<>();
     private boolean loadEagerly;
     private ExecutorService backgroundExecutor;
     private Executor callbackExecutor;
     private Behavior defaultBehavior;
-    BodyFactory defaultBodyFactory;
+    private BodyFactory defaultBodyFactory;
 
     /**
      * Creates default instance of Builder.
@@ -586,6 +586,10 @@ public final class Retromock {
         behavior,
         bodyFactory
       );
+    }
+
+    Map<Class<? extends BodyFactory>, BodyFactory> bodyFactories() {
+      return new HashMap<>(bodyFactories);
     }
   }
 }

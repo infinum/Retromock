@@ -148,7 +148,7 @@ class RetromockTest {
             .build()
 
         assertThat(retromock.bodyFactories()).isNotEmpty
-        assertThat(retromock.newBuilder().bodyFactories).isEmpty()
+        assertThat(retromock.newBuilder().bodyFactories()).isEmpty()
     }
 
     @Test
