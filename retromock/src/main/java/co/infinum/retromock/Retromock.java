@@ -116,10 +116,106 @@ public final class Retromock {
     this.defaultBodyFactory = bodyFactory;
   }
 
+  /**
+   * Create an implementation of the API endpoints defined by the {@code service} interface.
+   * If mocking is not enabled on a service method it would return an interface that redirects a
+   * call to Retrofit's service.
+   *
+   * To enable mocking of some method it has to be annotated with
+   * {@link Mock} annotation. If there is no
+   * {@link Mock} annotation or the annotation has value set to {@code
+   * false} method call would be delegated to retrofit's instance of the service.
+   * <pre><code>
+   * &#064;Mock
+   * Call&lt;User&gt; getUser();
+   * </code></pre>
+   *
+   * <p>
+   * To return specific mock response method has to be annotated with
+   * {@link MockResponse} annotation and specify response parameters in
+   * the annotation. For example,
+   * <pre><code>
+   * &#064;Mock
+   * &#064;MockResponse(code = 200, message = "OK", body = "{\"name\":\"John\",
+   * \"surname\":\"Smith\"}",
+   * headers = {
+   *  &#064;MockHeader(name = "ContentType", value = "application/json"),
+   *  &#064;MockHeader(name = "CustomHeader", value = "CustomValue")
+   * }, bodyFactory = PassThroughBodyFactory.class)
+   * Call&lt;User&gt; getUser();
+   * </code></pre>
+   * body parameter is closely related with bodyFactory parameter. Value of the body parameter will
+   * be used to load body stream using bodyFactory instance. The implementation of creating body
+   * stream is depending on instance of {@link BodyFactory}.
+   *
+   * <p>
+   * Specify custom behavior on a method using {@link MockBehavior}
+   * annotation. For example,
+   * <pre><code>
+   * &#064;Mock
+   * &#064;MockBehavior(durationMillis = 500, durationDeviation = 100)
+   * Call&lt;User&gt; getUser();
+   * </code></pre>
+   * would delay response between 400 and 600 milliseconds.
+   *
+   * @param <T> Service
+   * @param service class type of a service
+   * @return a service implementation that would either mock a call or delegate it to Retrofit's
+   * service
+   */
   public <T> T create(final Class<T> service) {
     return create(createDelegate(retrofit, service), service);
   }
 
+  /**
+   * Create an implementation of the API endpoints defined by the {@code service} interface.
+   * If mocking is not enabled on a service method it would return an interface that redirects a
+   * call to a service provided by {@link DelegateFactory} argument.
+   *
+   * To enable mocking of some method it has to be annotated with
+   * {@link Mock} annotation. If there is no
+   * {@link Mock} annotation or the annotation has value set to {@code
+   * false} method call would be delegated to retrofit's instance of the service.
+   * <pre><code>
+   * &#064;Mock
+   * Call&lt;User&gt; getUser();
+   * </code></pre>
+   *
+   * <p>
+   * To return specific mock response method has to be annotated with
+   * {@link MockResponse} annotation and specify response parameters in
+   * the annotation. For example,
+   * <pre><code>
+   * &#064;Mock
+   * &#064;MockResponse(code = 200, message = "OK", body = "{\"name\":\"John\",
+   * \"surname\":\"Smith\"}",
+   * headers = {
+   *  &#064;MockHeader(name = "ContentType", value = "application/json"),
+   *  &#064;MockHeader(name = "CustomHeader", value = "CustomValue")
+   * }, bodyFactory = PassThroughBodyFactory.class)
+   * Call&lt;User&gt; getUser();
+   * </code></pre>
+   * body parameter is closely related with bodyFactory parameter. Value of the body parameter will
+   * be used to load body stream using bodyFactory instance. The implementation of creating body
+   * stream is depending on instance of {@link BodyFactory}.
+   *
+   * <p>
+   * Specify custom behavior on a method using {@link MockBehavior}
+   * annotation. For example,
+   * <pre><code>
+   * &#064;Mock
+   * &#064;MockBehavior(durationMillis = 500, durationDeviation = 100)
+   * Call&lt;User&gt; getUser();
+   * </code></pre>
+   * would delay response between 400 and 600 milliseconds.
+   *
+   * @param <T> Service
+   * @param factory used to create a service delegate to which method calls would be redirected if
+   *                mock is disabled on the method
+   * @param service class type of a service
+   * @return a service implementation that would either mock a call or delegate it to Retrofit's
+   * service
+   */
   @SuppressWarnings({"unchecked", "WeakerAccess"})
   public <T> T create(final DelegateFactory<T> factory, final Class<T> service) {
     if (eagerlyLoad) {
