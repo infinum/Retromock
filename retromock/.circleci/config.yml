@@ -36,17 +36,27 @@ jobs:
             - ~/.gradle
           key: v1-dependencies-{{ checksum "build.gradle" }}
 
+      - run: ./gradlew assemble
       - run: ./gradlew checkstyle
       - run: ./gradlew pmd
       - run: ./gradlew findbugs
       - run: ./gradlew test
+      - run: ./gradlew jar
+      - run: ./gradlew sourceJar
+      - run: ./gradlew javadocJar
 
+      - store_artifacts:
+          path: build/libs
+          destination: libs
       - store_artifacts:
           path: build/reports
           destination: reports
       - store_artifacts:
           path: build/test-reports
           destination: test-reports
+      - store_artifacts:
+          path: build/docs
+          destinations: docs
       - store_artifacts:
           path: out
           destinations: outputs
