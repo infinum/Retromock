@@ -1,6 +1,8 @@
 group = 'co.infinum'
 version = '0.0.1'
 
+apply from: 'versions.gradle'
+
 buildscript {
     repositories {
         google()
@@ -11,7 +13,8 @@ buildscript {
 
     dependencies {
         classpath 'net.ltgt.gradle:gradle-errorprone-plugin:0.0.10'
-        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.2.0'
+        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.2.30'
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
     }
 }
 
@@ -26,6 +29,8 @@ apply plugin: 'kotlin'
 apply from: 'config/quality.gradle'
 apply plugin: 'net.ltgt.errorprone'
 apply plugin: 'jacoco'
+
+apply from: 'bintray.gradle'
 
 sourceCompatibility = 1.8
 
@@ -63,20 +68,20 @@ jacoco {
 
 dependencies {
 
-    compileOnly 'com.google.code.findbugs:annotations:3.0.1'
+    compileOnly deps.google.annotations
 
-    implementation "com.squareup.retrofit2:retrofit:2.4.0"
+    implementation deps.retrofit
 
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.1.1'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.1.1'
-    testCompile 'org.assertj:assertj-core:3.8.0'
-    testCompile 'org.mockito:mockito-core:2.23.0'
-    testCompile 'org.mockito:mockito-junit-jupiter:2.23.0'
+    testImplementation deps.junit.api
+    testRuntimeOnly deps.junit.engine
+    testCompile deps.assertj
+    testCompile deps.mockito.core
+    testCompile deps.mockito.junit
     testCompile group: 'com.google.guava', name: 'guava', version: '27.0-jre'
-    testCompileOnly 'com.google.code.findbugs:annotations:3.0.1'
+    testCompileOnly deps.google.annotations
 
-    testCompile "org.jetbrains.kotlin:kotlin-stdlib:1.2.0"
-    testCompile "org.jetbrains.kotlin:kotlin-test:1.2.0"
+    testCompile deps.kotlin.stdlib
+    testCompile deps.kotlin.test
 }
 
 task sourceJar(type: Jar) {
@@ -87,4 +92,8 @@ task sourceJar(type: Jar) {
 task javadocJar(type: Jar) {
     from javadoc
     classifier = 'javadoc'
+}
+
+clean {
+    delete 'out'
 }
