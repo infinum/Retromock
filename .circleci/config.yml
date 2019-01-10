@@ -25,8 +25,6 @@ jobs:
       - checkout:
           path: ~/retromock
 
-      - run: cd retromock
-
       # Download and cache dependencies
       - restore_cache:
           keys:
