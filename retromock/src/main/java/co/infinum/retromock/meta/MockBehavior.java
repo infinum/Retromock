@@ -21,7 +21,13 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface MockBehavior {
 
+  /**
+   * Default duration in milliseconds.
+   */
   int DEFAULT_DURATION_MILLIS = 1000;
+  /**
+   * Default deviation in milliseconds.
+   */
   int DEFAULT_DEVIATION_MILLIS = 500;
 
   /**
