@@ -13,7 +13,7 @@ import co.infinum.retromock.BodyFactory;
 import co.infinum.retromock.Retromock;
 
 /**
- * Use this annotation to specify parameters to define {@link MockResponse}.
+ * Use this annotation to specify parameters to define a mocked response.
  * If this method is not applied to a service method {@link Retromock} would create default
  * response with status code 200 and empty response body and no headers.
  */

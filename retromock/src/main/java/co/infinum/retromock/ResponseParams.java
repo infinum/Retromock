@@ -97,7 +97,7 @@ final class ResponseParams {
       return this;
     }
 
-    Builder headers(final Headers headers) {
+    Builder headers(@Nullable final Headers headers) {
       this.headers = headers;
       return this;
     }
