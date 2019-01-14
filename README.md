@@ -155,6 +155,114 @@ To produce a constant delay set `durationDeviation` parameter to zero. If not sp
   @MockBehavior(durationDeviation = 1000, durationMillis = 500)
 ```
 
+Retromock declaration
+-------
+#### `BodyFactory`
+
+In order to provide a response body from a custom source create a BodyFactory implementation and set it to `bodyFactory` parametar in `@MockResponse` annotation.
+###### Example
+1. Create an implementation of `BodyFactory` that loads a stream using application class loader.
+```java
+class ResourceBodyFactory implements BodyFactory {
+
+  @Override
+  public InputStream create(final String input) throws IOException {
+    return ResourceBodyFactory.class.getResourceAsStream(input);
+  }
+}
+```
+In Android, `BodyFactory` can load a response body from asset:
+```java
+class AssetBodyFactory implements BodyFactory {
+
+  private final AssetManager assetManager;
+
+  public AssetBodyFactory(final AssetManager assetManager) {
+    this.assetManager = assetManager;
+  }
+
+  @Override
+  public InputStream create(final String input) throws IOException {
+    return assetManager.open(input);
+  }
+}
+```
+2. Create a `Retromock` instance and add body factory. Note: Body factory class cannot be annonymous class because you need to reference it later on.
+```java
+Retromock retromock = new Retromock.Builder()
+  .retrofit(retrofit)
+  .addBodyFactory(new ResourceBodyFactory())
+  .build();
+```
+3. In the service set your body factory class in `@MockResponse` annotation.
+```java
+public interface Service {
+
+  @Mock
+  @MockResponse(body = "smith.json", bodyFactory = ResourceBodyFactory.class)
+  @GET("/")
+  Call<User> getUser();
+}
+```
+
+If majority of your service method use a particular body factory you can set it as default.
+If so, you wouldn't need to specify a `bodyFactory` parameter in `@MockResponse` annotation.
+Also, in this case `BodyFactory` instance can be annonymous class.
+
+###### Example
+```java
+Retromock retromock = new Retromock.Builder()
+  .retrofit(retrofit)
+  .defaultBodyFactory(new ResourceBodyFactory())
+  .build();
+```
+No need to set a body factory - default one will be used if non is provided.
+```java
+public interface Service {
+
+  @Mock
+  @MockResponse(body = "smith.json")
+  @GET("/")
+  Call<User> getUser();
+}
+```
+
+#### `Behavior`
+Implementation of this class provides a response delay in milliseconds.
+
+If you want to set a custom default delay implement this class and set it as `defaultBehavior` in the builder.
+
+If so, this behavior will be used on all service method that do not have `@MockBehavior` annotation.
+
+If not set, Retromock uses default behavior that produces response delays randomly in uniform distribution between 500 and 1500 milliseconds.
+###### Example
+Remove response delay
+```java
+Retromock retromock = new Retromock.Builder()
+  .retrofit(retrofit)
+  .defaultBehavior(() -> 0)
+  .build();
+```
+
+#### `Executors`
+You can set background and callback executors in `Retromock` builder.
+
+By default, background executor is set to mock a call on background thread.
+If you set a custom implementation keep in mind that response delay will block the thread.
+
+Retromock by default uses callback executor from `Retrofit` instance.
+If you want a custom one, feel free to set it using the builder.
+
+
+###### Example
+Set custom default behavior in the builder.
+```java
+Retromock retromock = new Retromock.Builder()
+  .retrofit(retrofit)
+  .defaultBehavior(() -> 0)
+  .build();
+```
+
 ProGuard
 -------
 The library does not require any ProGuard rules.

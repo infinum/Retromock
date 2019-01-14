@@ -23,7 +23,9 @@ public class ResourceService {
 
     Retromock retromock = new Retromock.Builder()
       .retrofit(retrofit)
+      .addBodyFactory(new ResourceBodyFactory())
       .defaultBodyFactory(ResourceService.class::getResourceAsStream)
+      .defaultBehavior(() -> 0)
       .build();
 
     Service service = retromock.create(Service.class);
@@ -36,7 +38,7 @@ public class ResourceService {
   public interface Service {
 
     @Mock
-    @MockResponse(body = "smith.json")
+    @MockResponse(body = "smith.json", bodyFactory = ResourceBodyFactory.class)
     @MockResponse(body = "doe.json")
     @GET("/")
     Call<User> getUser();
