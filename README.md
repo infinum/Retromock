@@ -105,15 +105,15 @@ Headers can be declared as array of type `@MockHeader` (`name-value` pair) annot
 ```
 
 Methods can have multiple `@MockResponse` annotations.
-###### Example in Java
+###### Java example
 ```java
   @Mock
   @MockResponse(body = "{\"name\":\"John\", \"surname\":\"Smith\"}")
   @MockResponse(body = "{\"name\":\"John\", \"surname\":\"Doe\"}")
-  @GET("/")
+  @GET("/endpoint")
   Call<User> getUser();
 ```
-###### Example in Kotlin
+###### Kotlin example
 ```kotlin
   @Mock
   @MockResponses(
@@ -121,8 +121,38 @@ Methods can have multiple `@MockResponse` annotations.
     MockResponse(body = "Body example 2."),
     MockResponse(body = "Body example 3.")
   )
-  @GET("/")
+  @GET("/endpoint")
   fun getResponseBody(): Call<ResponseBody>
+```
+By default, Retromock returns responses in same order as annotations are ordered.
+
+For example, let's say that service method is annotated with 3 responses: `[one, two, three]`.
+If you enqueue the service method 5 times it would produce `one, two, three, three, three`.
+
+To alter that behavior, use either
+ - `@MockCircular` - produces `[one, two, three, one, two]`, or
+ - `@MockRandom` - produces one of responses in uniform random distribution
+
+Any custom implementation isn't supported yet.
+
+#### `@MockBehavior`
+Use this annotation to define response delay. It accepts mean (`durationMillis)` and deviation (`durationDeviation`) in milliseconds.
+Retromock will produce random delay in range 
+```
+[durationMillis - durationDeviation, durationMillis + durationDeviation]
+```
+Following example will produce random duration between `500ms` and `1500ms`.
+###### Example
+```java
+  @Mock
+  @MockBehavior(durationDeviation = 1000, durationMillis = 500)
+  @GET("/endpoint")
+  Call<User> getUser();
+```
+
+To produce a constant delay set `durationDeviation` parameter to zero. If not specificly set, Retromock will use defaults equivalent to
+```java
+  @MockBehavior(durationDeviation = 1000, durationMillis = 500)
 ```
 
 ProGuard
