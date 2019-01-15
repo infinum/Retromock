@@ -5,7 +5,7 @@ package co.infinum.retromock;
  */
 public class DefaultBehavior implements Behavior {
 
-  static final DefaultBehavior INSTANCE = new DefaultBehavior(1000, 500);
+  static final DefaultBehavior INSTANCE = new DefaultBehavior(1000L, 500);
 
   private final long durationMillis;
   private final int durationDeviation;
