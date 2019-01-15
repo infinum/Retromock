@@ -501,7 +501,6 @@ public final class Retromock {
      * @param backgroundExecutor Executor used to execute a call.
      * @return this {@link Builder}.
      */
-    //TODO: not sure if this should be publicly configurable
     public Builder backgroundExecutor(final ExecutorService backgroundExecutor) {
       this.backgroundExecutor = backgroundExecutor;
       return this;
