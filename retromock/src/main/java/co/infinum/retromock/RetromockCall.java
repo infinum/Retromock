@@ -51,43 +51,7 @@ final class RetromockCall<T> implements Call<T> {
       throw new IllegalStateException("Call has already been executed!");
     }
 
-    task = backgroundExecutor.submit(new Runnable() {
-
-      private void delay() throws InterruptedException {
-        long delayMillis = behavior.delayMillis();
-        if (delayMillis > 0) {
-          Thread.sleep(delayMillis);
-        }
-      }
-
-      @Override
-      public void run() {
-        if (canceled.get()) {
-          callback.onFailure(RetromockCall.this, new IOException("canceled"));
-        } else {
-          try {
-            try {
-              delay();
-            } catch (InterruptedException interrupt) {
-              callback.onFailure(RetromockCall.this, new IOException("canceled"));
-            }
-            delegate.enqueue(new Callback<T>() {
-              @Override
-              public void onResponse(final Call<T> call, final Response<T> response) {
-                callback.onResponse(call, response);
-              }
-
-              @Override
-              public void onFailure(final Call<T> call, final Throwable t) {
-                callback.onFailure(call, t);
-              }
-            });
-          } catch (Throwable error) {
-            callback.onFailure(RetromockCall.this, error);
-          }
-        }
-      }
-    });
+    task = backgroundExecutor.submit(new DelayAndEnqueueRunnable(callback));
   }
 
   @Override
@@ -179,5 +143,49 @@ final class RetromockCall<T> implements Call<T> {
   @Override
   public Call<T> clone() {
     return new RetromockCall<>(behavior, backgroundExecutor, callbackExecutor, delegate);
+  }
+
+  private class DelayAndEnqueueRunnable implements Runnable {
+
+    private final Callback<T> callback;
+
+    DelayAndEnqueueRunnable(final Callback<T> callback) {
+      this.callback = callback;
+    }
+
+    private void delay() throws InterruptedException {
+      long delayMillis = behavior.delayMillis();
+      if (delayMillis > 0) {
+        Thread.sleep(delayMillis);
+      }
+    }
+
+    @Override
+    public void run() {
+      if (canceled.get()) {
+        callback.onFailure(RetromockCall.this, new IOException("canceled"));
+      } else {
+        try {
+          try {
+            delay();
+          } catch (InterruptedException interrupt) {
+            callback.onFailure(RetromockCall.this, new IOException("canceled"));
+          }
+          delegate.enqueue(new Callback<T>() {
+            @Override
+            public void onResponse(final Call<T> call, final Response<T> response) {
+              callback.onResponse(call, response);
+            }
+
+            @Override
+            public void onFailure(final Call<T> call, final Throwable t) {
+              callback.onFailure(call, t);
+            }
+          });
+        } catch (Throwable error) {
+          callback.onFailure(RetromockCall.this, error);
+        }
+      }
+    }
   }
 }

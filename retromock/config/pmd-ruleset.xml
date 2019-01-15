@@ -8,7 +8,9 @@
     </description>
     <rule ref="rulesets/java/basic.xml"/>
     <rule ref="rulesets/java/braces.xml"/>
-    <rule ref="rulesets/java/codesize.xml"/>
+    <rule ref="rulesets/java/codesize.xml">
+        <exclude name="TooManyMethods"/>
+    </rule>
     <rule ref="rulesets/java/empty.xml"/>
     <rule ref="rulesets/java/empty.xml/EmptyCatchBlock">
         <properties>
