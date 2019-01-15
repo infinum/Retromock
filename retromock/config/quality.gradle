@@ -2,15 +2,14 @@ apply plugin: 'checkstyle'
 apply plugin: 'findbugs'
 apply plugin: 'pmd'
 
-checkstyle {
-    toolVersion "7.6.1"
+checkstyleMain {
     configFile file("${project.rootDir}/config/checkstyle.xml")
     configProperties = [
             'checkstyle.cache.file': rootProject.file('build/checkstyle.cache'),
     ]
 }
 
-task findbugs(type: FindBugs) {
+findbugsMain {
     ignoreFailures = false
     effort = "max"
     reportLevel = "high"
@@ -33,7 +32,7 @@ task findbugs(type: FindBugs) {
     classpath = files()
 }
 
-task pmd(type: Pmd) {
+pmdMain {
     ruleSetFiles = files("${project.rootDir}/config/pmd-ruleset.xml")
     ignoreFailures = false
 
@@ -46,4 +45,3 @@ task pmd(type: Pmd) {
         html.enabled = true
     }
 }
-
