@@ -26,8 +26,8 @@ publishing {
 }
 
 bintray {
-    user = "$bintray_username"
-    key = "$bintray_api_key"
+    user = hasProperty('bintray_user') ?: System.getenv('BINTRAY_USER')
+    key = hasProperty('bintray_api_key') ?: System.getenv('BINTRAY_API_KEY')
     publish = false
     publications = ['Publication']
 

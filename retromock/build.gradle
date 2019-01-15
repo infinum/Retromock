@@ -1,7 +1,7 @@
-group = 'co.infinum'
-version = '0.0.1'
-
 apply from: 'versions.gradle'
+
+group = 'co.infinum'
+version = "$versions.retromock"
 
 buildscript {
     repositories {
