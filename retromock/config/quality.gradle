@@ -45,3 +45,7 @@ pmdMain {
         html.enabled = true
     }
 }
+
+findbugsTest {
+    enabled = false
+}
