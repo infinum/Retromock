@@ -1,4 +1,4 @@
-# Retromock
+# Retromock [![CircleCI](https://circleci.com/gh/infinum/Retromock.svg?style=svg)](https://circleci.com/gh/infinum/Retromock)
 
 Adapts Java interface created by [Retrofit][retrofit] using annotations on declared methods to define response mocks.
 
