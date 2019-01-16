@@ -97,3 +97,7 @@ task javadocJar(type: Jar) {
 clean {
     delete 'out'
 }
+
+apply from: 'tasks.gradle'
+
+assemble.dependsOn 'generateReadme'
