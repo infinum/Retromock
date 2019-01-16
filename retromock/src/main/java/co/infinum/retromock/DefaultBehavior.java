@@ -25,7 +25,7 @@ public class DefaultBehavior implements Behavior {
 
   /**
    * Create new instance using delay duration and delay deviation.
-   * This instance would provide a dealy in range [duration - deviation, duration + deviation)
+   * This instance would provide a delay in range [duration - deviation, duration + deviation)
    *
    * @param durationMillis    Delay duration in milliseconds.
    * @param durationDeviation Delay deviation in milliseconds.

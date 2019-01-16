@@ -43,7 +43,7 @@ If you would like to load response from a stream set a default body factory that
 ```java
 Retromock retromock = new Retromock.Builder()
   .retrofit(retrofit)
-  .defaultBodyFactory(input -> openStream(input))
+  .defaultBodyFactory(...)
   .build();
 ```
 
@@ -77,6 +77,16 @@ public interface Service {
 
 Save a response body content in file named `retromock/response.json`.
 
+Note: if you set custom default body factory and do not declare a `bodyFactory` parameter in `@MockResponse` annotation your body factory will be called with value of `body` parameter.
+That also applies if you don't specificaly set `body` - in that case `body` is empty by default.
+If you wouldn't like to handle the case of empty `body` wrap your default body factory into `NonEmptyBodyFactory` class as follows:
+```java
+Retromock retromock = new Retromock.Builder()
+  .retrofit(retrofit)
+  .defaultBodyFactory(new NonEmptyBodyFactory(...))
+  .build();
+```
+
 If you use `Retromock` only in some variants you can exclude files with mock responses from final .apk with configuration similar to:
 ```groovy
 applicationVariants.all { variant ->
@@ -97,7 +107,7 @@ ProGuard
 -------
 The library does not require any ProGuard rules.
 
-However, you might would need rules for Retrofit and its dependencies.
+However, you might need rules for Retrofit and its dependencies.
 
 License
 -------
