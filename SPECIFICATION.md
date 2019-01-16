@@ -2,9 +2,9 @@ Service declaration
 -------
 
 #### `@Mock`
-Use this annotation on a service method when you want to specify if this method should be mocked.
+Use this annotation on a service method when you want to specify that the method should be mocked. It is possible to enable or disable method mock with the `value` parametar of type `boolean`.
 
-If annotation is not listed on a method or it is, but with value set to `false` method will not be mocked.
+If annotation is not listed on a method or is disabled with the `value` parameter then the method will not be mocked.
 ###### Example
 ```java
   @GET("/endpoint")
@@ -16,8 +16,7 @@ If annotation is not listed on a method or it is, but with value set to `false` 
   Call<User> getUser();
 ``` 
 
-On the other hand, if annotation is listed on a method and its value is set to `true` response will be mocked.
-Adding this annotation without value parameter is equivalent to adding it with `true` parameter.
+Annotating the method without a `value` parameter and explicitly setting it to `true` will both result in mocked response since `true` is the default value.
 ###### Example
 ```java
   @Mock
@@ -31,9 +30,9 @@ Adding this annotation without value parameter is equivalent to adding it with `
 ``` 
 
 #### `@MockResponse`
-Use this annotation to specify parameters to define a mocked response.
+Use this annotation to specify parameters for defining a mocked response.
 
-If annotation is not present mocked response would be `200 OK` with empty body and no headers.
+If annotation is not present mocked response defaults to `200 OK` with an empty body and no headers.
 
 Parameters and default values:
  - `code` - `200`
@@ -84,16 +83,16 @@ Methods can have multiple `@MockResponse` annotations.
   @GET("/endpoint")
   fun getResponseBody(): Call<ResponseBody>
 ```
-By default, Retromock returns responses in same order as annotations are ordered.
+By default, Retromock returns responses in the same order as annotations defined.
 
 For example, let's say that service method is annotated with 3 responses: `[one, two, three]`.
-If you enqueue the service method 5 times it would produce `one, two, three, three, three`.
+If you enqueue the service method 5 times it will produce `one, two, three, three, three`.
 
 To alter that behavior, use either
  - `@MockCircular` - produces `[one, two, three, one, two]`, or
  - `@MockRandom` - produces one of responses in uniform random distribution
 
-Any custom implementation isn't supported yet.
+Custom implementations are not yet supported.
 
 #### `@MockBehavior`
 Use this annotation to define response delay. It accepts mean (`durationMillis)` and deviation (`durationDeviation`) in milliseconds.
@@ -105,22 +104,22 @@ Following example will produce random duration between `500ms` and `1500ms`.
 ###### Example
 ```java
   @Mock
-  @MockBehavior(durationDeviation = 1000, durationMillis = 500)
+  @MockBehavior(durationDeviation = 500, durationMillis = 1000)
   @GET("/endpoint")
   Call<User> getUser();
 ```
 
-To produce a constant delay set `durationDeviation` parameter to zero. If not specificly set, Retromock will use defaults equivalent to
+To produce a constant delay set `durationDeviation` parameter to zero. If not specifically set, Retromock will use defaults equivalent to
 ```java
-  @MockBehavior(durationDeviation = 1000, durationMillis = 500)
+  @MockBehavior(durationDeviation = 500, durationMillis = 1000)
 ```
 
 Retromock declaration
 -------
 #### `BodyFactory`
 
-By default `Retromock` mock response body to the string provided using `body` parameter of `@MockResponse` annotation.
-In order to provide a response body from a custom source create a BodyFactory implementation and set it to `bodyFactory` parametar in `@MockResponse` annotation.
+By default `Retromock` mocks response body with the string provided in the `body` parameter of `@MockResponse` annotation.
+In order to provide a response body from a custom source create a `BodyFactory` implementation and set it with the `bodyFactory` parametar.
 ###### Example
 1. Create an implementation of `BodyFactory` that loads a stream using application class loader.
 ```java
@@ -148,14 +147,14 @@ class AssetBodyFactory implements BodyFactory {
   }
 }
 ```
-2. Create a `Retromock` instance and add body factory. Note: Body factory class cannot be annonymous class because you need to reference it later on.
+2. Create a `Retromock` instance and add a body factory. Note: Body factory class cannot be annonymous class because it is referenced later on.
 ```java
 Retromock retromock = new Retromock.Builder()
   .retrofit(retrofit)
   .addBodyFactory(new ResourceBodyFactory())
   .build();
 ```
-3. In the service set your body factory class in `@MockResponse` annotation.
+3. Set body factory implementation class with `bodyFactory` parameter.
 ```java
 public interface Service {
 
@@ -166,8 +165,8 @@ public interface Service {
 }
 ```
 
-If majority of your service method use a particular body factory you can set it as default.
-If so, you wouldn't need to specify a `bodyFactory` parameter in `@MockResponse` annotation.
+If majority of your service methods use a particular body factory you can set it as default.
+If so, `bodyFactory` parameter does not have to be specified.
 In this case `BodyFactory` instance can be annonymous class.
 
 ###### Example
@@ -188,12 +187,23 @@ public interface Service {
 }
 ```
 
+Note: if you set custom default body factory and do not declare a `bodyFactory` parameter in `@MockResponse` annotation your body factory will be called with value of `body` parameter.
+
+That also applies if you don't specificaly set `body` - in that case `body` is empty by default.
+If you wouldn't like to handle the case of empty `body` wrap your default body factory into `NonEmptyBodyFactory` class as follows:
+```java
+Retromock retromock = new Retromock.Builder()
+  .retrofit(retrofit)
+  .defaultBodyFactory(new NonEmptyBodyFactory(...))
+  .build();
+```
+
 #### `Behavior`
 Implementation of this class provides a response delay in milliseconds.
 
 If you want to set a custom default delay implement this class and set it as `defaultBehavior` in the builder.
 
-If so, this behavior will be used on all service method that do not have `@MockBehavior` annotation.
+If so, this behavior will be used on all service methods that do not have `@MockBehavior` annotation.
 
 If not set, Retromock uses default behavior that produces response delays randomly in uniform distribution between `500ms` and `1500ms`.
 ###### Example
@@ -213,14 +223,6 @@ If you set a custom implementation keep in mind that response delay will block t
 
 Retromock by default uses callback executor from `Retrofit` instance.
 If you want a custom one, feel free to set it using the builder.
-###### Example
-Set custom default behavior in the builder.
-```java
-Retromock retromock = new Retromock.Builder()
-  .retrofit(retrofit)
-  .defaultBehavior(() -> 0)
-  .build();
-```
 
 #### `create`
 To create an implementation of your service call `create` method.
