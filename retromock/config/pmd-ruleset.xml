@@ -26,7 +26,9 @@
     <rule ref="rulesets/java/optimizations.xml">
         <exclude name="LocalVariableCouldBeFinal"/>
     </rule>
-    <rule ref="rulesets/java/strings.xml"/>
+    <rule ref="rulesets/java/strings.xml">
+        <exclude name="InefficientEmptyStringCheck"/>
+    </rule>
     <rule ref="rulesets/java/unnecessary.xml">
         <exclude name="UselessParentheses"/>
     </rule>
