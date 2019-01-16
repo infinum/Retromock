@@ -39,7 +39,7 @@ Call<User> = service.getUser();
 ```
 
 ##### Load responses from streams
-If you would like to load response from a stream set a default body factory that takes a body parameter(`response.json`) and loads a response stream for it.
+If you would like to load response from a stream set a default body factory that loads a response stream by a body parameter(`response.json`) in annotation.
 ```java
 Retromock retromock = new Retromock.Builder()
   .retrofit(retrofit)
@@ -78,7 +78,7 @@ public interface Service {
 Save a response body content in file named `retromock/response.json`.
 
 Note: if you set custom default body factory and do not declare a `bodyFactory` parameter in `@MockResponse` annotation your body factory will be called with value of `body` parameter.
-That also applies if you don't specificaly set `body` - in that case `body` is empty by default.
+That also applies if you don't specificaly set a `body` - in that case `body` is empty by default.
 If you wouldn't like to handle the case of empty `body` wrap your default body factory into `NonEmptyBodyFactory` class as follows:
 ```java
 Retromock retromock = new Retromock.Builder()
