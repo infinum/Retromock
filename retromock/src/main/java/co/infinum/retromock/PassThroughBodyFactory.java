@@ -13,7 +13,7 @@ import okio.Okio;
  * Implementation of {@link BodyFactory} that creates body from given input.
  * Use when pass full response body in {@link MockResponse} annotation.
  */
-final class PassThroughBodyFactory implements BodyFactory {
+public final class PassThroughBodyFactory implements BodyFactory {
 
   @Override
   public InputStream create(@Nonnull final String input) {
