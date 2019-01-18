@@ -118,7 +118,7 @@ Retromock declaration
 -------
 #### `BodyFactory`
 
-By default `Retromock` mocks response body with the string provided in the `body` parameter of `@MockResponse` annotation.
+By default `Retromock` mocks response body with the exact string provided in the `body` parameter of `@MockResponse` annotation.
 In order to provide a response body from a custom source create a `BodyFactory` implementation and set it with the `bodyFactory` parametar.
 ###### Example
 1. Create an implementation of `BodyFactory` that loads a stream using application class loader.
@@ -127,7 +127,7 @@ class ResourceBodyFactory implements BodyFactory {
 
   @Override
   public InputStream create(final String input) throws IOException {
-    return ResourceBodyFactory.class.getResourceAsStream(input);
+    return ResourceBodyFactory.class.getClassLoader().getResourceAsStream(input);
   }
 }
 ```
@@ -147,6 +147,8 @@ class AssetBodyFactory implements BodyFactory {
   }
 }
 ```
+Or use any other implementation that suits your needs.
+
 2. Create a `Retromock` instance and add a body factory. Note: Body factory class cannot be annonymous class because it is referenced later on.
 ```java
 Retromock retromock = new Retromock.Builder()
