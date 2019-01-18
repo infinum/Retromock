@@ -27,13 +27,6 @@ public final class SimpleService {
 
     Service service = retromock.create(Service.class);
 
-    System.out.println();
-    System.out.println("User:");
-    System.out.println(service.getUser().execute().body());
-    System.out.println("User:");
-    System.out.println(service.getUser().execute().body());
-    System.out.println("User:");
-    System.out.println(service.getUser().execute().body());
     System.out.println("User:");
     System.out.println(service.getUser().execute().body());
   }
@@ -41,7 +34,6 @@ public final class SimpleService {
 
     @Mock
     @MockResponse(body = "{\"name\":\"John\", \"surname\":\"Smith\"}")
-    @MockResponse(body = "{\"name\":\"John\", \"surname\":\"Doe\"}")
     @GET("/")
     Call<User> getUser();
   }
