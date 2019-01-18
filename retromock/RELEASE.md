@@ -9,7 +9,7 @@ Be sure that [build.gradle](build.gradle) and [Readme](../README.md) are both up
 
 ### Run gradle task
 
-`./gradlew clean build javadocs assemble`
+`./gradlew clean build javadocs jar sourceJar`
 
 `./gradlew bintrayUpload -Pbintray_username={yourBintrayUsername} -Pbintray_api_key={bintrayApiKey}`
 
