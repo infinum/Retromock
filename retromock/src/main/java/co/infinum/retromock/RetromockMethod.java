@@ -1,5 +1,6 @@
 package co.infinum.retromock;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.HttpURLConnection;
 
@@ -10,6 +11,7 @@ import co.infinum.retromock.meta.MockBehavior;
 import co.infinum.retromock.meta.MockCircular;
 import co.infinum.retromock.meta.MockRandom;
 import co.infinum.retromock.meta.MockResponse;
+import co.infinum.retromock.meta.MockResponseProvider;
 import co.infinum.retromock.meta.MockResponses;
 import co.infinum.retromock.meta.MockSequential;
 import okhttp3.Headers;
@@ -30,6 +32,7 @@ final class RetromockMethod {
     }
 
     MockResponse[] responses = loadMockResponses(method);
+    MockResponseProvider provider = method.getAnnotation(MockResponseProvider.class);
     ParamsProducer producer;
     if (responses != null) {
       producer = new ResponseParamsProducer(
@@ -37,6 +40,13 @@ final class RetromockMethod {
         loadResponseIterator(method, responses),
         DEFAULT_PARAMS
       );
+    } else if (provider != null) {
+      try {
+        producer = new ProviderResponseProducer(provider, method, retromock);
+      } catch (IllegalAccessException | InstantiationException
+        | NoSuchMethodException | InvocationTargetException e) {
+        throw new RuntimeException("Cannot create response provider " + provider.value(), e);
+      }
     } else {
       producer = new NoResponseProducer(retromock, DEFAULT_PARAMS);
     }

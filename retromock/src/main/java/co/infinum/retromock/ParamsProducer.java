@@ -2,6 +2,6 @@ package co.infinum.retromock;
 
 interface ParamsProducer {
 
-  ResponseParams produce();
+  ResponseParams produce(Object[] args);
 
 }
