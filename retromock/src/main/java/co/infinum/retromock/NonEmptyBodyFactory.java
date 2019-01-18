@@ -39,11 +39,13 @@ public class NonEmptyBodyFactory implements BodyFactory {
    * @param bodyFactory instance to delegate a call to if body input is not empty
    */
   public NonEmptyBodyFactory(final BodyFactory bodyFactory) {
+    Preconditions.checkNotNull(bodyFactory, "Body factory is null.");
     this.bodyFactory = bodyFactory;
   }
 
   @Override
   public final InputStream create(@Nonnull final String input) throws IOException {
+    Preconditions.checkNotNull(input, "Input is null.");
     if (input.trim().isEmpty()) {
       return new InputStream() {
         @Override

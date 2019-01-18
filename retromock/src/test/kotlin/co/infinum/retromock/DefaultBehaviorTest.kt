@@ -2,10 +2,10 @@ package co.infinum.retromock
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
-import org.mockito.Mockito.`when`
-import org.mockito.Mockito.verify
+import org.mockito.Mockito.*
 import org.mockito.junit.jupiter.MockitoExtension
 
 @ExtendWith(MockitoExtension::class)
@@ -71,6 +71,25 @@ class DefaultBehaviorTest {
         behavior.delayMillis()
 
         verify(randomProvider).nextLong(1000)
+    }
+
+    @Test
+    fun delayWithDeviationZeroReturnsMean() {
+        val mean = 1000L
+        val deviation = 0
+
+        val behavior = DefaultBehavior(mean, deviation, randomProvider)
+        val delay = behavior.delayMillis()
+
+        assertThat(delay).isEqualTo(mean)
+        verifyNoMoreInteractions(randomProvider)
+    }
+
+    @Test
+    fun negativeDeviationThrows() {
+        assertThrows<IllegalArgumentException> {
+            DefaultBehavior(100, -1, randomProvider)
+        }
     }
 
 }

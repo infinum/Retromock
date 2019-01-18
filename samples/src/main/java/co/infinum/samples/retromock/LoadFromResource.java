@@ -12,30 +12,14 @@ import retrofit2.Retrofit;
 import retrofit2.converter.moshi.MoshiConverterFactory;
 import retrofit2.http.GET;
 
-public final class SimpleService {
+class LoadFromResource {
 
-  public static void main(String[] args) throws IOException {
-
-    Retrofit retrofit = new Retrofit.Builder()
-      .baseUrl("https://www.google.com")
-      .addConverterFactory(MoshiConverterFactory.create())
-      .build();
-
-    Retromock retromock = new Retromock.Builder()
-      .retrofit(retrofit)
-      .build();
-
-    Service service = retromock.create(Service.class);
-
-    System.out.println("User:");
-    System.out.println(service.getUser().execute().body());
-  }
   public interface Service {
 
     @Mock
-    @MockResponse(body = "{\"name\":\"John\", \"surname\":\"Smith\"}")
+    @MockResponse(body = "smith.json")
     @GET("/")
-    Call<User> getUser();
+    Call<LoadFromResource.User> getUser();
   }
 
   static class User {
@@ -53,5 +37,22 @@ public final class SimpleService {
         + ", surname='" + surname + '\''
         + '}';
     }
+  }
+
+  public static void main(String[] args) throws IOException {
+
+    Retrofit retrofit = new Retrofit.Builder()
+      .baseUrl("https://www.google.com")
+      .addConverterFactory(MoshiConverterFactory.create())
+      .build();
+
+    Retromock retromock = new Retromock.Builder()
+      .retrofit(retrofit)
+      .defaultBodyFactory(new ResourceBodyFactory())
+      .build();
+
+    LoadFromResource.Service service = retromock.create(LoadFromResource.Service.class);
+
+    System.out.println(service.getUser().execute().body());
   }
 }
