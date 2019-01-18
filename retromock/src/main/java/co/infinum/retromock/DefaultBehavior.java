@@ -43,8 +43,12 @@ public class DefaultBehavior implements Behavior {
 
   @Override
   public final long delayMillis() {
-    return durationMillis
-      + (durationDeviation != 0 ? randomProvider.nextLong(durationDeviation * 2) : 0)
-      - durationDeviation;
+    if (durationDeviation == 0) {
+      return durationMillis;
+    } else {
+      return durationMillis
+        + randomProvider.nextLong(durationDeviation * 2L)
+        - durationDeviation;
+    }
   }
 }
