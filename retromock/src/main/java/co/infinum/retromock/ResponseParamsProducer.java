@@ -26,7 +26,7 @@ final class ResponseParamsProducer implements ParamsProducer {
   }
 
   @Override
-  public ResponseParams produce() {
+  public ResponseParams produce(final Object[] args) {
     MockResponse mockResponse = iterator.next();
     ResponseParams params = cache.get(mockResponse);
     if (params != null) {

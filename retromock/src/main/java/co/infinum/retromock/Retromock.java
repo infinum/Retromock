@@ -252,7 +252,7 @@ public final class Retromock {
                 retrofit.<T>responseBodyConverter(
                   callAdapter.responseType(),
                   method.getAnnotations()
-                ), producer.produce()
+                ), producer.produce(args)
               ));
             }
           });
