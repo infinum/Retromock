@@ -33,6 +33,9 @@ public class DefaultBehavior implements Behavior {
    */
   DefaultBehavior(final long durationMillis, final int durationDeviation,
     final RandomProvider randomProvider) {
+    if (durationDeviation < 0) {
+      throw new IllegalArgumentException("Behavior deviation must be positive or zero.");
+    }
     this.durationMillis = durationMillis;
     this.durationDeviation = durationDeviation;
     this.randomProvider = randomProvider;
@@ -41,7 +44,7 @@ public class DefaultBehavior implements Behavior {
   @Override
   public final long delayMillis() {
     return durationMillis
-      + randomProvider.nextLong(durationDeviation * 2)
+      + (durationDeviation != 0 ? randomProvider.nextLong(durationDeviation * 2) : 0)
       - durationDeviation;
   }
 }
