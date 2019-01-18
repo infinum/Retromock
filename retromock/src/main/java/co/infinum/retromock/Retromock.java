@@ -452,6 +452,7 @@ public final class Retromock {
      * @return this {@link Builder}.
      */
     public Builder retrofit(final Retrofit retrofit) {
+      Preconditions.checkNotNull(retrofit, "Retrofit is null.");
       this.retrofit = retrofit;
       return this;
     }
