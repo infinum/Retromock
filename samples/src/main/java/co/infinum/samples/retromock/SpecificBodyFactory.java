@@ -2,9 +2,12 @@ package co.infinum.samples.retromock;
 
 import com.squareup.moshi.Json;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 
-import co.infinum.retromock.NonEmptyBodyFactory;
+import co.infinum.retromock.BodyFactory;
 import co.infinum.retromock.Retromock;
 import co.infinum.retromock.meta.Mock;
 import co.infinum.retromock.meta.MockResponse;
@@ -13,19 +16,34 @@ import retrofit2.Retrofit;
 import retrofit2.converter.moshi.MoshiConverterFactory;
 import retrofit2.http.GET;
 
-class DefaultBodyFactoryHandleEmptyBody {
+class SpecificBodyFactory {
+
+  static class CustomBuildBodyFactory implements BodyFactory {
+
+    @Override
+    public InputStream create(final String input) throws IOException {
+      String[] args = input.split("\\.");
+      return new ByteArrayInputStream(
+        ("{\"name\":\"" + args[0] + "\", \"surname\":\"" + args[1] + "\"}")
+          .getBytes(StandardCharsets.UTF_8)
+      );
+    }
+  }
 
   public interface Service {
 
     @Mock
     @MockResponse(body = "smith.json")
     @GET("/")
-    Call<DefaultBodyFactoryHandleEmptyBody.User> getUser();
+    Call<SpecificBodyFactory.User> getUser();
 
     @Mock
-    @MockResponse(code = 400)
+    @MockResponse(
+      body = "John.Doe",
+      bodyFactory = CustomBuildBodyFactory.class
+    )
     @GET("/")
-    Call<User> getOtherUser();
+    Call<SpecificBodyFactory.User> userMockedDirectlyInAnnotation();
   }
 
   static class User {
@@ -54,13 +72,13 @@ class DefaultBodyFactoryHandleEmptyBody {
 
     Retromock retromock = new Retromock.Builder()
       .retrofit(retrofit)
-      .defaultBodyFactory(new NonEmptyBodyFactory(new ResourceBodyFactory()))
+      .addBodyFactory(new CustomBuildBodyFactory())
+      .defaultBodyFactory(new ResourceBodyFactory())
       .build();
 
-    DefaultBodyFactoryHandleEmptyBody.Service service =
-      retromock.create(DefaultBodyFactoryHandleEmptyBody.Service.class);
+    SpecificBodyFactory.Service service = retromock.create(SpecificBodyFactory.Service.class);
 
     System.out.println(service.getUser().execute().body());
-    System.out.println(service.getOtherUser().execute());
+    System.out.println(service.userMockedDirectlyInAnnotation().execute().body());
   }
 }

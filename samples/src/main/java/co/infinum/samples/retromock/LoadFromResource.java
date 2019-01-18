@@ -48,7 +48,7 @@ class LoadFromResource {
 
     Retromock retromock = new Retromock.Builder()
       .retrofit(retrofit)
-      .defaultBodyFactory(LoadFromResource.class.getClassLoader()::getResourceAsStream)
+      .defaultBodyFactory(new ResourceBodyFactory())
       .build();
 
     LoadFromResource.Service service = retromock.create(LoadFromResource.Service.class);

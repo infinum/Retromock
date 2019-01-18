@@ -4,28 +4,26 @@ import com.squareup.moshi.Json;
 
 import java.io.IOException;
 
-import co.infinum.retromock.NonEmptyBodyFactory;
 import co.infinum.retromock.Retromock;
 import co.infinum.retromock.meta.Mock;
+import co.infinum.retromock.meta.MockHeader;
 import co.infinum.retromock.meta.MockResponse;
 import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.moshi.MoshiConverterFactory;
 import retrofit2.http.GET;
 
-class DefaultBodyFactoryHandleEmptyBody {
+class HeadersExample {
 
   public interface Service {
 
     @Mock
-    @MockResponse(body = "smith.json")
+    @MockResponse(body = "smith.json", headers = {
+      @MockHeader(name = "customHeader", value = "user Smith"),
+      @MockHeader(name = "Server", value = "google.com")
+    })
     @GET("/")
-    Call<DefaultBodyFactoryHandleEmptyBody.User> getUser();
-
-    @Mock
-    @MockResponse(code = 400)
-    @GET("/")
-    Call<User> getOtherUser();
+    Call<HeadersExample.User> getUser();
   }
 
   static class User {
@@ -54,13 +52,11 @@ class DefaultBodyFactoryHandleEmptyBody {
 
     Retromock retromock = new Retromock.Builder()
       .retrofit(retrofit)
-      .defaultBodyFactory(new NonEmptyBodyFactory(new ResourceBodyFactory()))
+      .defaultBodyFactory(new ResourceBodyFactory())
       .build();
 
-    DefaultBodyFactoryHandleEmptyBody.Service service =
-      retromock.create(DefaultBodyFactoryHandleEmptyBody.Service.class);
+    HeadersExample.Service service = retromock.create(HeadersExample.Service.class);
 
-    System.out.println(service.getUser().execute().body());
-    System.out.println(service.getOtherUser().execute());
+    System.out.println(service.getUser().execute().headers());
   }
 }
