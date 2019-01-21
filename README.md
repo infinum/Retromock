@@ -7,7 +7,7 @@ Quick guide
 
 #### Add dependency
 ```gradle
-implementation 'co.infinum:retromock:0.1.0'
+implementation 'co.infinum:retromock:0.2.0'
 ```
 
 #### Initialize
