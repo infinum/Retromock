@@ -33,8 +33,8 @@ final class ProviderResponseProducer implements ParamsProducer {
     } catch (IllegalAccessException e) {
       throw new RuntimeException("This shouldn't happen. Guarding against it in find method.", e);
     } catch (InvocationTargetException e) {
-      throw new RuntimeException("Method " + providerMethod.getDeclaringClass() + "." +
-        providerMethod.getName() + " threw an exception while executing.", e);
+      throw new RuntimeException("Method " + providerMethod.getDeclaringClass() + "."
+        + providerMethod.getName() + " threw an exception while executing.", e);
     }
     return new ResponseParams.Builder()
       .code(response.code())
@@ -56,13 +56,8 @@ final class ProviderResponseProducer implements ParamsProducer {
       for (Method method : c.getDeclaredMethods()) {
         if (method.isAnnotationPresent(ProvidesMock.class)
           && Response.class.equals(method.getReturnType())
-          && Arrays.equals(method.getParameterTypes(), serviceMethod.getParameterTypes())) {
-          int modifiers = method.getModifiers();
-          if (!Modifier.isPublic(modifiers) || Modifier.isAbstract(modifiers)) {
-            throw new RuntimeException(
-              "Method annotated with @ProvidesMock should be public and concrete."
-            );
-          } else if (providerMethod == null) {
+          && isMethodApplicable(method, serviceMethod)) {
+          if (providerMethod == null) {
             providerMethod = method;
           } else {
             throw new IllegalArgumentException(
@@ -90,29 +85,49 @@ final class ProviderResponseProducer implements ParamsProducer {
     return providerMethod;
   }
 
-  private static Object createProvider(Class<?> providerClass) {
+  private static boolean isMethodApplicable(
+    final Method candidate,
+    final Method serviceMethod) {
+    if (Arrays.equals(
+      candidate.getGenericParameterTypes(),
+      serviceMethod.getGenericParameterTypes()
+    )) {
+      int modifiers = candidate.getModifiers();
+      if (!Modifier.isPublic(modifiers) || Modifier.isAbstract(modifiers)) {
+        throw new RuntimeException(
+          "Method annotated with @ProvidesMock should be public and concrete."
+        );
+      } else {
+        return true;
+      }
+    } else {
+      return false;
+    }
+  }
+
+  private static Object createProvider(final Class<?> providerClass) {
     try {
       return providerClass.getConstructor().newInstance();
     } catch (InstantiationException e) {
       throw new RuntimeException(
-        "Class " + providerClass.getName() + " shouldn't be an abstract class.\n"
+        providerClass.getName() + " shouldn't be an abstract class.\n"
           + "Retromock needs to instantiate the class. Please provide a concrete class instead.",
         e
       );
     } catch (IllegalAccessException e) {
       throw new RuntimeException(
-        "Class " + providerClass.getName() + " should have public default constructor.\n"
+        providerClass.getName() + " should have public default constructor.\n"
           + "Retromock uses default constructor to create an instance of the class.",
         e
       );
     } catch (InvocationTargetException e) {
       throw new RuntimeException(
-        "Class " + providerClass.getName() + " threw an exception during initialization",
+        providerClass.getName() + " threw an exception during initialization",
         e.getCause()
       );
     } catch (NoSuchMethodException e) {
       throw new RuntimeException(
-        "Class " + providerClass.getName() + " has no default constructor.\n"
+        providerClass.getName() + " has no default constructor.\n"
           + "Retromock uses default constructor to create an instance of the class.",
         e
       );
