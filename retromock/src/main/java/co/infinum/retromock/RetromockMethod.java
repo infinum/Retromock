@@ -34,7 +34,11 @@ final class RetromockMethod {
     MockResponse[] responses = loadMockResponses(method);
     MockResponseProvider provider = method.getAnnotation(MockResponseProvider.class);
     ParamsProducer producer;
-    if (responses != null) {
+    if (responses != null && provider != null) {
+      throw new RuntimeException("Method " + method.getDeclaringClass() + "." + method.getName()
+        + "has both @MockResponse and @MockResponseProvider annotations. Retromock supports usage"
+        + " of only one of those on a single service method.");
+    } else if (responses != null) {
       producer = new ResponseParamsProducer(
         retromock,
         loadResponseIterator(method, responses),
