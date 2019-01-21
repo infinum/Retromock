@@ -35,7 +35,7 @@ final class RetromockMethod {
     ParamsProducer producer;
     if (responses != null && provider != null) {
       throw new RuntimeException("Method " + method.getDeclaringClass() + "." + method.getName()
-        + "has both @MockResponse and @MockResponseProvider annotations. Retromock supports usage"
+        + " has both @MockResponse and @MockResponseProvider annotations. Retromock supports usage"
         + " of only one of those on a single service method.");
     } else if (responses != null) {
       producer = new ResponseParamsProducer(
