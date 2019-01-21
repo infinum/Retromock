@@ -1,6 +1,5 @@
 package co.infinum.retromock;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.HttpURLConnection;
 
@@ -47,8 +46,7 @@ final class RetromockMethod {
     } else if (provider != null) {
       try {
         producer = new ProviderResponseProducer(provider, method, retromock);
-      } catch (IllegalAccessException | InstantiationException
-        | NoSuchMethodException | InvocationTargetException e) {
+      } catch (Exception e) {
         throw new RuntimeException("Cannot create response provider " + provider.value(), e);
       }
     } else {
