@@ -1,0 +1,1 @@
+-keepclasseswithmembers class * { @co.infinum.retromock.meta.ProvidesMock <methods>; }
