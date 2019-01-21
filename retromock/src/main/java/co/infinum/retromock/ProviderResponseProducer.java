@@ -30,8 +30,11 @@ final class ProviderResponseProducer implements ParamsProducer {
     Response response;
     try {
       response = (Response) providerMethod.invoke(provider, args);
-    } catch (IllegalAccessException | InvocationTargetException e) {
-      throw new RuntimeException("This shouldn't happen. Guarding against it in find method.");
+    } catch (IllegalAccessException e) {
+      throw new RuntimeException("This shouldn't happen. Guarding against it in find method.", e);
+    } catch (InvocationTargetException e) {
+      throw new RuntimeException("Method " + providerMethod.getDeclaringClass() + "." +
+        providerMethod.getName() + " threw an exception while executing.", e);
     }
     return new ResponseParams.Builder()
       .code(response.code())
@@ -74,8 +77,8 @@ final class ProviderResponseProducer implements ParamsProducer {
     }
 
     if (providerMethod == null) {
-      throw new IllegalArgumentException("Couldn't find a single method annotated with mock "
-        + "provider method in provider class: " + providerClass.getName() + ". Exactly one method"
+      throw new IllegalArgumentException("Couldn't find a single method annotated with "
+        + "@ProvidesMock in provider class: " + providerClass.getName() + ". Exactly one method"
         + " with following properties should be in the class:\n"
         + " * method must be annotated with @ProvidesMock\n"
         + " * return type has to be Response class\n"
