@@ -2,6 +2,7 @@ package co.infinum.retromock;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.Arrays;
 
 import co.infinum.retromock.meta.MockResponseProvider;
@@ -18,29 +19,29 @@ final class ProviderResponseProducer implements ParamsProducer {
     final MockResponseProvider annotation,
     final Method serviceMethod,
     final Retromock retromock
-  ) throws IllegalAccessException, InstantiationException, NoSuchMethodException,
-    InvocationTargetException {
+  ) {
     this.retromock = retromock;
-    provider = annotation.value().getConstructor().newInstance();
-    providerMethod = findProducerMethod(annotation.value(), serviceMethod);
+    this.providerMethod = findProducerMethod(annotation.value(), serviceMethod);
+    this.provider = createProvider(annotation.value());
   }
 
   @Override
   public ResponseParams produce(final Object[] args) {
+    Response response;
     try {
-      Response response = (Response) providerMethod.invoke(provider, args);
-      return new ResponseParams.Builder()
-        .code(response.code())
-        .message(response.message())
-        .headers(Headers.of())
-        .bodyFactory(new RetromockBodyFactory(
-          retromock.bodyFactory(response.bodyFactoryClass()),
-          response.body()
-        ))
-        .build();
+      response = (Response) providerMethod.invoke(provider, args);
     } catch (IllegalAccessException | InvocationTargetException e) {
-      throw new RuntimeException("ResponseProducer " + provider.getClass() + " threw!", e);
+      throw new RuntimeException("This shouldn't happen. Guarding against it in find method.");
     }
+    return new ResponseParams.Builder()
+      .code(response.code())
+      .message(response.message())
+      .headers(Headers.of())
+      .bodyFactory(new RetromockBodyFactory(
+        retromock.bodyFactory(response.bodyFactoryClass()),
+        response.body()
+      ))
+      .build();
   }
 
   private static Method findProducerMethod(
@@ -53,7 +54,12 @@ final class ProviderResponseProducer implements ParamsProducer {
         if (method.isAnnotationPresent(ProvidesMock.class)
           && Response.class.equals(method.getReturnType())
           && Arrays.equals(method.getParameterTypes(), serviceMethod.getParameterTypes())) {
-          if (providerMethod == null) {
+          int modifiers = method.getModifiers();
+          if (!Modifier.isPublic(modifiers) || Modifier.isAbstract(modifiers)) {
+            throw new RuntimeException(
+              "Method annotated with @ProvidesMock should be public and concrete."
+            );
+          } else if (providerMethod == null) {
             providerMethod = method;
           } else {
             throw new IllegalArgumentException(
@@ -79,5 +85,34 @@ final class ProviderResponseProducer implements ParamsProducer {
       );
     }
     return providerMethod;
+  }
+
+  private static Object createProvider(Class<?> providerClass) {
+    try {
+      return providerClass.getConstructor().newInstance();
+    } catch (InstantiationException e) {
+      throw new RuntimeException(
+        "Class " + providerClass.getName() + " shouldn't be an abstract class.\n"
+          + "Retromock needs to instantiate the class. Please provide a concrete class instead.",
+        e
+      );
+    } catch (IllegalAccessException e) {
+      throw new RuntimeException(
+        "Class " + providerClass.getName() + " should have public default constructor.\n"
+          + "Retromock uses default constructor to create an instance of the class.",
+        e
+      );
+    } catch (InvocationTargetException e) {
+      throw new RuntimeException(
+        "Class " + providerClass.getName() + " threw an exception during initialization",
+        e.getCause()
+      );
+    } catch (NoSuchMethodException e) {
+      throw new RuntimeException(
+        "Class " + providerClass.getName() + " has no default constructor.\n"
+          + "Retromock uses default constructor to create an instance of the class.",
+        e
+      );
+    }
   }
 }
