@@ -50,6 +50,10 @@ public final class Response {
     return bodyFactoryClass;
   }
 
+  /**
+   * Build a new {@link Response} instance.
+   * All methods are optional.
+   */
   public static final class Builder {
 
     private int code = HttpURLConnection.HTTP_OK;
@@ -60,6 +64,7 @@ public final class Response {
 
     /**
      * Optionally set HTTP status code, default value is <code>200</code>.
+     *
      * @param code Status code
      * @return This builder
      */
@@ -70,6 +75,7 @@ public final class Response {
 
     /**
      * Optionally set HTTP status message, default value is <code>OK</code>.
+     *
      * @param message Status message
      * @return This builder
      */
@@ -86,7 +92,6 @@ public final class Response {
      *
      * @param body Body specifier.
      * @return This builder.
-     *
      * @see BodyFactory
      */
     public Builder body(final String body) {
@@ -96,6 +101,7 @@ public final class Response {
 
     /**
      * Optionally set HTTP headers, default is empty array.
+     *
      * @param headers Array of response headers.
      * @return This builder.
      */
@@ -108,6 +114,7 @@ public final class Response {
      * Optionally set a class used to convert body parameter specifier to
      * {@link java.io.InputStream} body. Note: instance of class provided here has to be registered
      * to {@link Retromock} using {@code addBodyParser} method.
+     *
      * @param bodyFactoryClass BodyFactory class used to convert body parameter text to body.
      * @return This builder.
      */
@@ -118,6 +125,7 @@ public final class Response {
 
     /**
      * Creates a new instance of {@link Response} using the configured values.
+     *
      * @return A new instance of {@link Response}.
      */
     public Response build() {
