@@ -66,6 +66,18 @@ final class ProviderResponseProducer implements ParamsProducer {
         }
       }
     }
+
+    if (providerMethod == null) {
+      throw new IllegalArgumentException("Couldn't find a single method annotated with mock "
+        + "provider method in provider class: " + providerClass.getName() + ". Exactly one method"
+        + " with following properties should be in the class:\n"
+        + " * method must be annotated with @ProvidesMock\n"
+        + " * return type has to be Response class\n"
+        + " * all method arguments should match service method. Service method has following "
+        + "arguments:\n"
+        + "   " + Arrays.toString(serviceMethod.getParameterTypes()) + "."
+      );
+    }
     return providerMethod;
   }
 }
