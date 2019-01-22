@@ -9,9 +9,9 @@ import co.infinum.retromock.meta.ProvidesMock;
 
 final class ProviderResponseProducer implements ParamsProducer {
 
-  final Object provider;
-  final Method providerMethod;
-  final Retromock retromock;
+  private final Object provider;
+  private final Method providerMethod;
+  private final Retromock retromock;
 
   ProviderResponseProducer(
     final Class<?> providerClass,
@@ -130,5 +130,13 @@ final class ProviderResponseProducer implements ParamsProducer {
         e
       );
     }
+  }
+
+  Object provider() {
+    return provider;
+  }
+
+  Method providerMethod() {
+    return providerMethod;
   }
 }
