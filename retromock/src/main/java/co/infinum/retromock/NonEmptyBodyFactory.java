@@ -22,7 +22,7 @@ import javax.annotation.Nonnull;
  * </code></pre>
  * Wrap it to this class to handle that case with no response.
  */
-public class NonEmptyBodyFactory implements BodyFactory {
+public final class NonEmptyBodyFactory implements BodyFactory {
 
   private final BodyFactory bodyFactory;
 
@@ -44,7 +44,7 @@ public class NonEmptyBodyFactory implements BodyFactory {
   }
 
   @Override
-  public final InputStream create(@Nonnull final String input) throws IOException {
+  public InputStream create(@Nonnull final String input) throws IOException {
     Preconditions.checkNotNull(input, "Input is null.");
     if (input.trim().isEmpty()) {
       return new InputStream() {
