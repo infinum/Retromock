@@ -45,7 +45,7 @@ final class RetromockMethod {
       );
     } else if (provider != null) {
       try {
-        producer = new ProviderResponseProducer(provider, method, retromock);
+        producer = new ProviderResponseProducer(provider.value(), method, retromock);
       } catch (Exception e) {
         throw new RuntimeException("Cannot create response provider " + provider.value(), e);
       }

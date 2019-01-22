@@ -5,24 +5,22 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
 
-import co.infinum.retromock.meta.MockResponseProvider;
 import co.infinum.retromock.meta.ProvidesMock;
-import okhttp3.Headers;
 
 final class ProviderResponseProducer implements ParamsProducer {
 
-  private final Object provider;
-  private final Method providerMethod;
-  private final Retromock retromock;
+  final Object provider;
+  final Method providerMethod;
+  final Retromock retromock;
 
   ProviderResponseProducer(
-    final MockResponseProvider annotation,
+    final Class<?> providerClass,
     final Method serviceMethod,
     final Retromock retromock
   ) {
     this.retromock = retromock;
-    this.providerMethod = findProducerMethod(annotation.value(), serviceMethod);
-    this.provider = createProvider(annotation.value());
+    this.providerMethod = findProducerMethod(providerClass, serviceMethod);
+    this.provider = createProvider(providerClass);
   }
 
   @Override
@@ -34,12 +32,12 @@ final class ProviderResponseProducer implements ParamsProducer {
       throw new RuntimeException("This shouldn't happen. Guarding against it in find method.", e);
     } catch (InvocationTargetException e) {
       throw new RuntimeException("Method " + providerMethod.getDeclaringClass() + "."
-        + providerMethod.getName() + " threw an exception while executing.", e);
+        + providerMethod.getName() + " threw an exception while executing.", e.getCause());
     }
     return new ResponseParams.Builder()
       .code(response.code())
       .message(response.message())
-      .headers(Headers.of())
+      .headers(response.headers())
       .bodyFactory(new RetromockBodyFactory(
         retromock.bodyFactory(response.bodyFactoryClass()),
         response.body()
@@ -122,7 +120,7 @@ final class ProviderResponseProducer implements ParamsProducer {
       );
     } catch (InvocationTargetException e) {
       throw new RuntimeException(
-        providerClass.getName() + " threw an exception during initialization",
+        providerClass.getName() + " threw an exception during initialization.",
         e.getCause()
       );
     } catch (NoSuchMethodException e) {
