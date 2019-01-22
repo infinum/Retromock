@@ -56,11 +56,11 @@ class ProviderResponseProducerTest {
             retromock
         )
 
-        assertThat(producer.provider).isNotNull()
-        assertThat(producer.provider).isInstanceOf(NoArgsProducer::class.java)
+        assertThat(producer.provider()).isNotNull()
+        assertThat(producer.provider()).isInstanceOf(NoArgsProducer::class.java)
 
-        assertThat(producer.providerMethod.declaringClass).isEqualTo(NoArgsProducer::class.java)
-        assertThat(producer.providerMethod).isEqualTo(NoArgsProducer::class.java.getDeclaredMethod("noArgs"))
+        assertThat(producer.providerMethod().declaringClass).isEqualTo(NoArgsProducer::class.java)
+        assertThat(producer.providerMethod()).isEqualTo(NoArgsProducer::class.java.getDeclaredMethod("noArgs"))
     }
 
     @Test
@@ -76,11 +76,11 @@ class ProviderResponseProducerTest {
             retromock
         )
 
-        assertThat(producer.provider).isNotNull()
-        assertThat(producer.provider).isInstanceOf(SingleArgProducer::class.java)
+        assertThat(producer.provider()).isNotNull()
+        assertThat(producer.provider()).isInstanceOf(SingleArgProducer::class.java)
 
-        assertThat(producer.providerMethod.declaringClass).isEqualTo(SingleArgProducer::class.java)
-        assertThat(producer.providerMethod).isEqualTo(SingleArgProducer::class.java.getDeclaredMethod("singleArg", String::class.java))
+        assertThat(producer.providerMethod().declaringClass).isEqualTo(SingleArgProducer::class.java)
+        assertThat(producer.providerMethod()).isEqualTo(SingleArgProducer::class.java.getDeclaredMethod("singleArg", String::class.java))
     }
 
     @Test
@@ -96,11 +96,11 @@ class ProviderResponseProducerTest {
             retromock
         )
 
-        assertThat(producer.provider).isNotNull()
-        assertThat(producer.provider).isInstanceOf(MultipleArgsProducer::class.java)
+        assertThat(producer.provider()).isNotNull()
+        assertThat(producer.provider()).isInstanceOf(MultipleArgsProducer::class.java)
 
-        assertThat(producer.providerMethod.declaringClass).isEqualTo(MultipleArgsProducer::class.java)
-        assertThat(producer.providerMethod).isEqualTo(MultipleArgsProducer::class.java.getDeclaredMethod("multipleArgs", String::class.java, String::class.java))
+        assertThat(producer.providerMethod().declaringClass).isEqualTo(MultipleArgsProducer::class.java)
+        assertThat(producer.providerMethod()).isEqualTo(MultipleArgsProducer::class.java.getDeclaredMethod("multipleArgs", String::class.java, String::class.java))
     }
 
     @Test
@@ -116,11 +116,11 @@ class ProviderResponseProducerTest {
             retromock
         )
 
-        assertThat(producer.provider).isNotNull()
-        assertThat(producer.provider).isInstanceOf(MultipleDiffArgsProducer::class.java)
+        assertThat(producer.provider()).isNotNull()
+        assertThat(producer.provider()).isInstanceOf(MultipleDiffArgsProducer::class.java)
 
-        assertThat(producer.providerMethod.declaringClass).isEqualTo(MultipleDiffArgsProducer::class.java)
-        assertThat(producer.providerMethod).isEqualTo(MultipleDiffArgsProducer::class.java.getDeclaredMethod("multipleArgs", String::class.java, Int::class.java))
+        assertThat(producer.providerMethod().declaringClass).isEqualTo(MultipleDiffArgsProducer::class.java)
+        assertThat(producer.providerMethod()).isEqualTo(MultipleDiffArgsProducer::class.java.getDeclaredMethod("multipleArgs", String::class.java, Int::class.java))
     }
 
     @Test
@@ -136,11 +136,11 @@ class ProviderResponseProducerTest {
             retromock
         )
 
-        assertThat(producer.provider).isNotNull()
-        assertThat(producer.provider).isInstanceOf(MultipleArgsProducer::class.java)
+        assertThat(producer.provider()).isNotNull()
+        assertThat(producer.provider()).isInstanceOf(MultipleArgsProducer::class.java)
 
-        assertThat(producer.providerMethod.declaringClass).isEqualTo(MultipleArgsProducer::class.java)
-        assertThat(producer.providerMethod).isEqualTo(MultipleArgsProducer::class.java.getDeclaredMethod("multipleArgs", String::class.java, String::class.java))
+        assertThat(producer.providerMethod().declaringClass).isEqualTo(MultipleArgsProducer::class.java)
+        assertThat(producer.providerMethod()).isEqualTo(MultipleArgsProducer::class.java.getDeclaredMethod("multipleArgs", String::class.java, String::class.java))
     }
 
     @Test
@@ -156,11 +156,11 @@ class ProviderResponseProducerTest {
             retromock
         )
 
-        assertThat(producer.provider).isNotNull()
-        assertThat(producer.provider).isInstanceOf(MultipleArgsProducer::class.java)
+        assertThat(producer.provider()).isNotNull()
+        assertThat(producer.provider()).isInstanceOf(MultipleArgsProducer::class.java)
 
-        assertThat(producer.providerMethod.declaringClass).isEqualTo(MultipleArgsProducer::class.java)
-        assertThat(producer.providerMethod).isEqualTo(MultipleArgsProducer::class.java.getDeclaredMethod("multipleArgs", String::class.java, Int::class.java))
+        assertThat(producer.providerMethod().declaringClass).isEqualTo(MultipleArgsProducer::class.java)
+        assertThat(producer.providerMethod()).isEqualTo(MultipleArgsProducer::class.java.getDeclaredMethod("multipleArgs", String::class.java, Int::class.java))
     }
 
     @Test
