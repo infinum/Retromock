@@ -13,6 +13,7 @@ import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
 
+@Suppress("UNUSED_PARAMETER", "unused")
 @ExtendWith(MockitoExtension::class)
 class ProviderResponseProducerTest {
 
@@ -309,6 +310,7 @@ class ProviderResponseProducerTest {
                 throw IllegalArgumentException()
             }
 
+            @Suppress("UNREACHABLE_CODE")
             @ProvidesMock
             fun method(): Response = Response.Builder().build()
         }
