@@ -1,12 +1,12 @@
 package co.infinum.retromock;
 
-import java.io.IOException;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-import java.net.HttpURLConnection;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executor;
@@ -18,16 +18,11 @@ import javax.annotation.Nullable;
 import co.infinum.retromock.meta.Mock;
 import co.infinum.retromock.meta.MockBehavior;
 import co.infinum.retromock.meta.MockResponse;
-import okhttp3.MediaType;
-import okhttp3.Protocol;
+import okhttp3.Interceptor;
 import okhttp3.Request;
-import okhttp3.ResponseBody;
-import okio.Okio;
 import retrofit2.Call;
 import retrofit2.CallAdapter;
 import retrofit2.Callback;
-import retrofit2.Converter;
-import retrofit2.Response;
 import retrofit2.Retrofit;
 
 /**
@@ -98,13 +93,16 @@ public final class Retromock {
   private final Behavior defaultBehavior;
   private final BodyFactory defaultBodyFactory;
 
+  private final List<Interceptor> interceptors;
+
   private Retromock(final Retrofit retrofit,
     final Map<Class<? extends BodyFactory>, BodyFactory> bodyFactories,
     final boolean eagerlyLoad,
     final ExecutorService backgroundExecutor,
     final Executor callbackExecutor,
     final Behavior defaultBehavior,
-    final BodyFactory bodyFactory) {
+    final BodyFactory bodyFactory,
+    final List<Interceptor> interceptors) {
 
     this.retrofit = retrofit;
     this.bodyFactories = bodyFactories;
@@ -114,6 +112,7 @@ public final class Retromock {
     this.callbackExecutor = callbackExecutor;
     this.defaultBehavior = defaultBehavior;
     this.defaultBodyFactory = bodyFactory;
+    this.interceptors = interceptors;
   }
 
   /**
@@ -158,7 +157,7 @@ public final class Retromock {
    * </code></pre>
    * would delay response between 400 and 600 milliseconds.
    *
-   * @param <T> Service
+   * @param <T>     Service
    * @param service class type of a service
    * @return a service implementation that would either mock a call or delegate it to Retrofit's
    * service
@@ -209,7 +208,7 @@ public final class Retromock {
    * </code></pre>
    * would delay response between 400 and 600 milliseconds.
    *
-   * @param <T> Service
+   * @param <T>     Service
    * @param factory used to create a service delegate to which method calls would be redirected if
    *                mock is disabled on the method
    * @param service class type of a service
@@ -232,7 +231,7 @@ public final class Retromock {
             return method.invoke(this, args);
           }
 
-          RetromockMethod mockMethod;
+          final RetromockMethod mockMethod;
           try {
             mockMethod = findRetromockMethod(method);
           } catch (DisabledException e) {
@@ -240,29 +239,26 @@ public final class Retromock {
             return method.invoke(delegate, args);
           }
 
-          final CallAdapter<?, T> callAdapter = (CallAdapter<?, T>) retrofit
-            .callAdapter(method.getGenericReturnType(), method.getAnnotations());
+          final CallAdapter callAdapter =
+            retrofit.callAdapter(method.getGenericReturnType(), method.getAnnotations());
 
-          final ParamsProducer producer = mockMethod.producer();
-
-          Call<?> mockedCall = Calls.defer(new Callable<Call<T>>() {
+          Call<T> mockedCall = Calls.defer(new Callable<Call<T>>() {
             @Override
-            public Call<T> call() throws IOException {
-              return Calls.response(createResponse(
+            public Call<T> call() {
+              return new MockedCall<>(
                 retrofit.<T>responseBodyConverter(
                   callAdapter.responseType(),
                   method.getAnnotations()
-                ), producer.produce()
-              ));
+                ),
+                new InterceptorCall(
+                  new Request.Builder().url("http://localhost").build(),
+                  Retromock.this,
+                  mockMethod
+                ));
             }
           });
 
-          return callAdapter.adapt(new RetromockCall(
-            mockMethod.behavior(),
-            backgroundExecutor,
-            callbackExecutor,
-            mockedCall
-          ));
+          return callAdapter.adapt(mockedCall);
         }
       });
   }
@@ -316,6 +312,10 @@ public final class Retromock {
     return callbackExecutor;
   }
 
+  List<Interceptor> interceptors() {
+    return interceptors;
+  }
+
   private static <T> DelegateFactory<T> createDelegate(
     final Retrofit retrofit, final Class<T> service) {
 
@@ -333,56 +333,6 @@ public final class Retromock {
         findRetromockMethod(method);
       } catch (DisabledException ignored) {
         // retromock disabled on this method, moving on
-      }
-    }
-  }
-
-  private static <T> Response<T> createResponse(
-    final Converter<ResponseBody, T> converter,
-    final ResponseParams params) throws IOException {
-
-    RetromockBodyFactory factory = params.bodyFactory();
-
-    ResponseBody responseBody = null;
-    if (factory != null) {
-
-      String contentType = params.contentType();
-      MediaType mediaType = null;
-      if (contentType != null) {
-        mediaType = MediaType.parse(contentType);
-      }
-
-      responseBody = ResponseBody.create(
-        mediaType,
-        params.contentLength(),
-        Okio.buffer(Okio.source(factory.createBody())));
-    }
-
-    okhttp3.Response rawResponse = new okhttp3.Response.Builder()
-      .code(params.code())
-      .message(params.message())
-      .body(responseBody)
-      .protocol(Protocol.HTTP_1_1)
-      .headers(params.headers())
-      .request(new Request.Builder().url("http://localhost").build())
-      .build();
-
-    assert rawResponse.body() != null;
-    if (!rawResponse.isSuccessful()) {
-      return Response.error(rawResponse.body(), rawResponse);
-    } else {
-      try {
-        T body = null;
-        if (rawResponse.code() != HttpURLConnection.HTTP_NO_CONTENT
-          && rawResponse.code() != HttpURLConnection.HTTP_RESET) {
-          body = converter.convert(rawResponse.body());
-        } else {
-          // 204 and 205 must not include a body
-          rawResponse.close();
-        }
-        return Response.success(body, rawResponse);
-      } catch (IOException e) {
-        throw new RuntimeException("Error while converting mocked response!", e);
       }
     }
   }
@@ -418,6 +368,7 @@ public final class Retromock {
     private Executor callbackExecutor;
     private Behavior defaultBehavior;
     private BodyFactory defaultBodyFactory;
+    private final List<Interceptor> interceptors = new ArrayList<>();
 
     /**
      * Creates default instance of Builder.
@@ -442,6 +393,8 @@ public final class Retromock {
 
       // remove default body factory added by build()
       bodyFactories.remove(PassThroughBodyFactory.class);
+
+      this.interceptors.addAll(retromock.interceptors);
     }
 
     /**
@@ -533,6 +486,17 @@ public final class Retromock {
     }
 
     /**
+     * Add application level interceptor.
+     * @param interceptor Interceptor to trigger on each mock request/response.
+     * @return this {@link Builder}
+     */
+    public Builder addInterceptor(final Interceptor interceptor) {
+      Preconditions.checkNotNull(interceptor, "Interceptor is null.");
+      interceptors.add(interceptor);
+      return this;
+    }
+
+    /**
      * Create the {@link Retromock} instance using the configured values.
      *
      * If callbackExecutor is not specified, the one from retrofit will be used instead if exist.
@@ -584,7 +548,8 @@ public final class Retromock {
         backgroundExecutor,
         callbackExecutor,
         behavior,
-        bodyFactory
+        bodyFactory,
+        Collections.unmodifiableList(interceptors)
       );
     }
 
