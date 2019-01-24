@@ -10,7 +10,7 @@ import retrofit2.Callback;
 import retrofit2.Converter;
 import retrofit2.Response;
 
-class MockedCall<T> implements Call<T> {
+final class MockedCall<T> implements Call<T> {
 
   private final Converter<ResponseBody, T> converter;
   private final okhttp3.Call rawCall;

@@ -1,6 +1,7 @@
 package co.infinum.retromock;
 
 import java.io.IOException;
+import java.net.SocketTimeoutException;
 
 import okhttp3.Interceptor;
 import okhttp3.MediaType;
@@ -9,16 +10,21 @@ import okhttp3.ResponseBody;
 import okhttp3.internal.Util;
 import okio.Okio;
 
-class ReplyInterceptor implements Interceptor {
+final class ReplyInterceptor implements Interceptor {
 
-  private final RetromockMethod method;
+  private final ParamsProducer producer;
+  private final Behavior behavior;
 
-  ReplyInterceptor(final RetromockMethod method) {
-    this.method = method;
+  ReplyInterceptor(final ParamsProducer producer, final Behavior behavior) {
+    this.producer = producer;
+    this.behavior = behavior;
   }
 
-  private void delay() throws InterruptedException {
-    long delayMillis = method.behavior().delayMillis();
+  private void delay(final int maxDelay) throws InterruptedException {
+    long delayMillis = behavior.delayMillis();
+    if (maxDelay > 0) {
+      delayMillis = Math.min(delayMillis, maxDelay);
+    }
     if (delayMillis > 0) {
       Thread.sleep(delayMillis);
     }
@@ -27,11 +33,12 @@ class ReplyInterceptor implements Interceptor {
   @Override
   public okhttp3.Response intercept(final Chain chain) throws IOException {
     try {
-      delay();
+      delay(chain.connectTimeoutMillis());
     } catch (InterruptedException interrupt) {
-      throw new IOException("canceled");
+      throw new SocketTimeoutException(
+        "Timeout occurred - mock behavior delay is greater than connect timeout");
     }
-    ResponseParams params = method.producer().produce();
+    ResponseParams params = producer.produce();
 
     RetromockBodyFactory factory = params.bodyFactory();
 
@@ -61,6 +68,4 @@ class ReplyInterceptor implements Interceptor {
       .request(chain.request())
       .build();
   }
-
-
 }

@@ -239,21 +239,22 @@ public final class Retromock {
             return method.invoke(delegate, args);
           }
 
-          final CallAdapter callAdapter =
+          final CallAdapter<Object, Object> callAdapter = (CallAdapter<Object, Object>)
             retrofit.callAdapter(method.getGenericReturnType(), method.getAnnotations());
 
-          Call<T> mockedCall = Calls.defer(new Callable<Call<T>>() {
+          Call<Object> mockedCall = Calls.defer(new Callable<Call<Object>>() {
             @Override
-            public Call<T> call() {
+            public Call<Object> call() {
               return new MockedCall<>(
-                retrofit.<T>responseBodyConverter(
+                retrofit.responseBodyConverter(
                   callAdapter.responseType(),
                   method.getAnnotations()
                 ),
                 new InterceptorCall(
                   new Request.Builder().url("http://localhost").build(),
                   Retromock.this,
-                  mockMethod
+                  mockMethod.producer(),
+                  mockMethod.behavior()
                 ));
             }
           });

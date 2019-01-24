@@ -17,11 +17,12 @@ import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.internal.Util;
 
-class InterceptorCall implements Call {
+final class InterceptorCall implements Call {
 
   private final Request request;
   private final Retromock retromock;
-  private final RetromockMethod retromockMethod;
+  private final ParamsProducer producer;
+  private final Behavior behavior;
 
   private final AtomicBoolean executed = new AtomicBoolean(false);
   private final CancelInterceptor cancelInterceptor;
@@ -31,11 +32,13 @@ class InterceptorCall implements Call {
   InterceptorCall(
     final Request request,
     final Retromock retromock,
-    final RetromockMethod retromockMethod
+    final ParamsProducer producer,
+    final Behavior behavior
   ) {
     this.request = request;
     this.retromock = retromock;
-    this.retromockMethod = retromockMethod;
+    this.producer = producer;
+    this.behavior = behavior;
     this.cancelInterceptor = new CancelInterceptor();
   }
 
@@ -112,7 +115,7 @@ class InterceptorCall implements Call {
 
   @Override
   public Call clone() {
-    return new InterceptorCall(request, retromock, retromockMethod);
+    return new InterceptorCall(request, retromock, producer, behavior);
   }
 
   private Response getResponseWithInterceptorChain() throws IOException {
@@ -126,7 +129,7 @@ class InterceptorCall implements Call {
     interceptors.add(cancelInterceptor);
 
     // provides a response
-    interceptors.add(new ReplyInterceptor(retromockMethod));
+    interceptors.add(new ReplyInterceptor(producer, behavior));
 
     MockChain chain = new MockChain(request, interceptors, this, 0, 0, 0, 0);
     return chain.proceed(request);

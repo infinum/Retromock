@@ -6,7 +6,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import okhttp3.Interceptor;
 import okhttp3.Response;
 
-class CancelInterceptor implements Interceptor {
+final class CancelInterceptor implements Interceptor {
 
   private final AtomicBoolean canceled = new AtomicBoolean(false);
 
