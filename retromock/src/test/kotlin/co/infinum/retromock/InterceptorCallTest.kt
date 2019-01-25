@@ -317,8 +317,6 @@ class InterceptorCallTest {
 
     @Test
     fun cannotEnqueueCancelledCall() {
-        val body = "Response body content"
-
         val call = InterceptorCall(
             request,
             retromock,
