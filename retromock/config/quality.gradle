@@ -3,9 +3,10 @@ apply plugin: 'findbugs'
 apply plugin: 'pmd'
 
 checkstyleMain {
-    configFile file("${project.rootDir}/config/checkstyle.xml")
+    configFile file("${project.projectDir}/config/checkstyle.xml")
     configProperties = [
             'checkstyle.cache.file': rootProject.file('build/checkstyle.cache'),
+            'checkstyle.suppression.file': file("${project.projectDir}/config/suppressions.xml")
     ]
 }
 
@@ -13,7 +14,7 @@ findbugsMain {
     ignoreFailures = false
     effort = "max"
     reportLevel = "high"
-    excludeFilter = new File("${project.rootDir}/config/findbugs-filter.xml")
+    excludeFilter = new File("${project.projectDir}/config/findbugs-filter.xml")
     classes = files("$project.buildDir/classes/")
     maxHeapSize = "512m"
 
@@ -33,7 +34,7 @@ findbugsMain {
 }
 
 pmdMain {
-    ruleSetFiles = files("${project.rootDir}/config/pmd-ruleset.xml")
+    ruleSetFiles = files("${project.projectDir}/config/pmd-ruleset.xml")
     ignoreFailures = false
 
     source 'src'

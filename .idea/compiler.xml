@@ -1,21 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="CompilerConfiguration">
-    <wildcardResourcePatterns>
-      <entry name="!?*.java" />
-      <entry name="!?*.form" />
-      <entry name="!?*.class" />
-      <entry name="!?*.groovy" />
-      <entry name="!?*.scala" />
-      <entry name="!?*.flex" />
-      <entry name="!?*.kt" />
-      <entry name="!?*.clj" />
-    </wildcardResourcePatterns>
     <bytecodeTargetLevel>
-      <module name="retromock_main" target="1.7" />
-      <module name="retromock_test" target="1.7" />
-      <module name="samples_main" target="1.8" />
-      <module name="samples_test" target="1.8" />
+      <module name="retromock.main" target="1.7" />
+      <module name="retromock.test" target="1.7" />
+      <module name="samples.main" target="1.8" />
+      <module name="samples.retromock.main" target="1.7" />
+      <module name="samples.retromock.test" target="1.7" />
+      <module name="samples.test" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>
