@@ -9,7 +9,7 @@ publishing {
             artifact sourceJar
             groupId 'co.infinum'
             artifactId 'retromock'
-            version "{$versions.retromock}"
+            version "$versions.retromock"
 
             pom.withXml {
                 def root = asNode()
@@ -26,17 +26,17 @@ publishing {
 }
 
 bintray {
-    user = hasProperty('bintray_user') ?: System.getenv('BINTRAY_USER')
-    key = hasProperty('bintray_api_key') ?: System.getenv('BINTRAY_API_KEY')
+    user = project.hasProperty('bintray_user') ? bintray_user : System.getenv('BINTRAY_USER')
+    key = project.hasProperty('bintray_api_key') ? bintray_api_key : System.getenv('BINTRAY_API_KEY')
     publish = false
     publications = ['Publication']
 
     pkg {
-        repo = 'java'
+        repo = 'maven'
         name = "retromock"
         userOrg = 'infinum'
         licenses = ['Apache-2.0']
-        vcsUrl = 'https://github.com/infinum/Android-RetroMock.git'
+        vcsUrl = 'https://github.com/infinum/Retromock.git'
         publicDownloadNumbers = true
         
         version {
@@ -45,5 +45,4 @@ bintray {
             vcsTag = "${versions.retromock}"
         }
     }
-
 }
