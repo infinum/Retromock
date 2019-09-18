@@ -1,0 +1,4 @@
+rootProject.name = 'samples'
+include ':retromock'
+
+project(':retromock').projectDir = new File(rootProject.projectDir, '../retromock')

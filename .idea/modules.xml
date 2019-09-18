@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/co.infinum.retromock.iml" filepath="$PROJECT_DIR$/.idea/modules/co.infinum.retromock.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/retromock.iml" filepath="$PROJECT_DIR$/.idea/retromock.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/retromock.main.iml" filepath="$PROJECT_DIR$/.idea/modules/retromock.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/retromock.test.iml" filepath="$PROJECT_DIR$/.idea/modules/retromock.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/samples.iml" filepath="$PROJECT_DIR$/.idea/modules/samples.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/samples.main.iml" filepath="$PROJECT_DIR$/.idea/modules/samples.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-1281208336/samples.retromock.iml" filepath="$PROJECT_DIR$/.idea/modules/-1281208336/samples.retromock.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-1281208336/samples.retromock.main.iml" filepath="$PROJECT_DIR$/.idea/modules/-1281208336/samples.retromock.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-1281208336/samples.retromock.test.iml" filepath="$PROJECT_DIR$/.idea/modules/-1281208336/samples.retromock.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/samples.test.iml" filepath="$PROJECT_DIR$/.idea/modules/samples.test.iml" />
+    </modules>
+  </component>
+</project>
