@@ -1,0 +1,103 @@
+apply from: 'versions.gradle'
+
+group = 'co.infinum'
+version = "$versions.retromock"
+
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+        jcenter()
+        maven { url "https://plugins.gradle.org/m2/" } // needed for gradle-errorprone-plugin
+    }
+
+    dependencies {
+        classpath 'net.ltgt.gradle:gradle-errorprone-plugin:0.0.10'
+        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.2.30'
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+apply plugin: 'java'
+apply plugin: 'java-library'
+apply plugin: 'kotlin'
+
+apply from: 'config/quality.gradle'
+apply plugin: 'net.ltgt.errorprone'
+apply plugin: 'jacoco'
+
+apply from: 'bintray.gradle'
+
+sourceCompatibility = JavaVersion.VERSION_1_7
+
+sourceSets {
+    test.java.srcDirs += 'src/test/kotlin'
+}
+
+compileTestKotlin {
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8
+    }
+
+}
+
+test {
+    useJUnitPlatform()
+    testLogging {
+        events 'PASSED', 'FAILED', 'SKIPPED'
+    }
+    afterSuite { desc, result ->
+        if (!desc.parent) {
+            println "\nTest result: ${result.resultType}"
+            println "Test summary: ${result.testCount} tests, " +
+                    "${result.successfulTestCount} succeeded, " +
+                    "${result.failedTestCount} failed, " +
+                    "${result.skippedTestCount} skipped"
+        }
+    }
+    finalizedBy jacocoTestReport
+}
+
+jacoco {
+    toolVersion = "0.8.2"
+}
+
+dependencies {
+
+    compileOnly deps.google.annotations
+
+    implementation deps.retrofit
+
+    testImplementation deps.junit.api
+    testRuntimeOnly deps.junit.engine
+    testCompile deps.assertj
+    testCompile deps.mockito.core
+    testCompile deps.mockito.junit
+    testCompile group: 'com.google.guava', name: 'guava', version: '27.0-jre'
+    testCompileOnly deps.google.annotations
+
+    testCompile deps.kotlin.stdlib
+    testCompile deps.kotlin.test
+}
+
+task sourceJar(type: Jar) {
+    from sourceSets.main.allJava
+    classifier = 'sources'
+}
+
+task javadocJar(type: Jar) {
+    from javadoc
+    classifier = 'javadoc'
+}
+
+clean {
+    delete 'out'
+}
+
+apply from: 'tasks.gradle'
+
+assemble.dependsOn 'generateReadme'

@@ -1,0 +1,52 @@
+apply plugin: 'checkstyle'
+apply plugin: 'findbugs'
+apply plugin: 'pmd'
+
+checkstyleMain {
+    configFile file("${project.projectDir}/config/checkstyle.xml")
+    configProperties = [
+            'checkstyle.cache.file': rootProject.file('build/checkstyle.cache'),
+            'checkstyle.suppression.file': file("${project.projectDir}/config/suppressions.xml")
+    ]
+}
+
+findbugsMain {
+    ignoreFailures = false
+    effort = "max"
+    reportLevel = "high"
+    excludeFilter = new File("${project.projectDir}/config/findbugs-filter.xml")
+    classes = files("$project.buildDir/classes/")
+    maxHeapSize = "512m"
+
+    source 'src'
+    include '**/*.java'
+    exclude '**/gen/**'
+
+    reports {
+        xml.enabled = false
+        html.enabled = true
+        html {
+            destination "$project.buildDir/reports/findbugs/findbugs.html"
+        }
+    }
+
+    classpath = files()
+}
+
+pmdMain {
+    ruleSetFiles = files("${project.projectDir}/config/pmd-ruleset.xml")
+    ignoreFailures = false
+
+    source 'src'
+    include '**/*.java'
+    exclude '**/gen/**'
+
+    reports {
+        xml.enabled = false
+        html.enabled = true
+    }
+}
+
+findbugsTest {
+    enabled = false
+}

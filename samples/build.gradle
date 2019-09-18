@@ -1,0 +1,15 @@
+apply plugin: 'java'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation project(":retromock")
+
+    implementation 'com.squareup.moshi:moshi:1.6.0'
+    implementation 'com.squareup.retrofit2:converter-moshi:2.4.0'
+
+}
