@@ -1,4 +1,6 @@
-# Retromock [![Build Status](https://app.bitrise.io/app/7b832efc5bb97051/status.svg?token=S3Efgo8YEz6s8tFv2ocKzA&branch=master)](https://app.bitrise.io/app/7b832efc5bb97051)
+# Retromock
+[![Build Status](https://app.bitrise.io/app/7b832efc5bb97051/status.svg?token=S3Efgo8YEz6s8tFv2ocKzA&branch=master)](https://app.bitrise.io/app/7b832efc5bb97051)
+[ ![Download](https://api.bintray.com/packages/infinum/maven/retromock/images/download.svg) ](https://bintray.com/infinum/maven/retromock/_latestVersion)
 
 Adapts Java interface created by [Retrofit][retrofit] using annotations on declared methods to define response mocks.
 
