@@ -2,12 +2,8 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <bytecodeTargetLevel>
-      <module name="retromock.main" target="1.7" />
-      <module name="retromock.test" target="1.7" />
-      <module name="samples.main" target="1.8" />
-      <module name="samples.retromock.main" target="1.7" />
-      <module name="samples.retromock.test" target="1.7" />
-      <module name="samples.test" target="1.8" />
+      <module name="android.main" target="1.8" />
+      <module name="android.test" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>
