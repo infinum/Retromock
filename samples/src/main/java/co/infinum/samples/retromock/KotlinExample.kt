@@ -17,11 +17,6 @@ class KotlinExample {
         @GET("/")
         @MockResponse(body = "smith.json")
         @Mock
-        fun getUser(): Call<User?>
-
-        @GET("/")
-        @MockResponse(body = "smith.json")
-        @Mock
         suspend fun getCoroutineUser(): User?
     }
 
@@ -51,8 +46,6 @@ class KotlinExample {
                     .defaultBodyFactory(ResourceBodyFactory())
                     .build()
             val service: Service = retromock.create(Service::class.java)
-            println(service.getUser().execute().body())
-            println("Finished using Call")
 
             runBlocking {
                 println("Inside run blocking")
@@ -62,7 +55,7 @@ class KotlinExample {
                     service.getCoroutineUser()
                 }
 
-                withContext(Dispatchers.Main) {
+                withContext(Dispatchers.Default) {
                     println(user)
                 }
             }

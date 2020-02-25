@@ -15,15 +15,12 @@ import co.infinum.retromock.meta.Mock;
 import co.infinum.retromock.meta.MockBehavior;
 import co.infinum.retromock.meta.MockResponse;
 import kotlin.coroutines.Continuation;
-import kotlin.jvm.internal.Reflection;
 import okhttp3.MediaType;
 import okhttp3.Protocol;
 import okhttp3.Request;
 import okhttp3.ResponseBody;
 import okio.Okio;
 import retrofit2.*;
-
-import static co.infinum.retromock.Utils.checkNotPrimitive;
 
 /**
  * Retromock adapts {@link Retrofit} created Java interface using annotations on declared methods
@@ -236,11 +233,14 @@ public final class Retromock {
           }
 
           Type wrappedType = method.getGenericReturnType();
+          boolean isKotlinSuspendFunction = false;
+
+          // fallback if kotlin suspend function
           Type[] parameterTypes = method.getGenericParameterTypes();
           if (parameterTypes.length > 0) {
             Type lastParameterType = parameterTypes[parameterTypes.length - 1];
-            // kotlin suspend function
             if (Utils.getRawType(lastParameterType) == Continuation.class) {
+              isKotlinSuspendFunction = true;
                 Type actualType = Utils.getParameterLowerBound(0, (ParameterizedType) lastParameterType);
                 wrappedType = new Utils.ParameterizedTypeImpl(null, Call.class, actualType);
             }
@@ -263,12 +263,26 @@ public final class Retromock {
             }
           });
 
-          return callAdapter.adapt(new RetromockCall(
-            mockMethod.behavior(),
-            backgroundExecutor,
-            callbackExecutor,
-            mockedCall
+
+          Object call = callAdapter.adapt(new RetromockCall(
+                  mockMethod.behavior(),
+                  backgroundExecutor,
+                  callbackExecutor,
+                  mockedCall
           ));
+          if (!isKotlinSuspendFunction) {
+            return call;
+          } else {
+            // todo dodaj za response
+            //noinspection unchecked Checked by reflection inside RequestFactory.
+            Continuation<T> continuation = (Continuation<T>) args[args.length - 1];
+            try {
+              return KotlinExtensions.await((Call<T>) call, continuation);
+            } catch (Exception e) {
+//              return KotlinExtensions.suspendAndThrow(e, continuation);
+              return null;
+            }
+          }
         }
       });
   }
