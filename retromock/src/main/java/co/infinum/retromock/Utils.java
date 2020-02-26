@@ -33,6 +33,7 @@ final class Utils {
     // No instances.
   }
 
+  @SuppressWarnings("AnnotateFormatMethod")
   static RuntimeException methodError(Method method, @Nullable Throwable cause, String message,
                                       Object... args) {
     message = String.format(message, args);
