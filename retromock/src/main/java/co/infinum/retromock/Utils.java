@@ -33,10 +33,6 @@ final class Utils {
     // No instances.
   }
 
-  static RuntimeException methodError(Method method, String message, Object... args) {
-    return methodError(method, null, message, args);
-  }
-
   static RuntimeException methodError(Method method, @Nullable Throwable cause, String message,
                                       Object... args) {
     message = String.format(message, args);
@@ -45,15 +41,6 @@ final class Utils {
         + method.getDeclaringClass().getSimpleName()
         + "."
         + method.getName(), cause);
-  }
-
-  static RuntimeException parameterError(Method method,
-      Throwable cause, int p, String message, Object... args) {
-    return methodError(method, cause, message + " (parameter #" + (p + 1) + ")", args);
-  }
-
-  static RuntimeException parameterError(Method method, int p, String message, Object... args) {
-    return methodError(method, message + " (parameter #" + (p + 1) + ")", args);
   }
 
   static Class<?> getRawType(Type type) {
@@ -180,19 +167,6 @@ final class Utils {
     return type instanceof Class ? ((Class<?>) type).getName() : type.toString();
   }
 
-  /**
-   * Returns the generic form of {@code supertype}. For example, if this is {@code
-   * ArrayList<String>}, this returns {@code Iterable<String>} given the input {@code
-   * Iterable.class}.
-   *
-   * @param supertype a superclass of, or interface implemented by, this.
-   */
-  static Type getSupertype(Type context, Class<?> contextRawType, Class<?> supertype) {
-    if (!supertype.isAssignableFrom(contextRawType)) throw new IllegalArgumentException();
-    return resolve(context, contextRawType,
-        getGenericSupertype(context, contextRawType, supertype));
-  }
-
   static Type resolve(Type context, Class<?> contextRawType, Type toResolve) {
     // This implementation is made a little more complicated in an attempt to avoid object-creation.
     while (true) {
@@ -295,23 +269,6 @@ final class Utils {
     }
   }
 
-  /** Returns true if {@code annotations} contains an instance of {@code cls}. */
-  static boolean isAnnotationPresent(Annotation[] annotations,
-      Class<? extends Annotation> cls) {
-    for (Annotation annotation : annotations) {
-      if (cls.isInstance(annotation)) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  static ResponseBody buffer(final ResponseBody body) throws IOException {
-    Buffer buffer = new Buffer();
-    body.source().readAll(buffer);
-    return ResponseBody.create(body.contentType(), body.contentLength(), buffer);
-  }
-
   static Type getParameterUpperBound(int index, ParameterizedType type) {
     Type[] types = type.getActualTypeArguments();
     if (index < 0 || index >= types.length) {
@@ -331,33 +288,6 @@ final class Utils {
       return ((WildcardType) paramType).getLowerBounds()[0];
     }
     return paramType;
-  }
-
-  static boolean hasUnresolvableType(@Nullable Type type) {
-    if (type instanceof Class<?>) {
-      return false;
-    }
-    if (type instanceof ParameterizedType) {
-      ParameterizedType parameterizedType = (ParameterizedType) type;
-      for (Type typeArgument : parameterizedType.getActualTypeArguments()) {
-        if (hasUnresolvableType(typeArgument)) {
-          return true;
-        }
-      }
-      return false;
-    }
-    if (type instanceof GenericArrayType) {
-      return hasUnresolvableType(((GenericArrayType) type).getGenericComponentType());
-    }
-    if (type instanceof TypeVariable) {
-      return true;
-    }
-    if (type instanceof WildcardType) {
-      return true;
-    }
-    String className = type == null ? "null" : type.getClass().getName();
-    throw new IllegalArgumentException("Expected a Class, ParameterizedType, or "
-        + "GenericArrayType, but <" + type + "> is of type " + className);
   }
 
   static final class ParameterizedTypeImpl implements ParameterizedType {
@@ -492,18 +422,6 @@ final class Utils {
       if (lowerBound != null) return "? super " + typeToString(lowerBound);
       if (upperBound == Object.class) return "?";
       return "? extends " + typeToString(upperBound);
-    }
-  }
-
-  // https://github.com/ReactiveX/RxJava/blob/6a44e5d0543a48f1c378dc833a155f3f71333bc2/
-  // src/main/java/io/reactivex/exceptions/Exceptions.java#L66
-  static void throwIfFatal(Throwable t) {
-    if (t instanceof VirtualMachineError) {
-      throw (VirtualMachineError) t;
-    } else if (t instanceof ThreadDeath) {
-      throw (ThreadDeath) t;
-    } else if (t instanceof LinkageError) {
-      throw (LinkageError) t;
     }
   }
 }
