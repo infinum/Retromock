@@ -7,6 +7,7 @@ import co.infinum.retromock.meta.MockResponse
 import com.squareup.moshi.Json
 import kotlinx.coroutines.*
 import retrofit2.Call
+import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.GET
@@ -18,6 +19,11 @@ class KotlinExample {
         @MockResponse(body = "smith.json")
         @Mock
         suspend fun getCoroutineUser(): User?
+
+        @GET("/")
+        @MockResponse(body = "smith.json")
+        @Mock
+        suspend fun getCoroutineUserWithResponse(): Response<User>
     }
 
     class User {
@@ -52,7 +58,7 @@ class KotlinExample {
 
                 val user = withContext(Dispatchers.IO) {
                     println("Calling coroutine")
-                    service.getCoroutineUser()
+                    service.getCoroutineUserWithResponse().body()
                 }
 
                 withContext(Dispatchers.Default) {
