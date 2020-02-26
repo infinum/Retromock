@@ -56,13 +56,19 @@ class KotlinExample {
             runBlocking {
                 println("Inside run blocking")
 
+                val userFromResponse = withContext(Dispatchers.IO) {
+                    println("Calling coroutine (Response) ")
+                    service.getCoroutineUserWithResponse().body()
+                }
+
                 val user = withContext(Dispatchers.IO) {
                     println("Calling coroutine")
-                    service.getCoroutineUserWithResponse().body()
+                    service.getCoroutineUser()
                 }
 
                 withContext(Dispatchers.Default) {
                     println(user)
+                    print(userFromResponse)
                 }
             }
         }
