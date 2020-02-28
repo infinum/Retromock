@@ -6,7 +6,6 @@ import co.infinum.retromock.meta.Mock
 import co.infinum.retromock.meta.MockResponse
 import com.squareup.moshi.Json
 import kotlinx.coroutines.*
-import retrofit2.Call
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
