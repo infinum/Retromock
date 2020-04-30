@@ -2,7 +2,7 @@ buildscript {
 
     ext.versions = [
             "retromock": "1.0.0",
-            "retrofit" : "2.4.0",
+            "retrofit" : "2.8.1",
             "junit"    : "5.1.1",
             "assertj"  : "3.8.0",
             "mockito"  : "2.23.0",
