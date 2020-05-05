@@ -1,26 +1,33 @@
 package co.infinum.retromock;
 
-import java.io.IOException;
-import java.lang.reflect.*;
-import java.net.HttpURLConnection;
-import java.util.*;
-import java.util.concurrent.Callable;
-import java.util.concurrent.Executor;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
-import javax.annotation.Nullable;
-
 import co.infinum.retromock.meta.Mock;
 import co.infinum.retromock.meta.MockBehavior;
 import co.infinum.retromock.meta.MockResponse;
-import kotlin.coroutines.Continuation;
 import okhttp3.MediaType;
 import okhttp3.Protocol;
 import okhttp3.Request;
 import okhttp3.ResponseBody;
 import okio.Okio;
-import retrofit2.*;
+import retrofit2.Call;
+import retrofit2.CallAdapter;
+import retrofit2.Callback;
+import retrofit2.Converter;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+
+import javax.annotation.Nullable;
+import java.io.IOException;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
+import java.net.HttpURLConnection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Retromock adapts {@link Retrofit} created Java interface using annotations on declared methods
