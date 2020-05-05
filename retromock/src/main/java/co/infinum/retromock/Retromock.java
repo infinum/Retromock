@@ -91,13 +91,12 @@ public final class Retromock {
   private final BodyFactory defaultBodyFactory;
 
   private Retromock(final Retrofit retrofit,
-                    final Map<Class<? extends BodyFactory>, BodyFactory> bodyFactories,
-                    final boolean eagerlyLoad,
-                    final ExecutorService backgroundExecutor,
-                    final Executor callbackExecutor,
-                    final Behavior defaultBehavior,
-                    final BodyFactory bodyFactory) {
-
+    final Map<Class<? extends BodyFactory>, BodyFactory> bodyFactories,
+    final boolean eagerlyLoad,
+    final ExecutorService backgroundExecutor,
+    final Executor callbackExecutor,
+    final Behavior defaultBehavior,
+    final BodyFactory bodyFactory) {
     this.retrofit = retrofit;
     this.bodyFactories = bodyFactories;
     this.methodCache = new HashMap<>();
