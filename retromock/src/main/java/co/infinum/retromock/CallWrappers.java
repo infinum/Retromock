@@ -8,7 +8,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
-abstract class CallWrapper {
+abstract class AbstractCallWrapper {
 
   abstract Object wrap(final Object call);
 
@@ -18,7 +18,7 @@ abstract class CallWrapper {
    * Checks if method is suspend kotlin fun and in that case wraps its return type into Retrofit's {@code Call}.
    * Also, method handles special case when return type is wrapped into Retrofit's {@code Response}.
    */
-  static <T> CallWrapper create(final Method method, final Object[] args) {
+  static <T> AbstractCallWrapper create(final Method method, final Object[] args) {
     Type[] parameterTypes = method.getGenericParameterTypes();
     if (parameterTypes.length > 0) {
       Type lastParameterType = parameterTypes[parameterTypes.length - 1];
@@ -41,7 +41,7 @@ abstract class CallWrapper {
   }
 }
 
-class NoOpCallWrapper extends CallWrapper {
+class NoOpCallWrapper extends AbstractCallWrapper {
 
   private Type returnType;
 
@@ -60,7 +60,7 @@ class NoOpCallWrapper extends CallWrapper {
   }
 }
 
-class SuspendCallWrapper<T> extends CallWrapper {
+class SuspendCallWrapper<T> extends AbstractCallWrapper {
 
   private Type returnType;
   private boolean continuationWantsResponse;
