@@ -113,7 +113,7 @@ final class Calls {
 
     @Override
     public Timeout timeout() {
-        return new Timeout();
+        return Timeout.NONE;
     }
   }
 
