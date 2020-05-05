@@ -16,7 +16,12 @@
 package co.infinum.retromock;
 
 import javax.annotation.Nullable;
-import java.lang.reflect.*;
+import java.lang.reflect.Array;
+import java.lang.reflect.GenericArrayType;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.lang.reflect.TypeVariable;
+import java.lang.reflect.WildcardType;
 import java.util.Arrays;
 import java.util.Objects;
 
@@ -25,7 +30,7 @@ final class Utils {
     // No instances.
   }
 
-  static Class<?> getRawType(Type type) {
+  static Class<?> getRawType(final Type type) {
     Objects.requireNonNull(type, "type == null");
 
     if (type instanceof Class<?>) {
@@ -38,7 +43,9 @@ final class Utils {
       // I'm not exactly sure why getRawType() returns Type instead of Class. Neal isn't either but
       // suspects some pathological case related to nested classes exists.
       Type rawType = parameterizedType.getRawType();
-      if (!(rawType instanceof Class)) throw new IllegalArgumentException();
+      if (!(rawType instanceof Class)) {
+        throw new IllegalArgumentException();
+      }
       return (Class<?>) rawType;
     }
     if (type instanceof GenericArrayType) {
@@ -59,7 +66,7 @@ final class Utils {
   }
 
   /** Returns true if {@code a} and {@code b} are equal. */
-  static boolean equals(Type a, Type b) {
+  static boolean equals(final Type a, final Type b) {
     if (a == b) {
       return true; // Also handles (a == null && b == null).
 
@@ -67,7 +74,9 @@ final class Utils {
       return a.equals(b); // Class already specifies equals().
 
     } else if (a instanceof ParameterizedType) {
-      if (!(b instanceof ParameterizedType)) return false;
+      if (!(b instanceof ParameterizedType)) {
+        return false;
+      }
       ParameterizedType pa = (ParameterizedType) a;
       ParameterizedType pb = (ParameterizedType) b;
       Object ownerA = pa.getOwnerType();
@@ -77,20 +86,26 @@ final class Utils {
           && Arrays.equals(pa.getActualTypeArguments(), pb.getActualTypeArguments());
 
     } else if (a instanceof GenericArrayType) {
-      if (!(b instanceof GenericArrayType)) return false;
+      if (!(b instanceof GenericArrayType)) {
+        return false;
+      }
       GenericArrayType ga = (GenericArrayType) a;
       GenericArrayType gb = (GenericArrayType) b;
       return equals(ga.getGenericComponentType(), gb.getGenericComponentType());
 
     } else if (a instanceof WildcardType) {
-      if (!(b instanceof WildcardType)) return false;
+      if (!(b instanceof WildcardType)) {
+        return false;
+      }
       WildcardType wa = (WildcardType) a;
       WildcardType wb = (WildcardType) b;
       return Arrays.equals(wa.getUpperBounds(), wb.getUpperBounds())
           && Arrays.equals(wa.getLowerBounds(), wb.getLowerBounds());
 
     } else if (a instanceof TypeVariable) {
-      if (!(b instanceof TypeVariable)) return false;
+      if (!(b instanceof TypeVariable)) {
+        return false;
+      }
       TypeVariable<?> va = (TypeVariable<?>) a;
       TypeVariable<?> vb = (TypeVariable<?>) b;
       return va.getGenericDeclaration() == vb.getGenericDeclaration()
@@ -101,17 +116,20 @@ final class Utils {
     }
   }
 
-  static String typeToString(Type type) {
-    return type instanceof Class ? ((Class<?>) type).getName() : type.toString();
+  static String typeToString(final Type type) {
+    if (type instanceof Class) {
+      return ((Class<?>) type).getName();
+    }
+    return type.toString();
   }
 
-  static void checkNotPrimitive(Type type) {
+  static void checkNotPrimitive(final Type type) {
     if (type instanceof Class<?> && ((Class<?>) type).isPrimitive()) {
       throw new IllegalArgumentException();
     }
   }
 
-  static Type getParameterUpperBound(int index, ParameterizedType type) {
+  static Type getParameterUpperBound(final int index, final ParameterizedType type) {
     Type[] types = type.getActualTypeArguments();
     if (index < 0 || index >= types.length) {
       throw new IllegalArgumentException(
@@ -124,7 +142,7 @@ final class Utils {
     return paramType;
   }
 
-  static Type getParameterLowerBound(int index, ParameterizedType type) {
+  static Type getParameterLowerBound(final int index, final ParameterizedType type) {
     Type paramType = type.getActualTypeArguments()[index];
     if (paramType instanceof WildcardType) {
       return ((WildcardType) paramType).getLowerBounds()[0];
@@ -132,13 +150,15 @@ final class Utils {
     return paramType;
   }
 
+  static final int STRING_BUILDER_CAPACITY = 30;
+
   static final class ParameterizedTypeImpl implements ParameterizedType {
     private final @Nullable
     Type ownerType;
     private final Type rawType;
     private final Type[] typeArguments;
 
-    ParameterizedTypeImpl(@Nullable Type ownerType, Type rawType, Type... typeArguments) {
+    ParameterizedTypeImpl(final @Nullable Type ownerType, final Type rawType, final Type... typeArguments) {
       // Require an owner type if the raw type needs it.
       if (rawType instanceof Class<?>
           && (ownerType == null) != (((Class<?>) rawType).getEnclosingClass() == null)) {
@@ -168,19 +188,25 @@ final class Utils {
       return ownerType;
     }
 
-    @Override public boolean equals(Object other) {
+    @Override public boolean equals(final Object other) {
       return other instanceof ParameterizedType && Utils.equals(this, (ParameterizedType) other);
     }
 
     @Override public int hashCode() {
-      return Arrays.hashCode(typeArguments)
+      if (ownerType != null) {
+        return Arrays.hashCode(typeArguments)
           ^ rawType.hashCode()
-          ^ (ownerType != null ? ownerType.hashCode() : 0);
+          ^ ownerType.hashCode();
+      }
+      return Arrays.hashCode(typeArguments)
+        ^ rawType.hashCode();
     }
 
     @Override public String toString() {
-      if (typeArguments.length == 0) return typeToString(rawType);
-      StringBuilder result = new StringBuilder(30 * (typeArguments.length + 1));
+      if (typeArguments.length == 0) {
+        return typeToString(rawType);
+      }
+      StringBuilder result = new StringBuilder(STRING_BUILDER_CAPACITY * (typeArguments.length + 1));
       result.append(typeToString(rawType));
       result.append("<").append(typeToString(typeArguments[0]));
       for (int i = 1; i < typeArguments.length; i++) {

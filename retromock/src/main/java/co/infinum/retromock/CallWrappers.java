@@ -10,7 +10,7 @@ import java.lang.reflect.Type;
 
 abstract class CallWrapper {
 
-  abstract Object wrap(Object call);
+  abstract Object wrap(final Object call);
 
   abstract Type getReturnType();
 
@@ -18,7 +18,7 @@ abstract class CallWrapper {
    * Checks if method is suspend kotlin fun and in that case wraps its return type into Retrofit's {@code Call}.
    * Also, method handles special case when return type is wrapped into Retrofit's {@code Response}.
    */
-  static <T> CallWrapper create(Method method, final Object[] args) {
+  static <T> CallWrapper create(final Method method, final Object[] args) {
     Type[] parameterTypes = method.getGenericParameterTypes();
     if (parameterTypes.length > 0) {
       Type lastParameterType = parameterTypes[parameterTypes.length - 1];
@@ -45,7 +45,7 @@ class NoOpCallWrapper extends CallWrapper {
 
   private Type returnType;
 
-  public NoOpCallWrapper(Type returnType) {
+  public NoOpCallWrapper(final Type returnType) {
     this.returnType = returnType;
   }
 
@@ -55,7 +55,7 @@ class NoOpCallWrapper extends CallWrapper {
   }
 
   @Override
-  public Object wrap(Object call) {
+  public Object wrap(final Object call) {
     return call;
   }
 }
@@ -66,7 +66,7 @@ class SuspendCallWrapper<T> extends CallWrapper {
   private boolean continuationWantsResponse;
   private Object[] args;
 
-  public SuspendCallWrapper(Type returnType, boolean continuationWantsResponse, Object[] args) {
+  public SuspendCallWrapper(final Type returnType, final boolean continuationWantsResponse, final Object[] args) {
     this.returnType = returnType;
     this.continuationWantsResponse = continuationWantsResponse;
     this.args = args;
@@ -78,7 +78,7 @@ class SuspendCallWrapper<T> extends CallWrapper {
   }
 
   @SuppressWarnings("unchecked")
-  private Object handleContinuationWithResponse(Object[] args, Object call) {
+  private Object handleContinuationWithResponse(final Object[] args, final Object call) {
     //noinspection unchecked Checked by reflection inside RequestFactory.
     Continuation<Response<T>> continuation = (Continuation<Response<T>>) args[args.length - 1];
 
@@ -91,7 +91,7 @@ class SuspendCallWrapper<T> extends CallWrapper {
   }
 
   @SuppressWarnings("unchecked")
-  private Object handleContinuation(Object[] args, Object call) {
+  private Object handleContinuation(final Object[] args, final Object call) {
     //noinspection unchecked Checked by reflection inside RequestFactory.
     Continuation<T> continuation = (Continuation<T>) args[args.length - 1];
     try {
@@ -102,7 +102,7 @@ class SuspendCallWrapper<T> extends CallWrapper {
   }
 
   @Override
-  public Object wrap(Object call) {
+  public Object wrap(final Object call) {
     if (continuationWantsResponse) {
       return handleContinuationWithResponse(args, call);
     } else {
