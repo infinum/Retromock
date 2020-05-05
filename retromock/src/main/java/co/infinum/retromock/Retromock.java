@@ -221,7 +221,6 @@ public final class Retromock {
         private boolean continuationWantsResponse;
 
         private Object handleContinuationWithResponse(Object[] args, Object call) {
-          //noinspection unchecked Checked by reflection inside RequestFactory.
           Continuation<Response<T>> continuation = (Continuation<Response<T>>) args[args.length - 1];
 
           // See SuspendForBody for explanation about this try/catch.
