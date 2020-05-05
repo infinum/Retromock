@@ -179,7 +179,7 @@ final class Calls {
 
     @Override
     public Timeout timeout() {
-      return delegate.timeout();
+      return getDelegate().timeout();
     }
   }
 }
