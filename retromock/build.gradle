@@ -69,7 +69,7 @@ jacoco {
 
 dependencies {
     compileOnly deps.kotlin.stdlib
-    compileOnly deps.coroutines
+    compileOnly deps.kotlin.coroutines
 
     compileOnly deps.google.annotations
 
@@ -82,7 +82,7 @@ dependencies {
     testCompile deps.mockito.junit
     testCompile group: 'com.google.guava', name: 'guava', version: '27.0-jre'
     testCompileOnly deps.google.annotations
-    testImplementation deps.coroutines
+    testImplementation deps.kotlin.coroutines
 
     testCompile deps.kotlin.stdlib
     testCompile deps.kotlin.test
