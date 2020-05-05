@@ -11,9 +11,9 @@ import kotlin.coroutines.intrinsics.intercepted
 import kotlin.coroutines.intrinsics.suspendCoroutineUninterceptedOrReturn
 import kotlin.coroutines.resume
 
-inline fun <reified T> Retrofit.create(): T = create(T::class.java)
+inline fun <reified T> Retromock.create(): T = create(T::class.java)
 
-suspend fun <T : Any> Call<T>.await(): T {
+internal suspend fun <T : Any> Call<T>.await(): T {
     return suspendCancellableCoroutine { continuation ->
         continuation.invokeOnCancellation {
             cancel()
@@ -40,29 +40,7 @@ suspend fun <T : Any> Call<T>.await(): T {
     }
 }
 
-@JvmName("awaitNullable")
-suspend fun <T : Any> Call<T?>.await(): T? {
-    return suspendCancellableCoroutine { continuation ->
-        continuation.invokeOnCancellation {
-            cancel()
-        }
-        enqueue(object : Callback<T?> {
-            override fun onResponse(call: Call<T?>, response: Response<T?>) {
-                if (response.isSuccessful) {
-                    continuation.resume(response.body())
-                } else {
-                    continuation.resumeWithException(HttpException(response))
-                }
-            }
-
-            override fun onFailure(call: Call<T?>, t: Throwable) {
-                continuation.resumeWithException(t)
-            }
-        })
-    }
-}
-
-suspend fun <T : Any> Call<T>.awaitResponse(): Response<T> {
+internal suspend fun <T : Any> Call<T>.awaitResponse(): Response<T> {
     return suspendCancellableCoroutine { continuation ->
         continuation.invokeOnCancellation {
             cancel()
