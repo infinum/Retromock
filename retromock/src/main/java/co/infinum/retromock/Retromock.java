@@ -217,55 +217,6 @@ public final class Retromock {
     return (T) Proxy.newProxyInstance(service.getClassLoader(), new Class[]{service},
       new InvocationHandler() {
 
-        private boolean isKotlinSuspendFunction;
-        private boolean continuationWantsResponse;
-
-        private Object handleContinuationWithResponse(Object[] args, Object call) {
-          Continuation<Response<T>> continuation = (Continuation<Response<T>>) args[args.length - 1];
-
-          // See SuspendForBody for explanation about this try/catch.
-          try {
-            return KotlinExtensions.awaitResponse((Call<T>) call, continuation);
-          } catch (Exception e) {
-            return KotlinExtensions.suspendAndThrow(e, continuation);
-          }
-        }
-
-        private Object handleContinuation(Object[] args, Object call) {
-          //noinspection unchecked Checked by reflection inside RequestFactory.
-          Continuation<T> continuation = (Continuation<T>) args[args.length - 1];
-          try {
-            return KotlinExtensions.await((Call<T>) call, continuation);
-          } catch (Exception e) {
-            return KotlinExtensions.suspendAndThrow(e, continuation);
-          }
-        }
-
-        /**
-         * Checks if method is suspend kotlin fun and in that case wraps its return type into Retrofit's {@code Call}.
-         * Also, method handles special case when return type is wrapped into Retrofit's {@code Response}.
-         */
-        private Type extractReturnType(Method method) {
-          Type[] parameterTypes = method.getGenericParameterTypes();
-          if (parameterTypes.length > 0) {
-            Type lastParameterType = parameterTypes[parameterTypes.length - 1];
-            if (Utils.getRawType(lastParameterType) == Continuation.class) {
-              isKotlinSuspendFunction = true;
-              Type actualType = Utils.getParameterLowerBound(0, (ParameterizedType) lastParameterType);
-
-              if (Utils.getRawType(actualType) == Response.class && actualType instanceof ParameterizedType) {
-                // Unwrap the actual body type from Response<T>.
-                actualType = Utils.getParameterUpperBound(0, (ParameterizedType) actualType);
-                continuationWantsResponse = true;
-              }
-
-              return new Utils.ParameterizedTypeImpl(null, Call.class, actualType);
-            }
-          }
-
-          return method.getGenericReturnType();
-        }
-
         @Override
         public Object invoke(final Object proxy, final Method method, final Object[] args) throws
           Throwable {
@@ -281,12 +232,10 @@ public final class Retromock {
             return method.invoke(delegate, args);
           }
 
-          isKotlinSuspendFunction = false;
-          continuationWantsResponse = false;
-          Type wrappedType = extractReturnType(method);
+          CallWrapper callWrapper = CallWrapper.<T>create(method, args);
 
           final CallAdapter<?, T> callAdapter = (CallAdapter<?, T>) retrofit
-            .callAdapter(wrappedType, method.getAnnotations());
+            .callAdapter(callWrapper.getReturnType(), method.getAnnotations());
 
           final ParamsProducer producer = mockMethod.producer();
 
@@ -309,13 +258,7 @@ public final class Retromock {
             mockedCall
           ));
 
-          if (!isKotlinSuspendFunction) {
-            return call;
-          } else if (continuationWantsResponse) {
-            return handleContinuationWithResponse(args, call);
-          } else {
-            return handleContinuation(args, call);
-          }
+          return callWrapper.wrap(call);
         }
       });
   }
