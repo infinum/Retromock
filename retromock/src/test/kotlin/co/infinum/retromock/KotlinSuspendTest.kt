@@ -8,16 +8,13 @@ import co.infinum.retromock.meta.MockSequential
 import kotlinx.coroutines.runBlocking
 import okhttp3.ResponseBody
 import org.assertj.core.api.Assertions.assertThat
-import org.assertj.core.api.Java6Assertions
+import org.assertj.core.api.Java6Assertions.entry
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.mockito.Mockito
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.http.GET
-import java.io.FileInputStream
-import java.io.IOException
-import java.io.InputStream
 import java.nio.charset.StandardCharsets
 import java.util.concurrent.Executor
 import java.util.concurrent.ExecutorService
@@ -106,7 +103,7 @@ class KotlinSuspendTest {
         val obj = retromock.create(CallMethod::class.java)
 
         assertThat(obj.hashCode()).isNotZero()
-        Java6Assertions.assertThat(obj == Any()).isFalse()
+        assertThat(obj == Any()).isFalse()
         assertThat(obj.toString()).isNotEmpty()
     }
 
@@ -152,20 +149,20 @@ class KotlinSuspendTest {
                 .addBodyFactory(bodyFactory2)
                 .build()
 
-        Java6Assertions.assertThat(first.bodyFactories().size).isEqualTo(second.bodyFactories().size - 1)
-        Java6Assertions.assertThat(first.bodyFactories()).contains(
-                Java6Assertions.entry(EmptyBodyFactory::class.java, bodyFactory)
+        assertThat(first.bodyFactories().size).isEqualTo(second.bodyFactories().size - 1)
+        assertThat(first.bodyFactories()).contains(
+                entry(EmptyBodyFactory::class.java, bodyFactory)
         )
 
-        Java6Assertions.assertThat(second.bodyFactories()).contains(
-                Java6Assertions.entry(EmptyBodyFactory::class.java, bodyFactory),
-                Java6Assertions.entry(EmptyBodyFactory2::class.java, bodyFactory2)
+        assertThat(second.bodyFactories()).contains(
+                entry(EmptyBodyFactory::class.java, bodyFactory),
+                entry(EmptyBodyFactory2::class.java, bodyFactory2)
         )
 
-        Java6Assertions.assertThat(first.defaultBodyFactory()).isSameAs(second.defaultBodyFactory())
-        Java6Assertions.assertThat(first.defaultBehavior()).isSameAs(second.defaultBehavior())
-        Java6Assertions.assertThat(first.callbackExecutor()).isSameAs(second.callbackExecutor())
-        Java6Assertions.assertThat(first.backgroundExecutor()).isSameAs(second.backgroundExecutor())
+        assertThat(first.defaultBodyFactory()).isSameAs(second.defaultBodyFactory())
+        assertThat(first.defaultBehavior()).isSameAs(second.defaultBehavior())
+        assertThat(first.callbackExecutor()).isSameAs(second.callbackExecutor())
+        assertThat(first.backgroundExecutor()).isSameAs(second.backgroundExecutor())
 
     }
 
@@ -177,8 +174,8 @@ class KotlinSuspendTest {
                         .build())
                 .build()
 
-        Java6Assertions.assertThat(retromock.bodyFactories()).isNotEmpty
-        Java6Assertions.assertThat(retromock.newBuilder().bodyFactories()).isEmpty()
+        assertThat(retromock.bodyFactories()).isNotEmpty
+        assertThat(retromock.newBuilder().bodyFactories()).isEmpty()
     }
 
     @Test
@@ -189,8 +186,8 @@ class KotlinSuspendTest {
                         .build())
                 .build()
 
-        Java6Assertions.assertThat(retromock.bodyFactories().size).isEqualTo(1)
-        Java6Assertions.assertThat(retromock.bodyFactories().get(PassThroughBodyFactory::class.java)).isNotNull()
+        assertThat(retromock.bodyFactories().size).isEqualTo(1)
+        assertThat(retromock.bodyFactories().get(PassThroughBodyFactory::class.java)).isNotNull()
     }
 
     @Test
@@ -210,7 +207,7 @@ class KotlinSuspendTest {
 
         runBlocking { service.getResponseBody() }
 
-        Java6Assertions.assertThat(countDown.get()).isEqualTo(1)
+        assertThat(countDown.get()).isEqualTo(1)
     }
 
     @Test
@@ -250,7 +247,7 @@ class KotlinSuspendTest {
 
         runBlocking { service.getResponseBody() }
 
-        Java6Assertions.assertThat(countDown.get()).isEqualTo(0)
+        assertThat(countDown.get()).isEqualTo(0)
     }
 
     @Test
@@ -269,10 +266,10 @@ class KotlinSuspendTest {
         val service = retromock.create(ResponseMethod::class.java)
 
         runBlocking { service.getResponseBody() }
-        Java6Assertions.assertThat(countDown.get()).isEqualTo(1)
+        assertThat(countDown.get()).isEqualTo(1)
 
         runBlocking { service.getResponseBody() }
-        Java6Assertions.assertThat(countDown.get()).isEqualTo(0)
+        assertThat(countDown.get()).isEqualTo(0)
     }
 
     @Test
@@ -321,7 +318,7 @@ class KotlinSuspendTest {
 
         runBlocking { service.getResponseBody() }
 
-        Java6Assertions.assertThat(countDown.get()).isEqualTo(0)
+        assertThat(countDown.get()).isEqualTo(0)
     }
 
     @Test
@@ -385,7 +382,7 @@ class KotlinSuspendTest {
 
             val response3 = service.getResponseBody()
             assertThat(response3.string()).isEqualTo("Body example 3.")
-            Java6Assertions.assertThat(countDown.get()).isEqualTo(0)
+            assertThat(countDown.get()).isEqualTo(0)
         }
     }
 
@@ -397,7 +394,7 @@ class KotlinSuspendTest {
                         .build())
                 .build()
 
-        Java6Assertions.assertThat(retromock.bodyFactories()).containsKey(PassThroughBodyFactory::class.java)
+        assertThat(retromock.bodyFactories()).containsKey(PassThroughBodyFactory::class.java)
     }
 
     @Test
@@ -408,7 +405,7 @@ class KotlinSuspendTest {
                         .build())
                 .build()
 
-        Java6Assertions.assertThat(retromock.backgroundExecutor()).isNotNull()
+        assertThat(retromock.backgroundExecutor()).isNotNull()
     }
 
     @Test
@@ -421,7 +418,7 @@ class KotlinSuspendTest {
                 .backgroundExecutor(backgroundExecutor)
                 .build()
 
-        Java6Assertions.assertThat(retromock.backgroundExecutor()).isSameAs(backgroundExecutor)
+        assertThat(retromock.backgroundExecutor()).isSameAs(backgroundExecutor)
     }
 
     @Test
@@ -432,7 +429,7 @@ class KotlinSuspendTest {
                         .build())
                 .build()
 
-        Java6Assertions.assertThat(retromock.callbackExecutor()).isInstanceOf(Retromock.SyncExecutor::class.java)
+        assertThat(retromock.callbackExecutor()).isInstanceOf(Retromock.SyncExecutor::class.java)
     }
 
     @Test
@@ -445,7 +442,7 @@ class KotlinSuspendTest {
                 .callbackExecutor(callbackExecutor)
                 .build()
 
-        Java6Assertions.assertThat(retromock.callbackExecutor()).isSameAs(callbackExecutor)
+        assertThat(retromock.callbackExecutor()).isSameAs(callbackExecutor)
     }
 
     @Test
@@ -458,7 +455,7 @@ class KotlinSuspendTest {
                         .build())
                 .build()
 
-        Java6Assertions.assertThat(retromock.callbackExecutor()).isSameAs(callbackExecutor)
+        assertThat(retromock.callbackExecutor()).isSameAs(callbackExecutor)
     }
 
     @Test
@@ -469,7 +466,7 @@ class KotlinSuspendTest {
                         .build())
                 .build()
 
-        Java6Assertions.assertThat(retromock.defaultBehavior()).isSameAs(DefaultBehavior.INSTANCE)
+        assertThat(retromock.defaultBehavior()).isSameAs(DefaultBehavior.INSTANCE)
     }
 
     @Test
@@ -480,7 +477,7 @@ class KotlinSuspendTest {
                         .build())
                 .build()
 
-        Java6Assertions.assertThat(retromock.defaultBodyFactory()).isInstanceOf(PassThroughBodyFactory::class.java)
+        assertThat(retromock.defaultBodyFactory()).isInstanceOf(PassThroughBodyFactory::class.java)
     }
 }
 
