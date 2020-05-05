@@ -25,6 +25,7 @@ import java.lang.reflect.WildcardType;
 import java.util.Arrays;
 import java.util.Objects;
 
+@SuppressWarnings("PMD")
 final class Utils {
   private Utils() {
     // No instances.
@@ -207,8 +208,7 @@ final class Utils {
         return typeToString(rawType);
       }
       StringBuilder result = new StringBuilder(STRING_BUILDER_CAPACITY * (typeArguments.length + 1));
-      result.append(typeToString(rawType));
-      result.append("<").append(typeToString(typeArguments[0]));
+      result.append(typeToString(rawType)).append('<').append(typeToString(typeArguments[0]));
       for (int i = 1; i < typeArguments.length; i++) {
         result.append(", ").append(typeToString(typeArguments[i]));
       }

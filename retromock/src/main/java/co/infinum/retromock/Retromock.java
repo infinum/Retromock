@@ -239,7 +239,7 @@ public final class Retromock {
             return method.invoke(delegate, args);
           }
 
-          CallWrapper callWrapper = CallWrapper.<T>create(method, args);
+          AbstractCallWrapper callWrapper = AbstractCallWrapper.<T>create(method, args);
 
           final CallAdapter<?, T> callAdapter = (CallAdapter<?, T>) retrofit
             .callAdapter(callWrapper.getReturnType(), method.getAnnotations());
