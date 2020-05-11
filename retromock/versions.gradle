@@ -30,7 +30,8 @@ buildscript {
             "kotlin"  : [
                     "stdlib": "org.jetbrains.kotlin:kotlin-stdlib:${versions.kotlin}",
                     "test"  : "org.jetbrains.kotlin:kotlin-test:${versions.kotlin}",
-                    "coroutines" : "org.jetbrains.kotlinx:kotlinx-coroutines-core:${versions.coroutines}"
+                    "coroutines" : "org.jetbrains.kotlinx:kotlinx-coroutines-core:${versions.coroutines}",
+                    "gradlePlugin" : "org.jetbrains.kotlin:kotlin-gradle-plugin:${versions.kotlin}"
             ]
     ]
 
