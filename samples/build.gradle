@@ -1,7 +1,5 @@
 apply plugin: 'java'
 apply plugin: 'kotlin'
-apply from: '../retromock/versions.gradle'
-
 sourceCompatibility = 1.8
 
 repositories {
