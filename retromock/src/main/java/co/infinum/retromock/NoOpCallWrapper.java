@@ -16,7 +16,7 @@ class NoOpCallWrapper implements CallWrapper {
   }
 
   @Override
-  public Object wrap(final Object call, Object[] args) {
+  public Object wrap(final Object call, final Object[] args) {
     return call;
   }
 }
