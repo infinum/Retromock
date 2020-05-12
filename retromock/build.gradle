@@ -14,7 +14,7 @@ buildscript {
     dependencies {
         classpath 'net.ltgt.gradle:gradle-errorprone-plugin:0.0.10'
         classpath deps.kotlin.gradlePlugin
-        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
+        classpath deps.bintray.gradlePlugin
     }
 }
 
