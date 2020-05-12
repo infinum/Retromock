@@ -1,20 +1,5 @@
 package co.infinum.retromock;
 
-import java.io.IOException;
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
-import java.net.HttpURLConnection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.Callable;
-import java.util.concurrent.Executor;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
-import javax.annotation.Nullable;
-
 import co.infinum.retromock.meta.Mock;
 import co.infinum.retromock.meta.MockBehavior;
 import co.infinum.retromock.meta.MockResponse;
@@ -29,6 +14,20 @@ import retrofit2.Callback;
 import retrofit2.Converter;
 import retrofit2.Response;
 import retrofit2.Retrofit;
+
+import javax.annotation.Nullable;
+import java.io.IOException;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
+import java.net.HttpURLConnection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Retromock adapts {@link Retrofit} created Java interface using annotations on declared methods
@@ -90,6 +89,7 @@ public final class Retromock {
   private final Retrofit retrofit;
   private final Map<Class<? extends BodyFactory>, BodyFactory> bodyFactories;
   private final Map<Method, RetromockMethod> methodCache;
+  private final Map<Method, CallWrapper> callWrapperCache;
 
   private final boolean eagerlyLoad;
   private final ExecutorService backgroundExecutor;
@@ -105,10 +105,10 @@ public final class Retromock {
     final Executor callbackExecutor,
     final Behavior defaultBehavior,
     final BodyFactory bodyFactory) {
-
     this.retrofit = retrofit;
     this.bodyFactories = bodyFactories;
     this.methodCache = new HashMap<>();
+    this.callWrapperCache = new HashMap<>();
     this.eagerlyLoad = eagerlyLoad;
     this.backgroundExecutor = backgroundExecutor;
     this.callbackExecutor = callbackExecutor;
@@ -120,7 +120,7 @@ public final class Retromock {
    * Create an implementation of the API endpoints defined by the {@code service} interface.
    * If mocking is not enabled on a service method it would return an interface that redirects a
    * call to Retrofit's service.
-   *
+   * <p>
    * To enable mocking of some method it has to be annotated with
    * {@link Mock} annotation. If there is no
    * {@link Mock} annotation or the annotation has value set to {@code
@@ -158,7 +158,7 @@ public final class Retromock {
    * </code></pre>
    * would delay response between 400 and 600 milliseconds.
    *
-   * @param <T> Service
+   * @param <T>     Service
    * @param service class type of a service
    * @return a service implementation that would either mock a call or delegate it to Retrofit's
    * service
@@ -171,7 +171,7 @@ public final class Retromock {
    * Create an implementation of the API endpoints defined by the {@code service} interface.
    * If mocking is not enabled on a service method it would return an interface that redirects a
    * call to a service provided by {@link DelegateFactory} argument.
-   *
+   * <p>
    * To enable mocking of some method it has to be annotated with
    * {@link Mock} annotation. If there is no
    * {@link Mock} annotation or the annotation has value set to {@code
@@ -209,7 +209,7 @@ public final class Retromock {
    * </code></pre>
    * would delay response between 400 and 600 milliseconds.
    *
-   * @param <T> Service
+   * @param <T>     Service
    * @param factory used to create a service delegate to which method calls would be redirected if
    *                mock is disabled on the method
    * @param service class type of a service
@@ -223,8 +223,9 @@ public final class Retromock {
     }
     final T delegate = factory.create();
 
-    return (T) Proxy.newProxyInstance(service.getClassLoader(), new Class[] {service},
+    return (T) Proxy.newProxyInstance(service.getClassLoader(), new Class[]{service},
       new InvocationHandler() {
+
         @Override
         public Object invoke(final Object proxy, final Method method, final Object[] args) throws
           Throwable {
@@ -240,8 +241,10 @@ public final class Retromock {
             return method.invoke(delegate, args);
           }
 
+          CallWrapper callWrapper = findCallWrapper(method);
+
           final CallAdapter<?, T> callAdapter = (CallAdapter<?, T>) retrofit
-            .callAdapter(method.getGenericReturnType(), method.getAnnotations());
+            .callAdapter(callWrapper.getReturnType(), method.getAnnotations());
 
           final ParamsProducer producer = mockMethod.producer();
 
@@ -257,12 +260,14 @@ public final class Retromock {
             }
           });
 
-          return callAdapter.adapt(new RetromockCall(
+          Object call = callAdapter.adapt(new RetromockCall(
             mockMethod.behavior(),
             backgroundExecutor,
             callbackExecutor,
             mockedCall
           ));
+
+          return callWrapper.wrap(call, args);
         }
       });
   }
@@ -278,6 +283,23 @@ public final class Retromock {
       if (result == null) {
         result = RetromockMethod.parse(method, this);
         methodCache.put(method, result);
+      }
+    }
+
+    return result;
+  }
+
+  private <T> CallWrapper findCallWrapper(final Method method) {
+    CallWrapper result = callWrapperCache.get(method);
+    if (result != null) {
+      return result;
+    }
+
+    synchronized (callWrapperCache) {
+      result = callWrapperCache.get(method);
+      if (result == null) {
+        result = CallWrapperFactory.<T>create(method);
+        callWrapperCache.put(method, result);
       }
     }
 
@@ -534,13 +556,13 @@ public final class Retromock {
 
     /**
      * Create the {@link Retromock} instance using the configured values.
-     *
+     * <p>
      * If callbackExecutor is not specified, the one from retrofit will be used instead if exist.
      * If not {@link SyncExecutor} will be used.
-     *
+     * <p>
      * If default {@link Behavior} is not specified, {@link DefaultBehavior} will be used with
      * default parameters to deviate response fetch time between 0.5 and 1.5 seconds.
-     *
+     * <p>
      * If default {@link BodyFactory} is not specified, {@link PassThroughBodyFactory} will be
      * used instead to create body from the text entered in
      * {@link co.infinum.retromock.meta.MockResponse}'s body.
