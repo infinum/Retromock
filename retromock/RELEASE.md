@@ -2,7 +2,7 @@
 
 ### Check README.md and build.gradle
 
-Be sure that [build.gradle](build.gradle), [Changelog](../CHANGELOG.md) and [Readme](../README.md) are both updated and contain new, to be released version.
+Be sure that [build.gradle](build.gradle), [Changelog](../CHANGELOG.md) and [Readme](../README.md) are updated and contain new, to be released version.
 
 ### Run static checkers and tests
 `./gradlew clean build checkstyle pmd findbugs test`
