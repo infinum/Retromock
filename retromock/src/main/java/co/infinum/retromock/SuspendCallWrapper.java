@@ -44,7 +44,7 @@ class SuspendCallWrapper<T> implements CallWrapper {
   }
 
   @Override
-  public Object wrap(final Object call, Object[] args) {
+  public Object wrap(final Object call, final Object[] args) {
     if (continuationWantsResponse) {
       return handleContinuationWithResponse(args, call);
     } else {
