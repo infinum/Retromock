@@ -10,6 +10,8 @@ import java.lang.reflect.Type;
 
 class CallWrapperFactory {
 
+  private CallWrapperFactory() {}
+
   /**
    * Checks if method is suspend kotlin fun and in that case wraps its return type into Retrofit's {@code Call}.
    * Also, method handles special case when return type is wrapped into Retrofit's {@code Response}.
