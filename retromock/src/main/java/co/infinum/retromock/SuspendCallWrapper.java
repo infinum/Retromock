@@ -25,7 +25,6 @@ class SuspendCallWrapper<T> implements CallWrapper {
 
   @SuppressWarnings("unchecked")
   private Object handleContinuationWithResponse(final Object[] args, final Object call) {
-    //noinspection unchecked Checked by reflection inside RequestFactory.
     Continuation<Response<T>> continuation = (Continuation<Response<T>>) args[args.length - 1];
 
     // See SuspendForBody for explanation about this try/catch.
@@ -38,7 +37,6 @@ class SuspendCallWrapper<T> implements CallWrapper {
 
   @SuppressWarnings("unchecked")
   private Object handleContinuation(final Object[] args, final Object call) {
-    //noinspection unchecked Checked by reflection inside RequestFactory.
     Continuation<T> continuation = (Continuation<T>) args[args.length - 1];
     try {
       return KotlinExtensions.await((Call<T>) call, continuation);
