@@ -1,9 +1,9 @@
-apply from: 'versions.gradle'
-
 group = 'co.infinum'
 version = "$versions.retromock"
 
 buildscript {
+    apply from: 'versions.gradle'
+
     repositories {
         google()
         mavenCentral()
@@ -13,7 +13,7 @@ buildscript {
 
     dependencies {
         classpath 'net.ltgt.gradle:gradle-errorprone-plugin:0.0.10'
-        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.2.30'
+        classpath deps.kotlin.gradlePlugin
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
     }
 }
@@ -67,6 +67,8 @@ jacoco {
 }
 
 dependencies {
+    compileOnly deps.kotlin.stdlib
+    compileOnly deps.kotlin.coroutines
 
     compileOnly deps.google.annotations
 
@@ -79,6 +81,7 @@ dependencies {
     testCompile deps.mockito.junit
     testCompile group: 'com.google.guava', name: 'guava', version: '27.0-jre'
     testCompileOnly deps.google.annotations
+    testImplementation deps.kotlin.coroutines
 
     testCompile deps.kotlin.stdlib
     testCompile deps.kotlin.test
