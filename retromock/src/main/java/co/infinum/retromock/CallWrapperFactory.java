@@ -16,7 +16,7 @@ class CallWrapperFactory {
    * Checks if method is suspend kotlin fun and in that case wraps its return type into Retrofit's {@code Call}.
    * Also, method handles special case when return type is wrapped into Retrofit's {@code Response}.
    */
-  static <T> CallWrapper create(final Method method, final Object[] args) {
+  static <T> CallWrapper create(final Method method) {
     Type[] parameterTypes = method.getGenericParameterTypes();
     if (parameterTypes.length > 0) {
       Type lastParameterType = parameterTypes[parameterTypes.length - 1];
@@ -32,7 +32,7 @@ class CallWrapperFactory {
           continuationWantsResponse = true;
         }
 
-        return new SuspendCallWrapper<T>(returnType, continuationWantsResponse, args);
+        return new SuspendCallWrapper<T>(returnType, continuationWantsResponse);
       }
     }
     return new NoOpCallWrapper(method.getGenericReturnType());

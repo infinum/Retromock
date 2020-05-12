@@ -10,12 +10,10 @@ class SuspendCallWrapper<T> implements CallWrapper {
 
   private Type returnType;
   private boolean continuationWantsResponse;
-  private Object[] args;
 
-  public SuspendCallWrapper(final Type returnType, final boolean continuationWantsResponse, final Object[] args) {
+  public SuspendCallWrapper(final Type returnType, final boolean continuationWantsResponse) {
     this.returnType = returnType;
     this.continuationWantsResponse = continuationWantsResponse;
-    this.args = args;
   }
 
   @Override
@@ -46,7 +44,7 @@ class SuspendCallWrapper<T> implements CallWrapper {
   }
 
   @Override
-  public Object wrap(final Object call) {
+  public Object wrap(final Object call, Object[] args) {
     if (continuationWantsResponse) {
       return handleContinuationWithResponse(args, call);
     } else {

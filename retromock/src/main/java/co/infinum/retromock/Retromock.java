@@ -89,6 +89,7 @@ public final class Retromock {
   private final Retrofit retrofit;
   private final Map<Class<? extends BodyFactory>, BodyFactory> bodyFactories;
   private final Map<Method, RetromockMethod> methodCache;
+  private final Map<Method, CallWrapper> callWrapperCache;
 
   private final boolean eagerlyLoad;
   private final ExecutorService backgroundExecutor;
@@ -107,6 +108,7 @@ public final class Retromock {
     this.retrofit = retrofit;
     this.bodyFactories = bodyFactories;
     this.methodCache = new HashMap<>();
+    this.callWrapperCache = new HashMap<>();
     this.eagerlyLoad = eagerlyLoad;
     this.backgroundExecutor = backgroundExecutor;
     this.callbackExecutor = callbackExecutor;
@@ -239,7 +241,7 @@ public final class Retromock {
             return method.invoke(delegate, args);
           }
 
-          CallWrapper callWrapper = CallWrapperFactory.<T>create(method, args);
+          CallWrapper callWrapper = findCallWrapper(method);
 
           final CallAdapter<?, T> callAdapter = (CallAdapter<?, T>) retrofit
             .callAdapter(callWrapper.getReturnType(), method.getAnnotations());
@@ -265,7 +267,7 @@ public final class Retromock {
             mockedCall
           ));
 
-          return callWrapper.wrap(call);
+          return callWrapper.wrap(call, args);
         }
       });
   }
@@ -281,6 +283,23 @@ public final class Retromock {
       if (result == null) {
         result = RetromockMethod.parse(method, this);
         methodCache.put(method, result);
+      }
+    }
+
+    return result;
+  }
+
+  private <T> CallWrapper findCallWrapper(final Method method) {
+    CallWrapper result = callWrapperCache.get(method);
+    if (result != null) {
+      return result;
+    }
+
+    synchronized (callWrapperCache) {
+      result = callWrapperCache.get(method);
+      if (result == null) {
+        result = CallWrapperFactory.<T>create(method);
+        callWrapperCache.put(method, result);
       }
     }
 
