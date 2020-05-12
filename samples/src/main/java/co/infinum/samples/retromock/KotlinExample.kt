@@ -65,10 +65,8 @@ class KotlinExample {
                     service.getCoroutineUser()
                 }
 
-                withContext(Dispatchers.Default) {
-                    println(user)
-                    print(userFromResponse)
-                }
+                println(user)
+                print(userFromResponse)
             }
         }
     }
