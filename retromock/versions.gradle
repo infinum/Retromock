@@ -7,6 +7,7 @@ buildscript {
             "assertj"  : "3.8.0",
             "mockito"  : "2.23.0",
             "kotlin"   : "1.3.72",
+            "bintray"   : "1.8.5",
             "coroutines" : "1.3.6",
             "google"   : [
                     "annotations": "3.0.1"
@@ -32,7 +33,10 @@ buildscript {
                     "test"  : "org.jetbrains.kotlin:kotlin-test:${versions.kotlin}",
                     "coroutines" : "org.jetbrains.kotlinx:kotlinx-coroutines-core:${versions.coroutines}",
                     "gradlePlugin" : "org.jetbrains.kotlin:kotlin-gradle-plugin:${versions.kotlin}"
-            ]
+            ],
+            "bintray"  : [
+                    "gradlePlugin": "com.jfrog.bintray.gradle:gradle-bintray-plugin:${versions.bintray}"
+            ],
     ]
 
 }
