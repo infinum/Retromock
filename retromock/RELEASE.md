@@ -5,11 +5,11 @@
 Be sure that [build.gradle](build.gradle), [Changelog](../CHANGELOG.md) and [Readme](../README.md) are updated and contain new, to be released version.
 
 ### Run static checkers and tests
-`./gradlew clean build checkstyle pmd findbugs test`
+`./gradlew clean build checkstyleMain checkstyleTest pmdMain pmdTest findbugsMain findbugsTest test`
 
 ### Run gradle task
 
-`./gradlew clean build javadocs jar sourceJar`
+`./gradlew clean build javadoc jar sourceJar`
 
 `./gradlew bintrayUpload -Pbintray_username={yourBintrayUsername} -Pbintray_api_key={bintrayApiKey}`
 
