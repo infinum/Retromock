@@ -12,7 +12,6 @@ buildscript {
 
     dependencies {
         classpath deps.kotlin.gradlePlugin
-        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
     }
 }
 
