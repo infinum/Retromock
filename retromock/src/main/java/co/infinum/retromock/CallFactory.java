@@ -12,7 +12,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-final class Calls {
+final class CallFactory {
 
   /**
    * Invokes {@code callable} once for the returned {@link Call} and once for each instance that is
@@ -34,7 +34,7 @@ final class Calls {
     return new FakeCall<>(null, failure);
   }
 
-  private Calls() {
+  private CallFactory() {
   }
 
   static final class FakeCall<T> implements Call<T> {

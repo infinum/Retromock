@@ -17,39 +17,39 @@ import java.io.IOException
 import java.util.concurrent.Callable
 
 @ExtendWith(MockitoExtension::class)
-class CallsTest {
+class CallFactoryTest {
 
     @Test
     fun fakeCallCannotBeCreatedWithBothResponseAndError() {
         assertThrows<AssertionError> {
-            Calls.FakeCall(Response.success(""), IOException())
+            CallFactory.FakeCall(Response.success(""), IOException())
         }
     }
 
     @Test
     fun fakeCallCannotBeCreatedWithNonOfResponseAndError() {
         assertThrows<AssertionError> {
-            Calls.FakeCall<String>(null, null)
+            CallFactory.FakeCall<String>(null, null)
         }
     }
 
     @Test
     fun fakeCallExecuteSetsTheFlag() {
-        val call = Calls.FakeCall(Response.success(""), null)
+        val call = CallFactory.FakeCall(Response.success(""), null)
         call.execute()
         assertThat(call.isExecuted).isTrue()
     }
 
     @Test
     fun fakeCallCancelSetsTheFlag() {
-        val call = Calls.FakeCall(Response.success(""), null)
+        val call = CallFactory.FakeCall(Response.success(""), null)
         call.cancel()
         assertThat(call.isCanceled).isTrue()
     }
 
     @Test
     fun fakeCallCannotExecuteCallMoreThanOnce() {
-        val call = Calls.FakeCall(Response.success(""), null)
+        val call = CallFactory.FakeCall(Response.success(""), null)
         call.execute()
 
         assertThrows<IllegalStateException> {
@@ -59,7 +59,7 @@ class CallsTest {
 
     @Test
     fun fakeCallCannotExecuteCanceledCall() {
-        val call = Calls.FakeCall(Response.success(""), null)
+        val call = CallFactory.FakeCall(Response.success(""), null)
         call.cancel()
 
         assertThrows<IOException> {
@@ -69,7 +69,7 @@ class CallsTest {
 
     @Test
     fun fakeCallCloneCreatesCleanState() {
-        val call = Calls.FakeCall(Response.success(""), null)
+        val call = CallFactory.FakeCall(Response.success(""), null)
         call.execute()
         call.cancel()
 
@@ -80,7 +80,7 @@ class CallsTest {
 
     @Test
     fun fakeCallExecuteThrows() {
-        val call = Calls.FakeCall<String>(null, IOException())
+        val call = CallFactory.FakeCall<String>(null, IOException())
 
         assertThrows<IOException> {
             call.execute()
@@ -89,7 +89,7 @@ class CallsTest {
 
     @Test
     fun fakeCallCannotEnqueueCallMoreThanOnce() {
-        val call = Calls.FakeCall(Response.success(""), null)
+        val call = CallFactory.FakeCall(Response.success(""), null)
         call.execute()
 
         assertThrows<IllegalStateException> {
@@ -100,7 +100,7 @@ class CallsTest {
     @Test
     fun fakeCallCannotEnqueueCanceledCall() {
         val callback = mock<Callback<String>>()
-        val call = Calls.FakeCall(Response.success(""), null)
+        val call = CallFactory.FakeCall(Response.success(""), null)
         call.cancel()
         call.enqueue(callback)
 
@@ -111,21 +111,21 @@ class CallsTest {
     @Test
     fun fakeCallRequestReturnsRaw() {
         val response = Response.success("")
-        val call = Calls.FakeCall(response, null)
+        val call = CallFactory.FakeCall(response, null)
         assertThat(call.request()).isEqualTo(response.raw().request())
     }
 
     @Test
     fun fakeCallErrorResponseReturnsNotNull() {
-        val call = Calls.FakeCall<String>(null, IOException())
+        val call = CallFactory.FakeCall<String>(null, IOException())
         assertThat(call.request()).isNotNull()
     }
 
     @Test
     fun deferredCallExecuteInvokesCallable() {
         val callable = mock<Callable<Call<String>>>()
-        whenever(callable.call()).thenReturn(Calls.response(""))
-        val call = Calls.DeferredCall(callable)
+        whenever(callable.call()).thenReturn(CallFactory.response(""))
+        val call = CallFactory.DeferredCall(callable)
 
         call.execute()
         verify(callable).call()
@@ -135,8 +135,8 @@ class CallsTest {
     @Test
     fun deferredCallEnqueueInvokesCallable() {
         val callable = mock<Callable<Call<String>>>()
-        whenever(callable.call()).thenReturn(Calls.response(""))
-        val call = Calls.DeferredCall(callable)
+        whenever(callable.call()).thenReturn(CallFactory.response(""))
+        val call = CallFactory.DeferredCall(callable)
 
         call.enqueue(mock())
         verify(callable).call()
@@ -147,7 +147,7 @@ class CallsTest {
     fun deferredCallCallableThrowsIO() {
         val callable = mock<Callable<Call<String>>>()
         whenever(callable.call()).thenThrow(IOException::class.java)
-        val call = Calls.DeferredCall(callable)
+        val call = CallFactory.DeferredCall(callable)
 
         val callback = mock<Callback<String>>()
         call.enqueue(callback)
@@ -159,7 +159,7 @@ class CallsTest {
     fun deferredCallCallableThrowsFatal() {
         val callable = mock<Callable<Call<String>>>()
         whenever(callable.call()).thenThrow(Exception::class.java)
-        val call = Calls.DeferredCall(callable)
+        val call = CallFactory.DeferredCall(callable)
 
         val callback = mock<Callback<String>>()
 
@@ -173,8 +173,8 @@ class CallsTest {
     @Test
     fun deferredCallExecuteSetsTheFlag() {
         val callable = mock<Callable<Call<String>>>()
-        whenever(callable.call()).thenReturn(Calls.response(""))
-        val call = Calls.DeferredCall(callable)
+        whenever(callable.call()).thenReturn(CallFactory.response(""))
+        val call = CallFactory.DeferredCall(callable)
         call.execute()
         assertThat(call.isExecuted).isTrue()
     }
@@ -182,8 +182,8 @@ class CallsTest {
     @Test
     fun deferredCallCancelSetsTheFlag() {
         val callable = mock<Callable<Call<String>>>()
-        whenever(callable.call()).thenReturn(Calls.response(""))
-        val call = Calls.DeferredCall(callable)
+        whenever(callable.call()).thenReturn(CallFactory.response(""))
+        val call = CallFactory.DeferredCall(callable)
         call.cancel()
         assertThat(call.isCanceled).isTrue()
     }
@@ -191,8 +191,8 @@ class CallsTest {
     @Test
     fun deferredCallCannotExecuteCallMoreThanOnce() {
         val callable = mock<Callable<Call<String>>>()
-        whenever(callable.call()).thenReturn(Calls.response(""))
-        val call = Calls.DeferredCall(callable)
+        whenever(callable.call()).thenReturn(CallFactory.response(""))
+        val call = CallFactory.DeferredCall(callable)
         call.execute()
 
         assertThrows<IllegalStateException> {
@@ -203,8 +203,8 @@ class CallsTest {
     @Test
     fun deferredCallCannotExecuteCanceledCall() {
         val callable = mock<Callable<Call<String>>>()
-        whenever(callable.call()).thenReturn(Calls.response(""))
-        val call = Calls.DeferredCall(callable)
+        whenever(callable.call()).thenReturn(CallFactory.response(""))
+        val call = CallFactory.DeferredCall(callable)
         call.cancel()
 
         assertThrows<IOException> {
@@ -215,8 +215,8 @@ class CallsTest {
     @Test
     fun deferredCallCloneCreatesCleanState() {
         val callable = mock<Callable<Call<String>>>()
-        whenever(callable.call()).then { Calls.response("") }
-        val call = Calls.DeferredCall(callable)
+        whenever(callable.call()).then { CallFactory.response("") }
+        val call = CallFactory.DeferredCall(callable)
         call.execute()
         call.cancel()
 
@@ -229,16 +229,16 @@ class CallsTest {
     fun deferredCallRequestReturnsRaw() {
         val response = Response.success("")
         val callable = mock<Callable<Call<String>>>()
-        whenever(callable.call()).thenReturn(Calls.response(response))
-        val call = Calls.DeferredCall(callable)
+        whenever(callable.call()).thenReturn(CallFactory.response(response))
+        val call = CallFactory.DeferredCall(callable)
         assertThat(call.request()).isEqualTo(response.raw().request())
     }
 
     @Test
     fun deferredCallErrorResponseReturnsNotNull() {
         val callable = mock<Callable<Call<String>>>()
-        whenever(callable.call()).thenReturn(Calls.response(""))
-        val call = Calls.DeferredCall(callable)
+        whenever(callable.call()).thenReturn(CallFactory.response(""))
+        val call = CallFactory.DeferredCall(callable)
         assertThat(call.request()).isNotNull()
     }
 

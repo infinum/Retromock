@@ -248,10 +248,10 @@ public final class Retromock {
 
           final ParamsProducer producer = mockMethod.producer();
 
-          Call<?> mockedCall = Calls.defer(new Callable<Call<T>>() {
+          Call<?> mockedCall = CallFactory.defer(new Callable<Call<T>>() {
             @Override
             public Call<T> call() throws IOException {
-              return Calls.response(createResponse(
+              return CallFactory.response(createResponse(
                 retrofit.<T>responseBodyConverter(
                   callAdapter.responseType(),
                   method.getAnnotations()

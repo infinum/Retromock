@@ -41,7 +41,7 @@ class RetromockCallTest {
     @Test
     fun http200Sync() {
         val body = "Response body content"
-        val delegate = Calls.response(body)
+        val delegate = CallFactory.response(body)
 
         retromockCall = RetromockCall(behavior, backgroundExecutor, callbackExecutor, delegate)
         whenever(behavior.delayMillis()).thenReturn(0)
@@ -55,7 +55,7 @@ class RetromockCallTest {
     @Test
     fun http200Async() {
         val body = "Response body content"
-        val delegate = Calls.response(body)
+        val delegate = CallFactory.response(body)
 
         val callback = mock<Callback<String>>()
 
@@ -79,7 +79,7 @@ class RetromockCallTest {
     @Test
     fun http404Sync() {
         val body = "Response body content"
-        val delegate = Calls.response(Response.error<String>(404, ResponseBody.create(MediaType.parse("text/plain"), body)))
+        val delegate = CallFactory.response(Response.error<String>(404, ResponseBody.create(MediaType.parse("text/plain"), body)))
 
         retromockCall = RetromockCall(behavior, backgroundExecutor, callbackExecutor, delegate)
         whenever(behavior.delayMillis()).thenReturn(0)
@@ -93,7 +93,7 @@ class RetromockCallTest {
     @Test
     fun http404Async() {
         val body = "Response body content"
-        val delegate = Calls.response(Response.error<String>(404, ResponseBody.create(MediaType.parse("text/plain"), body)))
+        val delegate = CallFactory.response(Response.error<String>(404, ResponseBody.create(MediaType.parse("text/plain"), body)))
 
         val callback = mock<Callback<String>>()
 
@@ -116,7 +116,7 @@ class RetromockCallTest {
 
     @Test
     fun transportProblem() {
-        val delegate = Calls.failure<String>(IOException("Socket closed."))
+        val delegate = CallFactory.failure<String>(IOException("Socket closed."))
 
         retromockCall = RetromockCall(behavior, backgroundExecutor, callbackExecutor, delegate)
         whenever(behavior.delayMillis()).thenReturn(0)
@@ -128,7 +128,7 @@ class RetromockCallTest {
 
     @Test
     fun transportProblemAsync() {
-        val delegate = Calls.failure<String>(IOException("Socket closed."))
+        val delegate = CallFactory.failure<String>(IOException("Socket closed."))
 
         val callback = mock<Callback<String>>()
 
@@ -152,7 +152,7 @@ class RetromockCallTest {
     @Test
     fun executeCallOnce() {
         val body = "Response body content"
-        val delegate = Calls.response(body)
+        val delegate = CallFactory.response(body)
 
         retromockCall = RetromockCall(behavior, backgroundExecutor, callbackExecutor, delegate)
         whenever(behavior.delayMillis()).thenReturn(0)
@@ -165,7 +165,7 @@ class RetromockCallTest {
     @Test
     fun requestIsEqualToRaw() {
         val body = "Response body content"
-        val delegate = Calls.response(body)
+        val delegate = CallFactory.response(body)
 
         retromockCall = RetromockCall(behavior, backgroundExecutor, callbackExecutor, delegate)
 
@@ -175,7 +175,7 @@ class RetromockCallTest {
     @Test
     fun cannotExecuteTwice() {
         val body = "Response body content"
-        val delegate = Calls.response(body)
+        val delegate = CallFactory.response(body)
 
         retromockCall = RetromockCall(behavior, backgroundExecutor, callbackExecutor, delegate)
         whenever(behavior.delayMillis()).thenReturn(0)
@@ -190,7 +190,7 @@ class RetromockCallTest {
     @Test
     fun cannotEnqueueTwice() {
         val body = "Response body content"
-        val delegate = Calls.response(body)
+        val delegate = CallFactory.response(body)
 
         retromockCall = RetromockCall(behavior, backgroundExecutor, callbackExecutor, delegate)
         whenever(behavior.delayMillis()).thenReturn(0)
@@ -205,7 +205,7 @@ class RetromockCallTest {
     @Test
     fun cannotExecuteCancelledCall() {
         val body = "Response body content"
-        val delegate = Calls.response(body)
+        val delegate = CallFactory.response(body)
 
         retromockCall = RetromockCall(behavior, backgroundExecutor, callbackExecutor, delegate)
 
@@ -219,7 +219,7 @@ class RetromockCallTest {
     @Test
     fun cannotEnqueueCancelledCall() {
         val body = "Response body content"
-        val delegate = Calls.response(body)
+        val delegate = CallFactory.response(body)
 
         retromockCall = RetromockCall(behavior, backgroundExecutor, callbackExecutor, delegate)
         val callback = mock<Callback<String>>()
@@ -234,7 +234,7 @@ class RetromockCallTest {
     @Test
     fun executeFlagIsSet() {
         val body = "Response body content"
-        val delegate = Calls.response(body)
+        val delegate = CallFactory.response(body)
 
         retromockCall = RetromockCall(behavior, backgroundExecutor, callbackExecutor, delegate)
         retromockCall.execute()
@@ -245,7 +245,7 @@ class RetromockCallTest {
     @Test
     fun cancelFlagIsSet() {
         val body = "Response body content"
-        val delegate = Calls.response(body)
+        val delegate = CallFactory.response(body)
 
         retromockCall = RetromockCall(behavior, backgroundExecutor, callbackExecutor, delegate)
         retromockCall.cancel()
@@ -256,7 +256,7 @@ class RetromockCallTest {
     @Test
     fun cloneBuildCleanState() {
         val body = "Response body content"
-        val delegate = Calls.response(body)
+        val delegate = CallFactory.response(body)
 
         retromockCall = RetromockCall(behavior, backgroundExecutor, callbackExecutor, delegate)
         retromockCall.execute()

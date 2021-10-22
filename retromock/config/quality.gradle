@@ -11,7 +11,7 @@ checkstyleMain {
 }
 
 pmdMain {
-    ruleSetFiles = files("${project.projectDir}/config/pmd-ruleset.xml")
+    ruleSets = ["${project.projectDir}/config/pmd-ruleset.xml"]
     ignoreFailures = false
 
     source 'src'
