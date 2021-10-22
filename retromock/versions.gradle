@@ -1,16 +1,19 @@
 buildscript {
 
     ext.versions = [
-            "retromock": "1.1.0",
-            "retrofit" : "2.8.1",
-            "junit"    : "5.1.1",
-            "assertj"  : "3.8.0",
-            "mockito"  : "2.23.0",
-            "kotlin"   : "1.3.72",
+            "retromock" : "1.1.0",
+            "retrofit"  : "2.8.1",
+            "junit"     : "5.1.1",
+            "assertj"   : "3.8.0",
+            "mockito"   : "2.23.0",
+            "kotlin"    : "1.3.72",
             "bintray"   : "1.8.5",
-            "coroutines" : "1.3.6",
-            "google"   : [
+            "coroutines": "1.3.6",
+            "google"    : [
                     "annotations": "3.0.1"
+            ],
+            "spotbugs"  : [
+                    "plugin": "4.7.9"
             ]
     ]
 
@@ -29,14 +32,17 @@ buildscript {
                     "annotations": "com.google.code.findbugs:annotations:${versions.google.annotations}"
             ],
             "kotlin"  : [
-                    "stdlib": "org.jetbrains.kotlin:kotlin-stdlib:${versions.kotlin}",
-                    "test"  : "org.jetbrains.kotlin:kotlin-test:${versions.kotlin}",
-                    "coroutines" : "org.jetbrains.kotlinx:kotlinx-coroutines-core:${versions.coroutines}",
-                    "gradlePlugin" : "org.jetbrains.kotlin:kotlin-gradle-plugin:${versions.kotlin}"
+                    "stdlib"      : "org.jetbrains.kotlin:kotlin-stdlib:${versions.kotlin}",
+                    "test"        : "org.jetbrains.kotlin:kotlin-test:${versions.kotlin}",
+                    "coroutines"  : "org.jetbrains.kotlinx:kotlinx-coroutines-core:${versions.coroutines}",
+                    "gradlePlugin": "org.jetbrains.kotlin:kotlin-gradle-plugin:${versions.kotlin}"
             ],
-            "bintray"  : [
+            "bintray" : [
                     "gradlePlugin": "com.jfrog.bintray.gradle:gradle-bintray-plugin:${versions.bintray}"
             ],
+            "quality" : [
+                    "spotbugsPlugin": "com.github.spotbugs.snom:spotbugs-gradle-plugin:${versions.spotbugs.plugin}"
+            ]
     ]
 
 }

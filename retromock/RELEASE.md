@@ -5,7 +5,7 @@
 Be sure that [build.gradle](build.gradle), [Changelog](../CHANGELOG.md) and [Readme](../README.md) are updated and contain new, to be released version.
 
 ### Run static checkers and tests
-`./gradlew clean build checkstyleMain checkstyleTest pmdMain pmdTest findbugsMain findbugsTest test`
+`./gradlew clean build checkstyleMain checkstyleTest pmdMain pmdTest spotBugsMain test`
 
 ### Run gradle task
 
