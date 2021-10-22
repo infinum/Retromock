@@ -1,6 +1,6 @@
 # Retromock
 [![Build Status](https://app.bitrise.io/app/7b832efc5bb97051/status.svg?token=S3Efgo8YEz6s8tFv2ocKzA&branch=master)](https://app.bitrise.io/app/7b832efc5bb97051)
-[ ![Download](https://api.bintray.com/packages/infinum/maven/retromock/images/download.svg) ](https://bintray.com/infinum/maven/retromock/_latestVersion)
+[ ![Download](https://img.shields.io/maven-central/v/co.infinum/retromock) ](https://search.maven.org/artifact/co.infinum/retromock)
 
 <img src='./logo.svg' width='264'/>
 
