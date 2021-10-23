@@ -176,6 +176,7 @@ final class RetromockCall<T> implements Call<T> {
             delay();
           } catch (InterruptedException interrupt) {
             callback.onFailure(RetromockCall.this, new IOException("canceled"));
+            return;
           }
           delegate.enqueue(new Callback<T>() {
             @Override

@@ -20,6 +20,8 @@ import retrofit2.Response
 import java.io.IOException
 import java.util.concurrent.Executor
 import java.util.concurrent.ExecutorService
+import java.util.concurrent.Executors
+import java.util.concurrent.TimeUnit
 
 @ExtendWith(MockitoExtension::class)
 class RetromockCallTest {
@@ -268,4 +270,69 @@ class RetromockCallTest {
         assertThat(cloned.isExecuted).isFalse()
     }
 
+    @Test
+    fun cancelledCallDoesNotEnqueueDelegateCall() {
+        val delegate = mock<Call<String>>()
+        whenever(behavior.delayMillis()).thenReturn(500)
+        val callback = mock<Callback<String>>()
+
+        val service = Executors.newScheduledThreadPool(3)
+
+        retromockCall = RetromockCall(
+                behavior,
+                service,
+                service,
+                delegate
+        )
+
+        try {
+            service.schedule(
+                    {
+                        retromockCall.cancel()
+                    },
+                    200,
+                    TimeUnit.MILLISECONDS
+            )
+
+            retromockCall.enqueue(callback)
+
+
+            verify(callback, timeout(600)).onFailure(any(), any())
+            verify(delegate, never()).enqueue(any())
+            verify(delegate, never()).execute()
+        } finally {
+            service.shutdownNow()
+        }
+    }
+
+    @Test
+    fun cancelledCallDoesNotExecuteDelegateCall() {
+        val delegate = mock<Call<String>>()
+        whenever(behavior.delayMillis()).thenReturn(500)
+
+        val service = Executors.newScheduledThreadPool(3)
+
+        retromockCall = RetromockCall(
+                behavior,
+                service,
+                service,
+                delegate
+        )
+
+        try {
+            service.schedule(
+                    {
+                        retromockCall.cancel()
+                    },
+                    200,
+                    TimeUnit.MILLISECONDS
+            )
+
+            assertThrows<IOException> { retromockCall.execute() }
+            verify(delegate, never()).enqueue(any())
+            verify(delegate, never()).execute()
+        } finally {
+            service.shutdownNow()
+        }
+    }
 }
