@@ -11,7 +11,7 @@ Quick guide
 
 #### Add dependency
 ```gradle
-implementation 'co.infinum:retromock:1.1.0'
+implementation 'co.infinum:retromock:1.1.1'
 ```
 
 #### Initialize
