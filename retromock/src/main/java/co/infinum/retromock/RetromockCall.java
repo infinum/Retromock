@@ -9,6 +9,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
 import okhttp3.Request;
+import okio.Timeout;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -42,6 +43,11 @@ final class RetromockCall<T> implements Call<T> {
   @Override
   public Request request() {
     return delegate.request();
+  }
+
+  @Override
+  public Timeout timeout() {
+    return delegate.timeout();
   }
 
   private void enqueueInBackground(final Callback<T> callback) {
@@ -170,6 +176,7 @@ final class RetromockCall<T> implements Call<T> {
             delay();
           } catch (InterruptedException interrupt) {
             callback.onFailure(RetromockCall.this, new IOException("canceled"));
+            return;
           }
           delegate.enqueue(new Callback<T>() {
             @Override
