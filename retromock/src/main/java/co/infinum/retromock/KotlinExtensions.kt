@@ -4,12 +4,15 @@ package co.infinum.retromock
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.suspendCancellableCoroutine
-import retrofit2.*
-import kotlin.coroutines.resumeWithException
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.HttpException
+import retrofit2.Response
 import kotlin.coroutines.intrinsics.COROUTINE_SUSPENDED
 import kotlin.coroutines.intrinsics.intercepted
 import kotlin.coroutines.intrinsics.suspendCoroutineUninterceptedOrReturn
 import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
 
 inline fun <reified T> Retromock.create(): T = create(T::class.java)
 
@@ -23,7 +26,8 @@ internal suspend fun <T : Any> Call<T>.await(): T {
                 if (response.isSuccessful) {
                     val body = response.body()
                     if (body == null) {
-                        val e = KotlinNullPointerException("Response body type was declared as non-null")
+                        val e =
+                            KotlinNullPointerException("Response body type was declared as non-null")
                         continuation.resumeWithException(e)
                     } else {
                         continuation.resume(body)
