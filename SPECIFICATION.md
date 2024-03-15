@@ -60,7 +60,7 @@ Headers can be declared as array of type `@MockHeader` (`name-value` pair) annot
       @MockHeader(name = "AnyCustomHeader", value = "AnyCustomValue")
   })
   @GET("/endpoint")
-  @Call<User> getUser();
+  Call<User> getUser();
 ```
 
 Methods can have multiple `@MockResponse` annotations.

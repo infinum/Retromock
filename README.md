@@ -1,4 +1,8 @@
-# Retromock [![CircleCI](https://circleci.com/gh/infinum/Retromock.svg?style=svg)](https://circleci.com/gh/infinum/Retromock)
+# Retromock
+[![Build Status](https://app.bitrise.io/app/7b832efc5bb97051/status.svg?token=S3Efgo8YEz6s8tFv2ocKzA&branch=master)](https://app.bitrise.io/app/7b832efc5bb97051)
+[ ![Download](https://img.shields.io/maven-central/v/co.infinum/retromock) ](https://search.maven.org/artifact/co.infinum/retromock)
+
+<img src='./logo.svg' width='264'/>
 
 Adapts Java interface created by [Retrofit][retrofit] using annotations on declared methods to define response mocks.
 
@@ -7,7 +11,7 @@ Quick guide
 
 #### Add dependency
 ```gradle
-implementation 'co.infinum:retromock:0.2.0'
+implementation 'co.infinum:retromock:1.1.1'
 ```
 
 #### Initialize
@@ -131,10 +135,14 @@ limitations under the License.
 
 Maintained and sponsored by [Infinum](http://www.infinum.co).
 
-<a href='https://infinum.co'>
-  <img src='https://infinum.co/infinum.png' href='https://infinum.co' width='264'>
-</a>
-
+<p align="center">
+  <a href='https://infinum.com'>
+    <picture>
+        <source srcset="https://assets.infinum.com/brand/logo/static/white.svg" media="(prefers-color-scheme: dark)">
+        <img src="https://assets.infinum.com/brand/logo/static/default.svg">
+    </picture>
+  </a>
+</p>
 
  [retrofit]: https://square.github.io/retrofit/
  [specification]: SPECIFICATION.md
