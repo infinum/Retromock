@@ -289,7 +289,7 @@ public final class Retromock {
     return result;
   }
 
-  private <T> CallWrapper findCallWrapper(final Method method) {
+  public  <T> CallWrapper findCallWrapper(final Method method) {
     CallWrapper result = callWrapperCache.get(method);
     if (result != null) {
       return result;
