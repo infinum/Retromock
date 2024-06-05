@@ -1,6 +1,7 @@
 package co.infinum.retromock
 
 import co.infinum.retromock.meta.ProvidesMock
+import kotlinx.coroutines.runBlocking
 import okhttp3.Headers
 import org.assertj.core.api.Java6Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -11,8 +12,9 @@ import retrofit2.Retrofit
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
-import kotlin.coroutines.Continuation
-import kotlin.coroutines.EmptyCoroutineContext
+import java.util.concurrent.atomic.AtomicReference
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 @Suppress("UNUSED_PARAMETER", "unused")
 @ExtendWith(MockitoExtension::class)
@@ -390,7 +392,7 @@ class ProviderResponseProducerSuspendTest {
         )
 
         val error = assertThrows<RuntimeException> {
-            producer.produce(arrayOf())
+            runBlocking { producer.invokeNoArgs() }
         }
 
         assertThat(error.message).contains("threw an exception while executing.")
@@ -421,8 +423,7 @@ class ProviderResponseProducerSuspendTest {
             retromock
         )
 
-
-        val params = producer.produce(arrayOf(Continuation::class.java))
+        val params = runBlocking { producer.invokeNoArgs() }
 
         assertThat(params.code()).isEqualTo(100)
         assertThat(params.message()).isEqualTo("test-message")
@@ -435,4 +436,13 @@ class ProviderResponseProducerSuspendTest {
         assertThat(params.bodyFactory()).isInstanceOf(RetromockBodyFactory::class.java)
     }
 
+    private suspend fun ProviderResponseProducer.invokeNoArgs(): ResponseParams {
+        val value = AtomicReference<ResponseParams>()
+        suspendCoroutine<String> {
+            val params = produce(arrayOf(it))
+            value.set(params)
+            it.resume("")
+        }
+        return value.get()
+    }
 }
