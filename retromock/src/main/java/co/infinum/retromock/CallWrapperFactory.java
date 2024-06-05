@@ -33,7 +33,7 @@ final class CallWrapperFactory {
           continuationWantsResponse = true;
         }
 
-        return new SuspendCallWrapper<T>(returnType, continuationWantsResponse);
+        return new SuspendCallWrapper<T>(returnType,actualType, continuationWantsResponse);
       }
     }
     return new NoOpCallWrapper(method.getGenericReturnType());
