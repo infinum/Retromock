@@ -7,4 +7,6 @@ interface CallWrapper {
   Object wrap(final Object call, Object[] args);
 
   Type getReturnType();
+
+  Type getActualType();
 }
