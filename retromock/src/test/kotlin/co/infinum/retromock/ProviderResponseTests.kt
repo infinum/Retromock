@@ -4,10 +4,10 @@ import co.infinum.retromock.helpers.ImmediateBehavior
 import co.infinum.retromock.meta.Mock
 import co.infinum.retromock.meta.MockResponseProvider
 import co.infinum.retromock.meta.ProvidesMock
-import kotlinx.coroutines.runBlocking
 import okhttp3.ResponseBody
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test
+import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.http.GET
 
@@ -18,6 +18,7 @@ class ProviderResponseTests {
                 .baseUrl("http://infinum.co")
                 .build()
         )
+        .defaultBehavior(ImmediateBehavior())
         .build()
 
 
@@ -28,22 +29,22 @@ class ProviderResponseTests {
         @GET("/")
         @Mock
         @MockResponseProvider(NoArgsProducer::class)
-        fun noArgs(): ResponseBody
+        fun noArgs(): Call<ResponseBody>
 
         @GET("/")
         @Mock
         @MockResponseProvider(SingleArgProducer::class)
-        fun singleArg(arg: String): ResponseBody
+        fun singleArg(arg: String): Call<ResponseBody>
 
         @GET("/")
         @Mock
         @MockResponseProvider(MultipleArgsProducer::class)
-        fun multipleArgs(arg0: String, arg1: String): ResponseBody
+        fun multipleArgs(arg0: String, arg1: String): Call<ResponseBody>
 
         @GET("/")
         @Mock
         @MockResponseProvider(MultipleDiffProducer::class)
-        fun multipleDiff(arg0: String, arg1: Int): ResponseBody
+        fun multipleDiff(arg0: String, arg1: Int): Call<ResponseBody>
     }
 
     class NoArgsProducer {
@@ -74,30 +75,31 @@ class ProviderResponseTests {
 
     @Test
     fun testNoArgProvider() {
-        val responseBody =   service.noArgs()
-        Assertions.assertThat(responseBody.string()).isEqualTo("noArgsBody")
+        val responseBody = service.noArgs().execute()
+        Assertions.assertThat(responseBody.body()?.string()).isEqualTo("noArgsBody")
     }
 
     @Test
     fun testSingleArgProvider() {
         val arg1 = "arg1"
-        val responseBody =   service.singleArg(arg1)
-        Assertions.assertThat(responseBody.string()).isEqualTo(arg1)
+        val responseBody = service.singleArg(arg1).execute()
+        Assertions.assertThat(responseBody.body()?.string()).isEqualTo(arg1)
     }
 
     @Test
     fun testMultipleArgsProvider() {
         val arg1 = "arg1"
         val arg2 = "arg2"
-        val responseBody =   service.multipleArgs(arg1, arg2)
-        Assertions.assertThat(responseBody.string()).isEqualTo(arg1 + arg2)
+        val responseBody = service.multipleArgs(arg1, arg2).execute()
+        Assertions.assertThat(responseBody.body()?.string()).isEqualTo(arg1 + arg2)
     }
 
     @Test
     fun testMultipleDiffProvider() {
         val arg1 = "arg1"
         val arg2 = 10
-        val responseBody =   service.multipleDiff(arg1, arg2)
-        Assertions.assertThat(responseBody.string()).isEqualTo(arg1 + arg2)
+        val responseBody = service.multipleDiff(arg1, arg2).execute()
+        Assertions.assertThat(responseBody.body()?.string()).isEqualTo(arg1 + arg2)
     }
+
 }
