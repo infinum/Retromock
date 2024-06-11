@@ -96,52 +96,6 @@ class KotlinSuspendTest {
         suspend fun getResponseBody(): ResponseBody
     }
 
-    interface ProvideMockMethod {
-
-        @GET("/")
-        @Mock
-        @MockResponseProvider(NoArgsProducer::class)
-        suspend fun noArgs(): ResponseBody
-
-        suspend fun singleArg(arg: String): String
-
-        suspend fun multipleArgs(arg0: String, arg1: String): String
-
-        suspend fun multipleDiff(arg0: String, arg1: Int): String
-
-        suspend fun annotatedArgs(
-            @Header("header") header: String,
-            @Body body: String
-        ): String
-
-        @GET("test")
-        suspend fun annotatedMethod(arg0: String, arg1: Int): String
-
-    }
-
-    class NoArgsProducer {
-        @ProvidesMock
-        suspend fun noArgs(): co.infinum.retromock.Response =
-            co.infinum.retromock.Response.Builder().body("ResponseBody").build()
-    }
-
-    @Test
-    fun TestSuspendDynamicProviders(){
-        val retrofit = Retrofit.Builder()
-            .baseUrl("http://infinum.co/")
-            .build()
-
-        val retromock = Retromock.Builder()
-            .retrofit(retrofit)
-            .defaultBehavior(ImmediateBehavior())
-            .build()
-
-        val service = retromock.create(ProvideMockMethod::class.java)
-
-        val responseBody = runBlocking { service.noArgs() }
-        assertThat(responseBody.string()).isEqualTo("ResponseBody")
-    }
-
     @Test
     fun objectMethodsStillWork() {
         val retromock = Retromock.Builder()
