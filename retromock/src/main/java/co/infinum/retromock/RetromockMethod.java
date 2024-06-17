@@ -10,6 +10,7 @@ import co.infinum.retromock.meta.MockBehavior;
 import co.infinum.retromock.meta.MockCircular;
 import co.infinum.retromock.meta.MockRandom;
 import co.infinum.retromock.meta.MockResponse;
+import co.infinum.retromock.meta.MockResponseProvider;
 import co.infinum.retromock.meta.MockResponses;
 import co.infinum.retromock.meta.MockSequential;
 import okhttp3.Headers;
@@ -30,13 +31,24 @@ final class RetromockMethod {
     }
 
     MockResponse[] responses = loadMockResponses(method);
+    MockResponseProvider provider = method.getAnnotation(MockResponseProvider.class);
     ParamsProducer producer;
-    if (responses != null) {
+    if (responses != null && provider != null) {
+      throw new RuntimeException("Method " + method.getDeclaringClass() + "." + method.getName()
+        + " has both @MockResponse and @MockResponseProvider annotations. Retromock supports usage"
+        + " of only one of those on a single service method.");
+    } else if (responses != null) {
       producer = new ResponseParamsProducer(
         retromock,
         loadResponseIterator(method, responses),
         DEFAULT_PARAMS
       );
+    } else if (provider != null) {
+      try {
+        producer = new ProviderResponseProducer(provider.value(), method, retromock);
+      } catch (Exception e) {
+        throw new RuntimeException("Cannot create response provider " + provider.value(), e);
+      }
     } else {
       producer = new NoResponseProducer(retromock, DEFAULT_PARAMS);
     }

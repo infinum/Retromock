@@ -3,8 +3,10 @@ package co.infinum.retromock
 import co.infinum.retromock.helpers.*
 import co.infinum.retromock.meta.Mock
 import co.infinum.retromock.meta.MockResponse
+import co.infinum.retromock.meta.MockResponseProvider
 import co.infinum.retromock.meta.MockResponses
 import co.infinum.retromock.meta.MockSequential
+import co.infinum.retromock.meta.ProvidesMock
 import kotlinx.coroutines.runBlocking
 import okhttp3.ResponseBody
 import org.assertj.core.api.Assertions.assertThat
@@ -14,7 +16,9 @@ import org.junit.jupiter.api.assertThrows
 import org.mockito.Mockito
 import retrofit2.Response
 import retrofit2.Retrofit
+import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.Header
 import java.nio.charset.StandardCharsets
 import java.util.concurrent.Executor
 import java.util.concurrent.ExecutorService
@@ -60,9 +64,9 @@ class KotlinSuspendTest {
 
         @Mock
         @MockResponses(
-                MockResponse(body = "Body example."),
-                MockResponse(body = "Body example 2."),
-                MockResponse(body = "Body example 3.")
+            MockResponse(body = "Body example."),
+            MockResponse(body = "Body example 2."),
+            MockResponse(body = "Body example 3.")
         )
         @MockSequential
         @GET("/")
@@ -83,9 +87,9 @@ class KotlinSuspendTest {
 
         @Mock
         @MockResponses(
-                MockResponse(body = "Body example."),
-                MockResponse(body = "Body example 2.", bodyFactory = PassThroughBodyFactory::class),
-                MockResponse(body = "Body example 3.", bodyFactory = CountDownBodyFactory::class)
+            MockResponse(body = "Body example."),
+            MockResponse(body = "Body example 2.", bodyFactory = PassThroughBodyFactory::class),
+            MockResponse(body = "Body example 3.", bodyFactory = CountDownBodyFactory::class)
         )
         @MockSequential
         @GET("/")
@@ -95,10 +99,12 @@ class KotlinSuspendTest {
     @Test
     fun objectMethodsStillWork() {
         val retromock = Retromock.Builder()
-                .retrofit(Retrofit.Builder()
-                        .baseUrl("http://infinum.co/")
-                        .build())
-                .build()
+            .retrofit(
+                Retrofit.Builder()
+                    .baseUrl("http://infinum.co/")
+                    .build()
+            )
+            .build()
 
         val obj = retromock.create(CallMethod::class.java)
 
@@ -110,13 +116,13 @@ class KotlinSuspendTest {
     @Test
     fun responseWrappedCall() {
         val retrofit = Retrofit.Builder()
-                .baseUrl("http://infinum.co/")
-                .build()
+            .baseUrl("http://infinum.co/")
+            .build()
 
         val retromock = Retromock.Builder()
-                .retrofit(retrofit)
-                .defaultBehavior(ImmediateBehavior())
-                .build()
+            .retrofit(retrofit)
+            .defaultBehavior(ImmediateBehavior())
+            .build()
 
         val service = retromock.create(ResponseCallMethod::class.java)
 
@@ -133,30 +139,32 @@ class KotlinSuspendTest {
         val callbackExecutor = mock<Executor>()
 
         val first = Retromock.Builder()
-                .retrofit(Retrofit.Builder()
-                        .baseUrl("http://infinum.co/")
-                        .build())
-                .addBodyFactory(bodyFactory)
-                .defaultBodyFactory(defaultBodyFactory)
-                .defaultBehavior(defaultBehavior)
-                .backgroundExecutor(backgroundExecutor)
-                .callbackExecutor(callbackExecutor)
-                .build()
+            .retrofit(
+                Retrofit.Builder()
+                    .baseUrl("http://infinum.co/")
+                    .build()
+            )
+            .addBodyFactory(bodyFactory)
+            .defaultBodyFactory(defaultBodyFactory)
+            .defaultBehavior(defaultBehavior)
+            .backgroundExecutor(backgroundExecutor)
+            .callbackExecutor(callbackExecutor)
+            .build()
 
         val bodyFactory2 = EmptyBodyFactory2()
 
         val second = first.newBuilder()
-                .addBodyFactory(bodyFactory2)
-                .build()
+            .addBodyFactory(bodyFactory2)
+            .build()
 
         assertThat(first.bodyFactories().size).isEqualTo(second.bodyFactories().size - 1)
         assertThat(first.bodyFactories()).contains(
-                entry(EmptyBodyFactory::class.java, bodyFactory)
+            entry(EmptyBodyFactory::class.java, bodyFactory)
         )
 
         assertThat(second.bodyFactories()).contains(
-                entry(EmptyBodyFactory::class.java, bodyFactory),
-                entry(EmptyBodyFactory2::class.java, bodyFactory2)
+            entry(EmptyBodyFactory::class.java, bodyFactory),
+            entry(EmptyBodyFactory2::class.java, bodyFactory2)
         )
 
         assertThat(first.defaultBodyFactory()).isSameAs(second.defaultBodyFactory())
@@ -169,10 +177,12 @@ class KotlinSuspendTest {
     @Test
     fun builtInFactoryAbsentInCloneBuilder() {
         val retromock = Retromock.Builder()
-                .retrofit(Retrofit.Builder()
-                        .baseUrl("http://infinum.co/")
-                        .build())
-                .build()
+            .retrofit(
+                Retrofit.Builder()
+                    .baseUrl("http://infinum.co/")
+                    .build()
+            )
+            .build()
 
         assertThat(retromock.bodyFactories()).isNotEmpty
         assertThat(retromock.newBuilder().bodyFactories()).isEmpty()
@@ -181,10 +191,12 @@ class KotlinSuspendTest {
     @Test
     fun passThroughBodyFactoryAddedByDefault() {
         val retromock = Retromock.Builder()
-                .retrofit(Retrofit.Builder()
-                        .baseUrl("http://infinum.co/")
-                        .build())
-                .build()
+            .retrofit(
+                Retrofit.Builder()
+                    .baseUrl("http://infinum.co/")
+                    .build()
+            )
+            .build()
 
         assertThat(retromock.bodyFactories().size).isEqualTo(1)
         assertThat(retromock.bodyFactories().get(PassThroughBodyFactory::class.java)).isNotNull()
@@ -196,12 +208,14 @@ class KotlinSuspendTest {
         val factory = CountDownBodyFactory(countDown)
 
         val retromock = Retromock.Builder()
-                .retrofit(Retrofit.Builder()
-                        .baseUrl("http://infinum.co/")
-                        .build())
-                .defaultBodyFactory(factory)
-                .defaultBehavior(ImmediateBehavior())
-                .build()
+            .retrofit(
+                Retrofit.Builder()
+                    .baseUrl("http://infinum.co/")
+                    .build()
+            )
+            .defaultBodyFactory(factory)
+            .defaultBehavior(ImmediateBehavior())
+            .build()
 
         val service = retromock.create(MockedMethod::class.java)
 
@@ -216,12 +230,14 @@ class KotlinSuspendTest {
         whenever(factory.create(Mockito.anyString())).thenReturn(byteArrayOf().inputStream())
 
         val retromock = Retromock.Builder()
-                .retrofit(Retrofit.Builder()
-                        .baseUrl("http://infinum.co/")
-                        .build())
-                .defaultBodyFactory(factory)
-                .defaultBehavior(ImmediateBehavior())
-                .build()
+            .retrofit(
+                Retrofit.Builder()
+                    .baseUrl("http://infinum.co/")
+                    .build()
+            )
+            .defaultBodyFactory(factory)
+            .defaultBehavior(ImmediateBehavior())
+            .build()
 
         val service = retromock.create(ResponseMethod::class.java)
 
@@ -236,12 +252,14 @@ class KotlinSuspendTest {
         val factory = CountDownBodyFactory(countDown)
 
         val retromock = Retromock.Builder()
-                .retrofit(Retrofit.Builder()
-                        .baseUrl("http://infinum.co/")
-                        .build())
-                .defaultBodyFactory(factory)
-                .defaultBehavior(ImmediateBehavior())
-                .build()
+            .retrofit(
+                Retrofit.Builder()
+                    .baseUrl("http://infinum.co/")
+                    .build()
+            )
+            .defaultBodyFactory(factory)
+            .defaultBehavior(ImmediateBehavior())
+            .build()
 
         val service = retromock.create(ResponseMethod::class.java)
 
@@ -256,12 +274,14 @@ class KotlinSuspendTest {
         val factory = CountDownBodyFactory(countDown)
 
         val retromock = Retromock.Builder()
-                .retrofit(Retrofit.Builder()
-                        .baseUrl("http://infinum.co/")
-                        .build())
-                .defaultBodyFactory(factory)
-                .defaultBehavior(ImmediateBehavior())
-                .build()
+            .retrofit(
+                Retrofit.Builder()
+                    .baseUrl("http://infinum.co/")
+                    .build()
+            )
+            .defaultBodyFactory(factory)
+            .defaultBehavior(ImmediateBehavior())
+            .build()
 
         val service = retromock.create(ResponseMethod::class.java)
 
@@ -280,12 +300,14 @@ class KotlinSuspendTest {
         }
 
         val retromock = Retromock.Builder()
-                .retrofit(Retrofit.Builder()
-                        .baseUrl("http://infinum.co/")
-                        .build())
-                .defaultBodyFactory(factory)
-                .defaultBehavior(ImmediateBehavior())
-                .build()
+            .retrofit(
+                Retrofit.Builder()
+                    .baseUrl("http://infinum.co/")
+                    .build()
+            )
+            .defaultBodyFactory(factory)
+            .defaultBehavior(ImmediateBehavior())
+            .build()
 
         val service = retromock.create(ThreeResponsesMethod::class.java)
 
@@ -307,12 +329,14 @@ class KotlinSuspendTest {
         val factory = CountDownBodyFactory(countDown)
 
         val retromock = Retromock.Builder()
-                .retrofit(Retrofit.Builder()
-                        .baseUrl("http://infinum.co/")
-                        .build())
-                .addBodyFactory(factory)
-                .defaultBehavior(ImmediateBehavior())
-                .build()
+            .retrofit(
+                Retrofit.Builder()
+                    .baseUrl("http://infinum.co/")
+                    .build()
+            )
+            .addBodyFactory(factory)
+            .defaultBehavior(ImmediateBehavior())
+            .build()
 
         val service = retromock.create(ResponseMethodWithCustomBodyFactory::class.java)
 
@@ -325,11 +349,13 @@ class KotlinSuspendTest {
     fun noMatchingBodyFactoryExceptionThrown() {
 
         val retromock = Retromock.Builder()
-                .retrofit(Retrofit.Builder()
-                        .baseUrl("http://infinum.co/")
-                        .build())
-                .defaultBehavior(ImmediateBehavior())
-                .build()
+            .retrofit(
+                Retrofit.Builder()
+                    .baseUrl("http://infinum.co/")
+                    .build()
+            )
+            .defaultBehavior(ImmediateBehavior())
+            .build()
 
         val service = retromock.create(ResponseMethodWithCustomBodyFactory::class.java)
 
@@ -344,12 +370,14 @@ class KotlinSuspendTest {
         whenever(factory.create(Mockito.anyString())).thenReturn("".byteInputStream(StandardCharsets.UTF_8))
 
         val retromock = Retromock.Builder()
-                .retrofit(Retrofit.Builder()
-                        .baseUrl("http://infinum.co/")
-                        .build())
-                .defaultBodyFactory(factory)
-                .defaultBehavior(ImmediateBehavior())
-                .build()
+            .retrofit(
+                Retrofit.Builder()
+                    .baseUrl("http://infinum.co/")
+                    .build()
+            )
+            .defaultBodyFactory(factory)
+            .defaultBehavior(ImmediateBehavior())
+            .build()
 
         val service = retromock.create(ResponseMethod::class.java)
 
@@ -365,12 +393,14 @@ class KotlinSuspendTest {
         val factory = CountDownBodyFactory(countDown)
 
         val retromock = Retromock.Builder()
-                .retrofit(Retrofit.Builder()
-                        .baseUrl("http://infinum.co/")
-                        .build())
-                .addBodyFactory(factory)
-                .defaultBehavior(ImmediateBehavior())
-                .build()
+            .retrofit(
+                Retrofit.Builder()
+                    .baseUrl("http://infinum.co/")
+                    .build()
+            )
+            .addBodyFactory(factory)
+            .defaultBehavior(ImmediateBehavior())
+            .build()
 
         val service = retromock.create(ThreeResponsesMethodWithCustomBodyFactory::class.java)
         runBlocking {
@@ -389,10 +419,12 @@ class KotlinSuspendTest {
     @Test
     fun builderInjectsPassThroughBodyFactory() {
         val retromock = Retromock.Builder()
-                .retrofit(Retrofit.Builder()
-                        .baseUrl("http://infinum.co/")
-                        .build())
-                .build()
+            .retrofit(
+                Retrofit.Builder()
+                    .baseUrl("http://infinum.co/")
+                    .build()
+            )
+            .build()
 
         assertThat(retromock.bodyFactories()).containsKey(PassThroughBodyFactory::class.java)
     }
@@ -400,10 +432,12 @@ class KotlinSuspendTest {
     @Test
     fun builderCreatesDefaultExecutorIfNotExplicitlySet() {
         val retromock = Retromock.Builder()
-                .retrofit(Retrofit.Builder()
-                        .baseUrl("http://infinum.co/")
-                        .build())
-                .build()
+            .retrofit(
+                Retrofit.Builder()
+                    .baseUrl("http://infinum.co/")
+                    .build()
+            )
+            .build()
 
         assertThat(retromock.backgroundExecutor()).isNotNull()
     }
@@ -412,11 +446,13 @@ class KotlinSuspendTest {
     fun builderUsesExecutorIfExplicitlySet() {
         val backgroundExecutor = Executors.newSingleThreadExecutor()
         val retromock = Retromock.Builder()
-                .retrofit(Retrofit.Builder()
-                        .baseUrl("http://infinum.co/")
-                        .build())
-                .backgroundExecutor(backgroundExecutor)
-                .build()
+            .retrofit(
+                Retrofit.Builder()
+                    .baseUrl("http://infinum.co/")
+                    .build()
+            )
+            .backgroundExecutor(backgroundExecutor)
+            .build()
 
         assertThat(retromock.backgroundExecutor()).isSameAs(backgroundExecutor)
     }
@@ -424,10 +460,12 @@ class KotlinSuspendTest {
     @Test
     fun builderCreatesDefaultCallbackExecutorIfNotExplicitlySet() {
         val retromock = Retromock.Builder()
-                .retrofit(Retrofit.Builder()
-                        .baseUrl("http://infinum.co/")
-                        .build())
-                .build()
+            .retrofit(
+                Retrofit.Builder()
+                    .baseUrl("http://infinum.co/")
+                    .build()
+            )
+            .build()
 
         assertThat(retromock.callbackExecutor()).isInstanceOf(Retromock.SyncExecutor::class.java)
     }
@@ -436,11 +474,13 @@ class KotlinSuspendTest {
     fun builderUsesCallbackExecutorIfExplicitlySet() {
         val callbackExecutor = Executors.newSingleThreadExecutor()
         val retromock = Retromock.Builder()
-                .retrofit(Retrofit.Builder()
-                        .baseUrl("http://infinum.co/")
-                        .build())
-                .callbackExecutor(callbackExecutor)
-                .build()
+            .retrofit(
+                Retrofit.Builder()
+                    .baseUrl("http://infinum.co/")
+                    .build()
+            )
+            .callbackExecutor(callbackExecutor)
+            .build()
 
         assertThat(retromock.callbackExecutor()).isSameAs(callbackExecutor)
     }
@@ -449,11 +489,13 @@ class KotlinSuspendTest {
     fun builderUsesRetrofitCallbackExecutorIfNotExplicitlySetInRetromock() {
         val callbackExecutor = Executors.newSingleThreadExecutor()
         val retromock = Retromock.Builder()
-                .retrofit(Retrofit.Builder()
-                        .baseUrl("http://infinum.co/")
-                        .callbackExecutor(callbackExecutor)
-                        .build())
-                .build()
+            .retrofit(
+                Retrofit.Builder()
+                    .baseUrl("http://infinum.co/")
+                    .callbackExecutor(callbackExecutor)
+                    .build()
+            )
+            .build()
 
         assertThat(retromock.callbackExecutor()).isSameAs(callbackExecutor)
     }
@@ -461,10 +503,12 @@ class KotlinSuspendTest {
     @Test
     fun builderCreatesBehaviorIfNotExplicitlySet() {
         val retromock = Retromock.Builder()
-                .retrofit(Retrofit.Builder()
-                        .baseUrl("http://infinum.co/")
-                        .build())
-                .build()
+            .retrofit(
+                Retrofit.Builder()
+                    .baseUrl("http://infinum.co/")
+                    .build()
+            )
+            .build()
 
         assertThat(retromock.defaultBehavior()).isSameAs(DefaultBehavior.INSTANCE)
     }
@@ -472,10 +516,12 @@ class KotlinSuspendTest {
     @Test
     fun builderCreatesPassThroughBodyFactoryIfDefaultFactoryIsNotSet() {
         val retromock = Retromock.Builder()
-                .retrofit(Retrofit.Builder()
-                        .baseUrl("http://infinum.co/")
-                        .build())
-                .build()
+            .retrofit(
+                Retrofit.Builder()
+                    .baseUrl("http://infinum.co/")
+                    .build()
+            )
+            .build()
 
         assertThat(retromock.defaultBodyFactory()).isInstanceOf(PassThroughBodyFactory::class.java)
     }

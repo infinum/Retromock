@@ -14,7 +14,6 @@ import java.util.concurrent.atomic.AtomicInteger
 fun <T> whenever(methodCall: T): OngoingStubbing<T> = Mockito.`when`(methodCall)
 inline fun <reified T : Any> mock(): T = Mockito.mock(T::class.java)
 inline fun <reified T : Any> captor(): ArgumentCaptor<T> = ArgumentCaptor.forClass(T::class.java)
-
 class EmptyBodyFactory : BodyFactory {
     override fun create(input: String): InputStream {
         throw NotImplementedError("Method shouldn't be called.")
