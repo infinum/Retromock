@@ -2,7 +2,7 @@ package co.infinum.retromock;
 
 import java.util.concurrent.ThreadLocalRandom;
 
-class ThreadLocalRandomProvider implements RandomProvider {
+final class ThreadLocalRandomProvider implements RandomProvider {
 
   @Override
   public long nextLong(final long bound) {

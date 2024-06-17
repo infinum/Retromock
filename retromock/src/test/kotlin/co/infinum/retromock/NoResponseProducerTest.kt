@@ -20,7 +20,7 @@ class NoResponseProducerTest {
                 .build()
         )
 
-        val params = producer.produce()
+        val params = producer.produce(arrayOf())
 
         val bodyFactory = params.bodyFactory()
 

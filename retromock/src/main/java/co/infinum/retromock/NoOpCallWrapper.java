@@ -4,19 +4,24 @@ import java.lang.reflect.Type;
 
 class NoOpCallWrapper implements CallWrapper {
 
-  private Type returnType;
+    private Type returnType;
 
-  public NoOpCallWrapper(final Type returnType) {
-    this.returnType = returnType;
-  }
+    public NoOpCallWrapper(final Type returnType) {
+        this.returnType = returnType;
+    }
 
-  @Override
-  public Type getReturnType() {
-    return returnType;
-  }
+    @Override
+    public Type getReturnType() {
+        return returnType;
+    }
 
-  @Override
-  public Object wrap(final Object call, final Object[] args) {
-    return call;
-  }
+    @Override
+    public Type getActualType() {
+        return returnType;
+    }
+
+    @Override
+    public Object wrap(final Object call, final Object[] args) {
+        return call;
+    }
 }

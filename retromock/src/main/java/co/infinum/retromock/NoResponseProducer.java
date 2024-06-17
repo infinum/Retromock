@@ -11,7 +11,7 @@ final class NoResponseProducer implements ParamsProducer {
   }
 
   @Override
-  public ResponseParams produce() {
+  public ResponseParams produce(final Object[] args) {
     ResponseParams.Builder builder = defaults.newBuilder();
     return builder.bodyFactory(new RetromockBodyFactory(
       retromock.bodyFactory(PassThroughBodyFactory.class), "")).build();
