@@ -25,7 +25,7 @@ import java.lang.annotation.Target;
  *    &#064;Mock
  *    &#064;MockResponseProvider(MockProvider.class)
  *    &#064;GET("api")
- *    Call<User> getUser(&#064;Query("id") String id);
+ *    Call&lt;User&gt; getUser(&#064;Query("id") String id);
  *  </code></pre>
  *  2. Create a MockProvider class with following content:
  *  <pre><code>
