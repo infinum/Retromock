@@ -11,6 +11,7 @@ buildscript {
 
     dependencies {
         classpath deps.kotlin.gradlePlugin
+        classpath deps.dokka.plugin
     }
 }
 
@@ -25,7 +26,10 @@ apply plugin: 'kotlin'
 apply from: 'config/quality.gradle'
 apply plugin: 'jacoco'
 
-apply from: 'publish.gradle'
+apply from: "maven.gradle"
+apply from: "config.gradle"
+apply from: "dokka.gradle"
+apply from: "maven-publish.gradle"
 
 sourceCompatibility = JavaVersion.VERSION_1_7
 
