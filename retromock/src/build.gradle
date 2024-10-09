@@ -10,7 +10,7 @@ apply from: "config.gradle"
 apply from: "dokka.gradle"
 apply from: "maven-publish.gradle"
 
-sourceCompatibility = JavaVersion.VERSION_1_7
+sourceCompatibility = JavaVersion.VERSION_17
 
 sourceSets {
     test.java.srcDirs += 'src/test/kotlin'
@@ -18,7 +18,7 @@ sourceSets {
 
 compileTestKotlin {
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_1_8
+        jvmTarget = JavaVersion.VERSION_17
     }
 
 }
