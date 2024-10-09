@@ -1,0 +1,29 @@
+[versions]
+retromock = "1.2.0"
+retrofit = "2.8.1"
+junit = "5.1.1"
+assertj = "3.8.0"
+mockito = "2.23.0"
+kotlin = "2.0.20"
+bintray = "1.8.5"
+coroutines = "1.9.0"
+dokka = "1.9.10"
+google-annotations = "3.0.1"
+guava = "27.0-jre"
+
+[libraries]
+retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
+junit-api = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "junit" }
+junit-engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junit" }
+assertj-core = { module = "org.assertj:assertj-core", version.ref = "assertj" }
+mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockito" }
+mockito-junit = { module = "org.mockito:mockito-junit-jupiter", version.ref = "mockito" }
+google-annotations = { module = "com.google.code.findbugs:annotations", version.ref = "google-annotations" }
+kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlin" }
+kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
+kotlin-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
+google-guava = { group = "com.google.guava",name = "guava", version.ref = "guava" }
+
+[plugins]
+kotlin = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+dokka-plugin = { id = "org.jetbrains.dokka", version.ref = "dokka" }

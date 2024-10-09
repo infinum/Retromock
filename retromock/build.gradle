@@ -9,11 +9,6 @@ buildscript {
         google()
         mavenCentral()
     }
-
-    dependencies {
-        classpath deps.kotlin.gradlePlugin
-        classpath deps.dokka.plugin
-    }
 }
 allprojects {
     repositories {
