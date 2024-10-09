@@ -6,11 +6,10 @@ plugins {
 }
 
 apply from: "$rootDir/config/quality.gradle"
-
-apply from: "$rootDir/maven.gradle"
-apply from: "$rootDir/config.gradle"
 apply from: "$rootDir/dokka.gradle"
+apply from: "$rootDir/config.gradle"
 apply from: "$rootDir/maven-publish.gradle"
+
 
 java {
     sourceCompatibility = JavaVersion.VERSION_17
@@ -50,35 +49,26 @@ jacoco {
 }
 
 dependencies {
-    compileOnly deps.kotlin.stdlib
-    compileOnly deps.kotlin.coroutines
+    implementation deps.kotlin.stdlib
+    implementation deps.kotlin.coroutines
 
-    compileOnly deps.google.annotations
+    implementation deps.google.annotations
 
     implementation deps.retrofit
 
     testImplementation deps.junit.api
     testRuntimeOnly deps.junit.engine
-    testCompile deps.assertj
-    testCompile deps.mockito.core
-    testCompile deps.mockito.junit
-    testCompile group: 'com.google.guava', name: 'guava', version: '27.0-jre'
+    testImplementation deps.assertj
+    testImplementation deps.mockito.core
+    testImplementation deps.mockito.junit
+    testImplementation group: 'com.google.guava', name: 'guava', version: '27.0-jre'
     testCompileOnly deps.google.annotations
     testImplementation deps.kotlin.coroutines
 
-    testCompile deps.kotlin.stdlib
-    testCompile deps.kotlin.test
+    testImplementation deps.kotlin.stdlib
+    testImplementation deps.kotlin.test
 }
 
-task sourceJar(type: Jar) {
-    from sourceSets.main.allJava
-    classifier = 'sources'
-}
-
-task javadocJar(type: Jar) {
-    from javadoc
-    classifier = 'javadoc'
-}
 
 clean {
     delete 'out'

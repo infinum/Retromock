@@ -8,7 +8,7 @@ buildscript {
             "mockito"  : "2.23.0",
             "kotlin"   : "2.0.20",
             "bintray"   : "1.8.5",
-            "coroutines" : "1.3.6",
+            "coroutines" : "1.9.0",
             "dokka": "1.9.10",
             "google"   : [
                     "annotations": "3.0.1"
@@ -30,7 +30,7 @@ buildscript {
                     "annotations": "com.google.code.findbugs:annotations:${versions.google.annotations}"
             ],
             "kotlin"  : [
-                    "stdlib": "org.jetbrains.kotlin:kotlin-stdlib:${versions.kotlin}",
+                    "stdlib": "org.jetbrains.kotlin:kotlin-stdlib:2.0.20",
                     "test"  : "org.jetbrains.kotlin:kotlin-test:${versions.kotlin}",
                     "coroutines" : "org.jetbrains.kotlinx:kotlinx-coroutines-core:${versions.coroutines}",
                     "gradlePlugin" : "org.jetbrains.kotlin:kotlin-gradle-plugin:${versions.kotlin}"

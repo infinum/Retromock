@@ -3,6 +3,7 @@ version = "$versions.retromock"
 
 buildscript {
     apply from: 'versions.gradle'
+    apply from: "maven.gradle"
 
     repositories {
         google()
@@ -14,8 +15,10 @@ buildscript {
         classpath deps.dokka.plugin
     }
 }
-
-repositories {
-    mavenCentral()
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+    }
 }
 
