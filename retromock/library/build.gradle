@@ -1,8 +1,9 @@
 plugins {
     id 'java'
     id 'java-library'
-    id 'kotlin'
     id 'jacoco'
+    alias(libs.plugins.dokka.plugin)
+    alias(libs.plugins.kotlin)
 }
 
 apply from: "$rootDir/config/quality.gradle"
@@ -49,24 +50,23 @@ jacoco {
 }
 
 dependencies {
-    implementation deps.kotlin.stdlib
-    implementation deps.kotlin.coroutines
+    implementation(libs.kotlin.stdlib)
+    implementation(libs.kotlin.coroutines)
 
-    implementation deps.google.annotations
+    implementation(libs.google.annotations)
 
-    implementation deps.retrofit
+    implementation(libs.retrofit)
 
-    testImplementation deps.junit.api
-    testRuntimeOnly deps.junit.engine
-    testImplementation deps.assertj
-    testImplementation deps.mockito.core
-    testImplementation deps.mockito.junit
-    testImplementation group: 'com.google.guava', name: 'guava', version: '27.0-jre'
-    testCompileOnly deps.google.annotations
-    testImplementation deps.kotlin.coroutines
-
-    testImplementation deps.kotlin.stdlib
-    testImplementation deps.kotlin.test
+    testImplementation(libs.junit.api)
+    testRuntimeOnly(libs.junit.engine)
+    testImplementation(libs.assertj.core)
+    testImplementation(libs.mockito.core)
+    testImplementation(libs.mockito.junit)
+    testCompileOnly(libs.google.annotations)
+    testImplementation(libs.kotlin.coroutines)
+    testImplementation(libs.kotlin.stdlib)
+    testImplementation(libs.kotlin.test)
+    testImplementation(libs.google.guava)
 }
 
 

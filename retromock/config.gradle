@@ -1,7 +1,7 @@
 ext.mavenPublishProperties = [
         "group"      : "co.infinum",
         "artifactId" : "retromock",
-        "version"    : "1.2.0",
+        "version"    : libs.versions.retromock,
         repository : [
                 url     : sonatype.url,
                 username: sonatype.username,
