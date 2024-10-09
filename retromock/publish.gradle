@@ -30,7 +30,6 @@ afterEvaluate {
                 version = "$versions.retromock"
 
                 artifact sourceJar
-                artifact javadocJar
 
                 pom {
                     name.set("Retromock")

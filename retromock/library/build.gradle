@@ -1,16 +1,21 @@
-apply plugin: 'java'
-apply plugin: 'java-library'
-apply plugin: 'kotlin'
+plugins {
+    id 'java'
+    id 'java-library'
+    id 'kotlin'
+    id 'jacoco'
+}
 
 apply from: 'config/quality.gradle'
-apply plugin: 'jacoco'
 
-apply from: "maven.gradle"
-apply from: "config.gradle"
-apply from: "dokka.gradle"
-apply from: "maven-publish.gradle"
+apply from: "$rootDir/maven.gradle"
+apply from: "$rootDir/config.gradle"
+apply from: "$rootDir/dokka.gradle"
+apply from: "$rootDir/maven-publish.gradle"
 
-sourceCompatibility = JavaVersion.VERSION_17
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
 
 sourceSets {
     test.java.srcDirs += 'src/test/kotlin'
@@ -79,6 +84,6 @@ clean {
     delete 'out'
 }
 
-apply from: 'tasks.gradle'
+apply from: "$rootDir/tasks.gradle"
 
 assemble.dependsOn 'generateReadme'
