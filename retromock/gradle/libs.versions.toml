@@ -8,8 +8,8 @@ junit = "5.11.2"
 kotlin = "2.1.0-Beta1"
 mockito = "5.14.1"
 retrofit = "2.11.0"
-version-catalog-update = "0.8.4"
 retromock = "1.2.0"
+moshi = "1.15.1"
 
 [libraries]
 assertj-core = { module = "org.assertj:assertj-core", version.ref = "assertj" }
@@ -23,8 +23,9 @@ kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotl
 mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockito" }
 mockito-junit = { module = "org.mockito:mockito-junit-jupiter", version.ref = "mockito" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
+retrofit-moshi-converter = { module = "com.squareup.retrofit2:converter-moshi", version.ref = "retrofit" }
+moshi = {module = "com.squareup.moshi:moshi", version.ref = "moshi"}
 
 [plugins]
 dokka-plugin = { id = "org.jetbrains.dokka", version.ref = "dokka" }
 kotlin = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
-version-catalog-update = { id = "nl.littlerobots.version-catalog-update", version.ref = "version-catalog-update" }
