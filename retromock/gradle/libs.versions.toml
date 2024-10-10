@@ -1,28 +1,30 @@
 [versions]
-retromock = "1.2.0"
-retrofit = "2.8.1"
-junit = "5.1.1"
-assertj = "3.8.0"
-mockito = "2.23.0"
-kotlin = "2.0.20"
+assertj = "3.26.3"
 coroutines = "1.9.0"
-dokka = "1.9.10"
+dokka = "1.9.20"
 google-annotations = "3.0.1"
-guava = "27.0-jre"
+guava = "33.3.1-jre"
+junit = "5.11.2"
+kotlin = "2.1.0-Beta1"
+mockito = "5.14.1"
+retrofit = "2.11.0"
+version-catalog-update = "0.8.4"
+retromock = "1.2.0"
 
 [libraries]
-retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
+assertj-core = { module = "org.assertj:assertj-core", version.ref = "assertj" }
+google-annotations = { module = "com.google.code.findbugs:annotations", version.ref = "google-annotations" }
+google-guava = { module = "com.google.guava:guava", version.ref = "guava" }
 junit-api = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "junit" }
 junit-engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junit" }
-assertj-core = { module = "org.assertj:assertj-core", version.ref = "assertj" }
+kotlin-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
+kotlin-stdlib = "org.jetbrains.kotlin:kotlin-stdlib:2.0.20"
+kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockito" }
 mockito-junit = { module = "org.mockito:mockito-junit-jupiter", version.ref = "mockito" }
-google-annotations = { module = "com.google.code.findbugs:annotations", version.ref = "google-annotations" }
-kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlin" }
-kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
-kotlin-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
-google-guava = { group = "com.google.guava",name = "guava", version.ref = "guava" }
+retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
 
 [plugins]
-kotlin = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 dokka-plugin = { id = "org.jetbrains.dokka", version.ref = "dokka" }
+kotlin = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+version-catalog-update = { id = "nl.littlerobots.version-catalog-update", version.ref = "version-catalog-update" }
