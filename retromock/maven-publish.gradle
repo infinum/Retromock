@@ -1,6 +1,7 @@
 apply plugin: "maven-publish"
 apply plugin: "signing"
 
+
 task javadocsJar(type: Jar, dependsOn: "dokkaJavadoc") {
     getArchiveClassifier().set("javadoc")
     from dokkaJavadoc.outputDirectory
@@ -11,7 +12,9 @@ task sourcesJar(type: Jar) {
     from sourceSets.main.allJava
 }
 
+
 afterEvaluate {
+
     publishing {
         def properties = project.ext.mavenPublishProperties
 
