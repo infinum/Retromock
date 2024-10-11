@@ -167,7 +167,7 @@ class CallsTest {
             call.enqueue(callback)
         }
 
-        verifyZeroInteractions(callback)
+        verifyNoMoreInteractions(callback)
     }
 
     @Test

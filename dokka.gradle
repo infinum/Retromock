@@ -1,0 +1,24 @@
+apply plugin: "org.jetbrains.dokka"
+
+tasks.named("dokkaJavadoc") {
+    outputDirectory.set(file("$buildDir/javadoc"))
+
+    dokkaSourceSets {
+        named("main") {
+            includeNonPublic.set(false)
+            skipDeprecated.set(false)
+            reportUndocumented.set(true)
+            skipEmptyPackages.set(true)
+            platform.set(org.jetbrains.dokka.Platform.jvm)
+            sourceLink {
+                localDirectory.set(file("src/main/java"))
+                remoteUrl.set(uri("https://github.com/infinum/Retromock"))
+                remoteLineSuffix.set("#L")
+            }
+            jdkVersion.set(7)
+            noStdlibLink.set(false)
+            noAndroidSdkLink.set(false)
+            noJdkLink.set(false)
+        }
+    }
+}

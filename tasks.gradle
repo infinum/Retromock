@@ -1,6 +1,6 @@
 task generateReadme {
     doFirst {
-        def readmeFile = new File("${project.rootDir}/../README.md")
+        def readmeFile = new File("${project.rootDir}/README.md")
         def content = readmeFile.text
         content = content.replaceAll("'co\\.infinum:retromock:.+?'", "'co.infinum:retromock:${versions.retromock}'")
         readmeFile.setText(content)
