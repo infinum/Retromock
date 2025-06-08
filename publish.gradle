@@ -4,17 +4,17 @@ apply plugin: "signing"
 
 String sonatypeUsername = findProperty("sonatypeUsername")
         ?.toString()
-        ?: System.getenv("MAVEN_CENTRAL_USER")
+        ?: System.getenv("SONATYPE_USERNAME")
 String sonatypePassword = findProperty("sonatypePassword")
         ?.toString()
-        ?: System.getenv("MAVEN_CENTRAL_PW")
+        ?: System.getenv("SONATYPE_PASS")
 
 afterEvaluate {
     publishing {
         repositories {
             maven {
                 name "SonatypeMavenCentral"
-                url "https://oss.sonatype.org/service/local/staging/deploy/maven2"
+                url "https://ossrh-staging-api.central.sonatype.com/service/local/staging/deploy/maven2"
                 credentials {
                     username sonatypeUsername
                     password sonatypePassword
