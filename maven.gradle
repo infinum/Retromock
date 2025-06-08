@@ -15,7 +15,7 @@ if (propsFile.exists()) {
 ext.sonatype = [
 
         url     : properties["sonatype.url"]
-                ?: "https://oss.sonatype.org/service/local/staging/deploy/maven2",
+                ?: "https://ossrh-staging-api.central.sonatype.com/service/local/staging/deploy/maven2",
 
         username: findProperty("sonatypeUsername")?.toString()
                 ?: properties["sonatype.user"]
