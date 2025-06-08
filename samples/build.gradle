@@ -6,6 +6,7 @@ dependencies {
     implementation project(":library")
 
     implementation(libs.moshi)
+    implementation(libs.moshi.kotlin)
     implementation(libs.retrofit.moshi.converter)
     implementation(libs.kotlin.stdlib)
     implementation(libs.kotlin.coroutines)
