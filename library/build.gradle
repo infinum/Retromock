@@ -4,6 +4,7 @@ plugins {
     id 'jacoco'
     alias(libs.plugins.dokka.plugin)
     alias(libs.plugins.kotlin)
+    alias(libs.plugins.spotbugs)
 }
 
 apply from: "$rootDir/config/quality.gradle"

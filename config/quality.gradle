@@ -22,3 +22,13 @@ pmdMain {
         html.required.set(true)
     }
 }
+
+spotbugsMain {
+    excludeFilter = file("${project.rootDir}/config/findbugs-filter.xml")
+    ignoreFailures = true
+
+    reports {
+        xml.required.set(false)
+        html.required.set(true)
+    }
+}

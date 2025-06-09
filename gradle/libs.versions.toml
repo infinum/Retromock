@@ -10,6 +10,7 @@ mockito = "5.14.1"
 retrofit = "2.11.0"
 retromock = "1.2.0"
 moshi = "1.15.1"
+spotbugs = "6.0.27"
 
 [libraries]
 assertj-core = { module = "org.assertj:assertj-core", version.ref = "assertj" }
@@ -30,3 +31,4 @@ moshi-kotlin = { module = "com.squareup.moshi:moshi-kotlin", version.ref = "mosh
 [plugins]
 dokka-plugin = { id = "org.jetbrains.dokka", version.ref = "dokka" }
 kotlin = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+spotbugs = { id = "com.github.spotbugs", version.ref = "spotbugs" }
