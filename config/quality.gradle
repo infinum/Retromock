@@ -2,15 +2,15 @@ apply plugin: 'checkstyle'
 apply plugin: 'pmd'
 
 checkstyleMain {
-    configFile file("${project.projectDir}/config/checkstyle.xml")
+    configFile = rootProject.file('config/checkstyle.xml')
     configProperties = [
-            'checkstyle.cache.file': rootProject.file('build/checkstyle.cache'),
-            'checkstyle.suppression.file': file("${project.projectDir}/config/suppressions.xml")
+            'checkstyle.cache.file'      : rootProject.file('build/checkstyle.cache'),
+            'checkstyle.suppression.file': file("${rootProject.rootDir}/config/suppressions.xml")
     ]
 }
 
 pmdMain {
-    ruleSetFiles = files("${project.projectDir}/config/pmd-ruleset.xml")
+    ruleSetFiles = files("${project.rootDir}/config/pmd-ruleset.xml")
     ignoreFailures = false
 
     source 'src'

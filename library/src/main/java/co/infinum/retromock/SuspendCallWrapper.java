@@ -12,7 +12,7 @@ class SuspendCallWrapper<T> implements CallWrapper {
     private Type actualType;
     private boolean continuationWantsResponse;
 
-    public SuspendCallWrapper(final Type returnType, final Type rawReturnType, final boolean continuationWantsResponse) {
+    SuspendCallWrapper(final Type returnType, final Type rawReturnType, final boolean continuationWantsResponse) {
         this.returnType = returnType;
         this.continuationWantsResponse = continuationWantsResponse;
         this.actualType = rawReturnType;

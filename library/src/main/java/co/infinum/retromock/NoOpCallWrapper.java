@@ -6,7 +6,7 @@ class NoOpCallWrapper implements CallWrapper {
 
     private Type returnType;
 
-    public NoOpCallWrapper(final Type returnType) {
+    NoOpCallWrapper(final Type returnType) {
         this.returnType = returnType;
     }
 

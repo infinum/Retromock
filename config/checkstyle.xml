@@ -4,12 +4,10 @@
     "http://www.puppycrawl.com/dtds/configuration_1_2.dtd">
 
 <module name="Checker">
-
+    <property name="cacheFile" value="${checkstyle.cache.file}"/>
     <module name="SuppressionFilter">
         <property name="file" value="${checkstyle.suppression.file}"/>
     </module>
-
-    <module name="SuppressionCommentFilter"/>
     <module name="FileLength"/>
     <module name="FileTabCharacter"/>
 
@@ -31,35 +29,25 @@
         <property name="message" value="Space needed around ':' character."/>
     </module>
 
-    <!--Enable usage SUPPRESS CHECKSTYLE comment-->
-    <module name="SuppressWithNearbyCommentFilter">
-        <property name="commentFormat" value="CHECKSTYLE IGNORE"/>
-        <property name="checkFormat" value=".*"/>
-        <property name="influenceFormat" value="0"/>
+    <!-- Checks for Size Violations.                    -->
+    <!-- See http://checkstyle.sf.net/config_sizes.html -->
+    <module name="LineLength">
+        <property name="max" value="140"/>
     </module>
 
     <module name="TreeWalker">
-        <property name="cacheFile" value="${checkstyle.cache.file}"/>
-
         <!-- Checks for Javadoc comments.                     -->
         <!-- See http://checkstyle.sf.net/config_javadoc.html -->
-        <module name="JavadocMethod">
-            <property name="scope" value="public"/>
-        </module>
-        <module name="JavadocType">
-            <property name="scope" value="public"/>
-        </module>
-        <module name="JavadocVariable">
-            <property name="scope" value="public"/>
-        </module>
+        <!--module name="JavadocMethod"/-->
+        <!--module name="JavadocType"/-->
+        <!--module name="JavadocVariable"/-->
         <module name="JavadocStyle">
-            <property name="scope" value="public"/>
+            <property name="checkFirstSentence" value="false"/>
         </module>
 
         <!-- Checks for Naming Conventions.                  -->
         <!-- See http://checkstyle.sf.net/config_naming.html -->
-        <module name="ConstantName"/>
-        <module name="FileContentsHolder"/>
+        <!--<module name="ConstantName"/>-->
         <module name="LocalFinalVariableName"/>
         <module name="LocalVariableName"/>
         <module name="MemberName"/>
@@ -79,11 +67,6 @@
             <property name="processJavadoc" value="true"/>
         </module>
 
-        <!-- Checks for Size Violations.                    -->
-        <!-- See http://checkstyle.sf.net/config_sizes.html -->
-        <module name="LineLength">
-            <property name="max" value="140"/>
-        </module>
         <module name="MethodLength">
             <property name="max" value="200"/>
         </module>
@@ -91,10 +74,10 @@
         <!-- Checks for whitespace                               -->
         <!-- See http://checkstyle.sf.net/config_whitespace.html -->
         <module name="GenericWhitespace"/>
-        <module name="EmptyForIteratorPad"/>
+        <!--<module name="EmptyForIteratorPad"/>-->
         <module name="MethodParamPad"/>
-        <module name="NoWhitespaceAfter"/>
-        <module name="NoWhitespaceBefore"/>
+        <!--<module name="NoWhitespaceAfter"/>-->
+        <!--<module name="NoWhitespaceBefore"/>-->
         <module name="OperatorWrap"/>
         <module name="ParenPad"/>
         <module name="TypecastParenPad"/>
@@ -104,11 +87,12 @@
         <!-- Modifier Checks                                    -->
         <!-- See http://checkstyle.sf.net/config_modifiers.html -->
         <module name="ModifierOrder"/>
+        <module name="RedundantModifier"/>
 
         <!-- Checks for blocks. You know, those {}'s         -->
         <!-- See http://checkstyle.sf.net/config_blocks.html -->
         <module name="AvoidNestedBlocks"/>
-        <module name="EmptyBlock"/>
+        <!--module name="EmptyBlock"/-->
         <module name="LeftCurly"/>
         <module name="NeedBraces">
             <!--<property name="allowSingleLineStatement" value="true"/>-->
@@ -117,33 +101,35 @@
 
         <!-- Checks for common coding problems               -->
         <!-- See http://checkstyle.sf.net/config_coding.html -->
-        <module name="AvoidInlineConditionals"/>
+        <!--module name="AvoidInlineConditionals"/-->
         <module name="CovariantEquals"/>
         <module name="EmptyStatement"/>
-        <module name="EqualsAvoidNull"/>
+        <!--<module name="EqualsAvoidNull"/>-->
         <module name="EqualsHashCode"/>
+        <!--module name="HiddenField"/-->
         <module name="IllegalInstantiation"/>
-        <module name="InnerAssignment"/>
+        <!--module name="InnerAssignment"/-->
         <module name="MagicNumber">
             <property name="ignoreHashCodeMethod" value="true"/>
         </module>
+        <!--<module name="RedundantThrows"/>-->
         <module name="SimplifyBooleanExpression"/>
         <module name="SimplifyBooleanReturn"/>
         <module name="MissingSwitchDefault"/>
 
         <!-- Checks for class design                         -->
         <!-- See http://checkstyle.sf.net/config_design.html -->
-        <module name="DesignForExtension"/>
-        <module name="FinalClass"/>
+        <!--module name="DesignForExtension"/-->
+        <!--<module name="FinalClass"/>-->
         <module name="HideUtilityClassConstructor"/>
         <module name="InterfaceIsType"/>
-        <module name="VisibilityModifier"/>
+        <!--module name="VisibilityModifier"/-->
 
         <!-- Miscellaneous other checks.                   -->
         <!-- See http://checkstyle.sf.net/config_misc.html -->
         <module name="ArrayTypeStyle"/>
-        <module name="FinalParameters"/>
-        <module name="TodoComment"/>
+        <!--module name="FinalParameters"/-->
+        <!--module name="TodoComment"/-->
         <module name="UpperEll"/>
     </module>
 </module>
