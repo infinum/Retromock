@@ -38,16 +38,16 @@
     <module name="TreeWalker">
         <!-- Checks for Javadoc comments.                     -->
         <!-- See http://checkstyle.sf.net/config_javadoc.html -->
-        <!--module name="JavadocMethod"/-->
-        <!--module name="JavadocType"/-->
-        <!--module name="JavadocVariable"/-->
+<!--        <module name="JavadocMethod"/>-->
+<!--        <module name="JavadocType"/>-->
+<!--        <module name="JavadocVariable"/>-->
         <module name="JavadocStyle">
             <property name="checkFirstSentence" value="false"/>
         </module>
 
         <!-- Checks for Naming Conventions.                  -->
         <!-- See http://checkstyle.sf.net/config_naming.html -->
-        <!--<module name="ConstantName"/>-->
+        <module name="ConstantName"/>
         <module name="LocalFinalVariableName"/>
         <module name="LocalVariableName"/>
         <module name="MemberName"/>
@@ -74,10 +74,10 @@
         <!-- Checks for whitespace                               -->
         <!-- See http://checkstyle.sf.net/config_whitespace.html -->
         <module name="GenericWhitespace"/>
-        <!--<module name="EmptyForIteratorPad"/>-->
+        <module name="EmptyForIteratorPad"/>
         <module name="MethodParamPad"/>
-        <!--<module name="NoWhitespaceAfter"/>-->
-        <!--<module name="NoWhitespaceBefore"/>-->
+        <module name="NoWhitespaceAfter"/>
+        <module name="NoWhitespaceBefore"/>
         <module name="OperatorWrap"/>
         <module name="ParenPad"/>
         <module name="TypecastParenPad"/>
@@ -92,7 +92,7 @@
         <!-- Checks for blocks. You know, those {}'s         -->
         <!-- See http://checkstyle.sf.net/config_blocks.html -->
         <module name="AvoidNestedBlocks"/>
-        <!--module name="EmptyBlock"/-->
+        <module name="EmptyBlock"/>
         <module name="LeftCurly"/>
         <module name="NeedBraces">
             <!--<property name="allowSingleLineStatement" value="true"/>-->
@@ -104,11 +104,11 @@
         <!--module name="AvoidInlineConditionals"/-->
         <module name="CovariantEquals"/>
         <module name="EmptyStatement"/>
-        <!--<module name="EqualsAvoidNull"/>-->
+        <module name="EqualsAvoidNull"/>
         <module name="EqualsHashCode"/>
         <!--module name="HiddenField"/-->
         <module name="IllegalInstantiation"/>
-        <!--module name="InnerAssignment"/-->
+        <module name="InnerAssignment"/>
         <module name="MagicNumber">
             <property name="ignoreHashCodeMethod" value="true"/>
         </module>
@@ -119,17 +119,17 @@
 
         <!-- Checks for class design                         -->
         <!-- See http://checkstyle.sf.net/config_design.html -->
-        <!--module name="DesignForExtension"/-->
-        <!--<module name="FinalClass"/>-->
+        <module name="DesignForExtension"/>
+        <module name="FinalClass"/>
         <module name="HideUtilityClassConstructor"/>
         <module name="InterfaceIsType"/>
-        <!--module name="VisibilityModifier"/-->
+        <module name="VisibilityModifier"/>
 
         <!-- Miscellaneous other checks.                   -->
         <!-- See http://checkstyle.sf.net/config_misc.html -->
         <module name="ArrayTypeStyle"/>
-        <!--module name="FinalParameters"/-->
-        <!--module name="TodoComment"/-->
+        <module name="FinalParameters"/>
+        <module name="TodoComment"/>
         <module name="UpperEll"/>
     </module>
 </module>
