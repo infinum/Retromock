@@ -4,33 +4,17 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/2.0.0 http://pmd.sourceforge.net/ruleset_2_0_0.xsd">
     <description>
-        This ruleset checks my code for bad stuff
+        A custom ruleset based on PMD's Quickstart rules.
+        This ruleset is a good starting point for any Java project. It focuses on:
+        - Best Practices: Enforcing conventions and avoiding suboptimal code.
+        - Code Style: Maintaining a consistent and readable codebase.
+        - Design: Finding issues related to object-oriented design.
+        - Error Prone: Detecting potential bugs and sources of errors.
+        - Multithreading: Highlighting potential concurrency issues.
+        - Performance: Identifying inefficient code that can be optimized.
+        - Security: Finding common security vulnerabilities.
     </description>
-    <rule ref="rulesets/java/basic.xml"/>
-    <rule ref="rulesets/java/braces.xml"/>
-    <rule ref="rulesets/java/codesize.xml">
-        <exclude name="TooManyMethods"/>
+    <rule ref="rulesets/java/quickstart.xml" >
     </rule>
-    <rule ref="rulesets/java/empty.xml"/>
-    <rule ref="rulesets/java/empty.xml/EmptyCatchBlock">
-        <properties>
-            <property name="allowCommentedBlocks" value="true"/>
-        </properties>
-    </rule>
-    <rule ref="rulesets/java/finalizers.xml"/>
-    <rule ref="rulesets/java/imports.xml"/>
-    <rule ref="rulesets/java/naming.xml">
-        <exclude name="AvoidFieldNameMatchingMethodName"/>
-        <exclude name="LongVariable"/>
-    </rule>
-    <rule ref="rulesets/java/optimizations.xml">
-        <exclude name="LocalVariableCouldBeFinal"/>
-    </rule>
-    <rule ref="rulesets/java/strings.xml">
-        <exclude name="InefficientEmptyStringCheck"/>
-    </rule>
-    <rule ref="rulesets/java/unnecessary.xml">
-        <exclude name="UselessParentheses"/>
-    </rule>
-    <rule ref="rulesets/java/unusedcode.xml"/>
+
 </ruleset>
