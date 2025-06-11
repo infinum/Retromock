@@ -4,8 +4,14 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 final class SequentialIterator<T> implements ResponseIterator<T> {
 
+  /**
+   * Array of responses to iterate through sequentially.
+   */
   private final T[] responses;
 
+  /**
+   * Index tracker for the current position in the responses array.
+   */
   private AtomicInteger index = new AtomicInteger();
 
   SequentialIterator(final T[] responses) {

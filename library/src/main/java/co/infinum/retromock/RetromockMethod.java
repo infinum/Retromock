@@ -17,6 +17,9 @@ import okhttp3.Headers;
 
 final class RetromockMethod {
 
+    /**
+     * Default response parameters used when no specific response is configured.
+     */
   private static final ResponseParams DEFAULT_PARAMS = new ResponseParams.Builder()
     .code(HttpURLConnection.HTTP_OK)
     .message("OK")
@@ -105,7 +108,14 @@ final class RetromockMethod {
     return new SequentialIterator<>(responses);
   }
 
+  /**
+   * Producer for generating response parameters based on method arguments.
+   */
   private final ParamsProducer producer;
+
+  /**
+   * Behavior configuration for this mock method.
+   */
   private final Behavior behavior;
 
   private RetromockMethod(

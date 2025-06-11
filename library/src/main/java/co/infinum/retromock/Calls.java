@@ -17,6 +17,10 @@ final class Calls {
   /**
    * Invokes {@code callable} once for the returned {@link Call} and once for each instance that is
    * obtained from {@linkplain Call#clone() cloning} the returned {@link Call}.
+   *
+   * @param callable the callable that provides the call instance
+   * @param <T> the response type
+   * @return a deferred call that wraps the callable
    */
   static <T> Call<T> defer(final Callable<Call<T>> callable) {
     return new DeferredCall<>(callable);
@@ -39,9 +43,24 @@ final class Calls {
 
   static final class FakeCall<T> implements Call<T> {
 
+    /**
+     * The response to return when this call is executed.
+     */
     private final Response<T> response;
+
+    /**
+     * The error to throw when this call is executed.
+     */
     private final IOException error;
+
+    /**
+     * Tracks whether this call has been canceled.
+     */
     private final AtomicBoolean canceled = new AtomicBoolean();
+
+    /**
+     * Tracks whether this call has been executed.
+     */
     private final AtomicBoolean executed = new AtomicBoolean();
 
     FakeCall(final @Nullable Response<T> response, final @Nullable IOException error) {
@@ -119,7 +138,14 @@ final class Calls {
 
   static final class DeferredCall<T> implements Call<T> {
 
+    /**
+     * The callable that provides the delegate call.
+     */
     private final Callable<Call<T>> callable;
+
+    /**
+     * The delegate call that is lazily initialized when first accessed.
+     */
     private Call<T> delegate;
 
     DeferredCall(final Callable<Call<T>> callable) {

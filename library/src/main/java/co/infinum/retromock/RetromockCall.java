@@ -16,13 +16,39 @@ import retrofit2.Response;
 
 final class RetromockCall<T> implements Call<T> {
 
+    /**
+     * Behavior configuration for introducing delays and other mock behaviors.
+     */
   private final Behavior behavior;
+
+    /**
+     * Executor service for running background tasks.
+     */
   private final ExecutorService backgroundExecutor;
+
+    /**
+     * Executor for running callbacks on the appropriate thread.
+     */
   private final Executor callbackExecutor;
+
+    /**
+     * The underlying call delegate that performs the actual work.
+     */
   private final Call<T> delegate;
 
+    /**
+     * Future representing the currently running background task.
+     */
   private volatile Future<?> task;
+
+    /**
+     * Flag indicating whether this call has been canceled.
+     */
   private AtomicBoolean canceled;
+
+    /**
+     * Flag indicating whether this call has been executed.
+     */
   private AtomicBoolean executed;
 
   RetromockCall(
@@ -153,6 +179,9 @@ final class RetromockCall<T> implements Call<T> {
 
   private class DelayAndEnqueueRunnable implements Runnable {
 
+    /**
+     * The callback to invoke after the delay and execution.
+     */
     private final Callback<T> callback;
 
     DelayAndEnqueueRunnable(final Callback<T> callback) {

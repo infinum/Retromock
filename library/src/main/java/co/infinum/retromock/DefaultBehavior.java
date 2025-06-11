@@ -5,11 +5,24 @@ package co.infinum.retromock;
  */
 public class DefaultBehavior implements Behavior {
 
+    /**
+     * Default instance with 1000ms duration and 500ms deviation.
+     */
   static final DefaultBehavior INSTANCE = new DefaultBehavior(1000L, 500);
 
+    /**
+     * The base delay duration in milliseconds.
+     */
   private final long durationMillis;
+
+    /**
+     * The deviation range for randomizing the delay.
+     */
   private final int durationDeviation;
 
+    /**
+     * Provider for random number generation.
+     */
   private final RandomProvider randomProvider;
 
   /**

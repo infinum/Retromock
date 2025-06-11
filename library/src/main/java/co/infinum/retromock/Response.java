@@ -10,10 +10,29 @@ import okhttp3.Headers;
  */
 public final class Response {
 
+  /**
+   * HTTP status code for the response.
+   */
   private final int code;
+
+  /**
+   * HTTP status message for the response.
+   */
   private final String message;
+
+  /**
+   * Response body content or body factory specifier.
+   */
   private final String body;
+
+  /**
+   * HTTP headers for the response.
+   */
   private final Headers headers;
+
+  /**
+   * Class used to create the response body from the body string.
+   */
   private final Class<? extends BodyFactory> bodyFactoryClass;
 
   Response(
@@ -56,10 +75,29 @@ public final class Response {
    */
   public static final class Builder {
 
+    /**
+     * HTTP status code, defaults to 200 (OK).
+     */
     private int code = HttpURLConnection.HTTP_OK;
+
+    /**
+     * HTTP status message.
+     */
     private String message;
+
+    /**
+     * Response body content or body factory specifier.
+     */
     private String body;
+
+    /**
+     * HTTP headers for the response.
+     */
     private Headers headers;
+
+    /**
+     * Class used to create the response body from the body string.
+     */
     private Class<? extends BodyFactory> bodyFactoryClass;
 
     /**

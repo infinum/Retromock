@@ -87,16 +87,49 @@ public final class Retromock {
     static final class DisabledException extends Exception {
     }
 
+    /**
+     * The underlying Retrofit instance for making actual network calls.
+     */
     private final Retrofit retrofit;
+
+    /**
+     * Map of body factory classes to their instances for creating response bodies.
+     */
     private final Map<Class<? extends BodyFactory>, BodyFactory> bodyFactories;
+
+    /**
+     * Cache of methods to their corresponding Retromock method configurations.
+     */
     private final Map<Method, RetromockMethod> methodCache;
+
+    /**
+     * Cache of methods to their corresponding call wrappers.
+     */
     private final Map<Method, CallWrapper> callWrapperCache;
 
+    /**
+     * Flag indicating whether to eagerly load method configurations.
+     */
     private final boolean eagerlyLoad;
+
+    /**
+     * Executor service for running background tasks.
+     */
     private final ExecutorService backgroundExecutor;
+
+    /**
+     * Executor for running callbacks on the appropriate thread.
+     */
     private final Executor callbackExecutor;
 
+    /**
+     * Default behavior to use when no specific behavior is configured for a method.
+     */
     private final Behavior defaultBehavior;
+
+    /**
+     * Default body factory to use when no specific body factory is configured.
+     */
     private final BodyFactory defaultBodyFactory;
 
     private Retromock(final Retrofit retrofit,
@@ -446,12 +479,39 @@ public final class Retromock {
      */
     public static final class Builder {
 
+        /**
+         * The Retrofit instance to use for creating services.
+         */
         private Retrofit retrofit;
+
+        /**
+         * Map of body factory classes to their instances.
+         */
         private final Map<Class<? extends BodyFactory>, BodyFactory> bodyFactories = new HashMap<>();
+
+        /**
+         * Flag indicating whether to eagerly load method configurations.
+         */
         private boolean loadEagerly;
+
+        /**
+         * Executor service for running background tasks.
+         */
         private ExecutorService backgroundExecutor;
+
+        /**
+         * Executor for running callbacks on the appropriate thread.
+         */
         private Executor callbackExecutor;
+
+        /**
+         * Default behavior to use when no specific behavior is configured for a method.
+         */
         private Behavior defaultBehavior;
+
+        /**
+         * Default body factory to use when no specific body factory is configured.
+         */
         private BodyFactory defaultBodyFactory;
 
         /**

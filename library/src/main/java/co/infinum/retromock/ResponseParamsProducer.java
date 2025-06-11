@@ -9,9 +9,24 @@ import okhttp3.Headers;
 
 final class ResponseParamsProducer implements ParamsProducer {
 
+    /**
+     * The retromock instance for configuration access.
+     */
   private final Retromock retromock;
+
+    /**
+     * Iterator for cycling through mock responses.
+     */
   private final ResponseIterator<MockResponse> iterator;
+
+    /**
+     * Cache for storing parsed response parameters.
+     */
   private final Map<MockResponse, ResponseParams> cache;
+
+    /**
+     * Default response parameters to use as a base.
+     */
   private final ResponseParams defaults;
 
   ResponseParamsProducer(

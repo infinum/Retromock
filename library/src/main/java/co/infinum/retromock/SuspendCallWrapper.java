@@ -8,8 +8,19 @@ import java.lang.reflect.Type;
 
 class SuspendCallWrapper<T> implements CallWrapper {
 
+    /**
+     * The return type of the method being wrapped.
+     */
     private Type returnType;
+
+    /**
+     * The actual type of the response.
+     */
     private Type actualType;
+
+    /**
+     * Flag indicating whether the continuation expects a Response wrapper.
+     */
     private boolean continuationWantsResponse;
 
     SuspendCallWrapper(final Type returnType, final Type rawReturnType, final boolean continuationWantsResponse) {
@@ -59,4 +70,3 @@ class SuspendCallWrapper<T> implements CallWrapper {
         }
     }
 }
-

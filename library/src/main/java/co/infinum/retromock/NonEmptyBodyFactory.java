@@ -24,6 +24,9 @@ import javax.annotation.Nonnull;
  */
 public final class NonEmptyBodyFactory implements BodyFactory {
 
+    /**
+     * The wrapped body factory to delegate to for non-empty input.
+     */
   private final BodyFactory bodyFactory;
 
   /**

@@ -5,6 +5,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 final class DefaultThreadFactory implements ThreadFactory {
 
+    /**
+     * Global counter for creating unique thread pool identifiers.
+     */
   static final AtomicInteger POOL_INDEX = new AtomicInteger();
 
   @Override

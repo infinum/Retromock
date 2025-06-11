@@ -9,8 +9,19 @@ import co.infinum.retromock.meta.ProvidesMock;
 
 final class ProviderResponseProducer implements ParamsProducer {
 
+    /**
+     * The instance of the provider class.
+     */
     private final Object provider;
+
+    /**
+     * The method on the provider that produces mock responses.
+     */
     private final Method providerMethod;
+
+    /**
+     * The retromock instance for configuration access.
+     */
     private final Retromock retromock;
 
     ProviderResponseProducer(

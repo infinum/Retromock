@@ -66,7 +66,13 @@ final class Utils {
           + "GenericArrayType, but <" + type + "> is of type " + type.getClass().getName());
   }
 
-  /** Returns true if {@code a} and {@code b} are equal. */
+  /**
+   * Returns true if {@code a} and {@code b} are equal.
+   *
+   * @param a the first type to compare
+   * @param b the second type to compare
+   * @return true if the types are equal, false otherwise
+   */
   static boolean equals(final Type a, final Type b) {
     if (a == b) {
       return true; // Also handles (a == null && b == null).
@@ -151,12 +157,26 @@ final class Utils {
     return paramType;
   }
 
+  /**
+   * Default capacity for StringBuilder instances in string formatting.
+   */
   static final int STRING_BUILDER_CAPACITY = 30;
 
   static final class ParameterizedTypeImpl implements ParameterizedType {
+    /**
+     * The owner type of this parameterized type, or null if none.
+     */
     private final @Nullable
     Type ownerType;
+
+    /**
+     * The raw type of this parameterized type.
+     */
     private final Type rawType;
+
+    /**
+     * The type arguments for this parameterized type.
+     */
     private final Type[] typeArguments;
 
     ParameterizedTypeImpl(final @Nullable Type ownerType, final Type rawType, final Type... typeArguments) {

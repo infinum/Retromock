@@ -6,12 +6,24 @@ import okhttp3.Headers;
 
 final class ResponseParams {
 
+  /**
+   * HTTP status code for the response.
+   */
   private final int code;
 
+  /**
+   * HTTP status message for the response.
+   */
   private final String message;
 
+  /**
+   * Factory for creating the response body.
+   */
   private final RetromockBodyFactory bodyFactory;
 
+  /**
+   * HTTP headers for the response.
+   */
   private final Headers headers;
 
   private ResponseParams(final Builder builder) {
@@ -67,9 +79,24 @@ final class ResponseParams {
 
   static final class Builder {
 
+    /**
+     * HTTP status code for the response.
+     */
     private int code;
+
+    /**
+     * HTTP status message for the response.
+     */
     private String message;
+
+    /**
+     * Factory for creating the response body.
+     */
     private RetromockBodyFactory bodyFactory;
+
+    /**
+     * HTTP headers for the response.
+     */
     private Headers headers;
 
     Builder() {

@@ -2,7 +2,14 @@ package co.infinum.retromock;
 
 final class RandomIterator<T> implements ResponseIterator<T> {
 
+    /**
+     * Array of responses to randomly select from.
+     */
   private final T[] responses;
+
+    /**
+     * Provider for random number generation.
+     */
   private final RandomProvider randomProvider;
 
   RandomIterator(final T[] responses) {

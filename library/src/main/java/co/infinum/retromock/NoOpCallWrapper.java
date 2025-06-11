@@ -4,6 +4,9 @@ import java.lang.reflect.Type;
 
 class NoOpCallWrapper implements CallWrapper {
 
+    /**
+     * The return type of the method being wrapped.
+     */
     private Type returnType;
 
     NoOpCallWrapper(final Type returnType) {

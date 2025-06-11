@@ -16,6 +16,10 @@ final class CallWrapperFactory {
     /**
      * Checks if method is suspend kotlin fun and in that case wraps its return type into Retrofit's {@code Call}.
      * Also, method handles special case when return type is wrapped into Retrofit's {@code Response}.
+     *
+     * @param method the method to create a call wrapper for
+     * @param <T> the type parameter for the call wrapper
+     * @return a call wrapper appropriate for the method
      */
     static <T> CallWrapper create(final Method method) {
         Type[] parameterTypes = method.getGenericParameterTypes();
