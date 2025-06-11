@@ -15,7 +15,7 @@ tasks.named("dokkaJavadoc") {
                 remoteUrl.set(uri("https://github.com/infinum/Retromock"))
                 remoteLineSuffix.set("#L")
             }
-            jdkVersion.set(7)
+            jdkVersion.set(17)
             noStdlibLink.set(false)
             noAndroidSdkLink.set(false)
             noJdkLink.set(false)
