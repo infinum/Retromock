@@ -4,15 +4,63 @@
 
 <img src='./logo.svg' width='264'/>
 
+## Description
+
 Adapts Java interface created by [Retrofit][retrofit] using annotations on declared methods to define response mocks.
 
-Quick guide
--------
+## Table of contents
 
-#### Add dependency
-```gradle
+* [Requirements](#requirements)
+* [Getting started](#getting-started)
+* [Usage](#usage)
+* [Contributing](#contributing)
+* [License](#license)
+* [Credits](#credits)
+
+## Requirements
+
+You need to use [Retrofit][retrofit] in your project
+
+## Getting started
+
+To include _Retromock_ in your project, you have to add buildscript dependencies in your project
+level `build.gradle` or `build.gradle.kts`:
+
+**Groovy**
+
+```groovy
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+}
+```
+
+**KotlinDSL**
+
+```kotlin
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+}
+```
+
+Then, you can include the library in your module's `build.gradle` or `build.gradle.kts`:
+
+**Groovy**
+
+```groovy
 implementation 'co.infinum:retromock:1.2.0'
 ```
+
+**KotlinDSL**
+
+```kotlin
+implementation("co.infinum:retromock:1.2.0")
+```
+
+## Usage
 
 #### Initialize
 ```java
@@ -103,18 +151,29 @@ Retromock retromock = new Retromock.Builder()
 ```
 
 #### For more information please see [the full specification][specification].
--------
 
 
 
-ProGuard
--------
+
+#### ProGuard
+
 The library does not require any ProGuard rules.
 
 However, you might need rules for Retrofit and its dependencies.
 
-License
--------
+## Contributing
+
+We believe that the community can help us improve and build better a product.
+Please refer to our [contributing guide](CONTRIBUTING.md) to learn about the types of contributions we accept and the process for submitting them.
+
+To ensure that our community remains respectful and professional, we defined a [code of conduct](CODE_OF_CONDUCT.md) that we expect all contributors to follow.
+
+For easier developing a `samples` with proper implementations are provided.
+
+We appreciate your interest and look forward to your contributions.
+
+## License
+
 ```
 Copyright 2019 Infinum
 
@@ -133,7 +192,7 @@ limitations under the License.
 
 ## Credits
 
-Maintained and sponsored by [Infinum](http://www.infinum.co).
+Maintained and sponsored by [Infinum](http://www.infinum.com).
 
 <p align="center">
   <a href='https://infinum.com'>
