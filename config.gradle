@@ -1,5 +1,5 @@
 ext.mavenPublishProperties = [
-        "group"      : "co.infinum",
+        "group"      : "com.infinum",
         "artifactId" : "retromock",
         "version"    : libs.versions.retromock.get(),
         repository : [
