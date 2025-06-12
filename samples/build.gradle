@@ -1,26 +1,13 @@
-apply plugin: 'java'
-apply plugin: 'kotlin'
-sourceCompatibility = 1.8
-
-repositories {
-    mavenCentral()
+plugins {
+    id 'java'
+    alias(libs.plugins.kotlin)
 }
-
 dependencies {
-    implementation project(":retromock")
+    implementation project(":library")
 
-    implementation 'com.squareup.moshi:moshi:1.6.0'
-    implementation 'com.squareup.retrofit2:converter-moshi:2.4.0'
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$versions.kotlin"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$versions.coroutines"
-
-}
-buildscript {
-    apply from: '../retromock/versions.gradle'
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath deps.kotlin.gradlePlugin
-    }
+    implementation(libs.moshi)
+    implementation(libs.moshi.kotlin)
+    implementation(libs.retrofit.moshi.converter)
+    implementation(libs.kotlin.stdlib)
+    implementation(libs.kotlin.coroutines)
 }

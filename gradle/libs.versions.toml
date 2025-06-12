@@ -1,0 +1,34 @@
+[versions]
+assertj = "3.26.3"
+coroutines = "1.9.0"
+dokka = "1.9.20"
+google-annotations = "3.0.1"
+guava = "33.3.1-jre"
+junit = "5.11.2"
+kotlin = "2.1.0"
+mockito = "5.14.1"
+retrofit = "2.11.0"
+retromock = "1.2.0"
+moshi = "1.15.1"
+spotbugs = "6.0.27"
+
+[libraries]
+assertj-core = { module = "org.assertj:assertj-core", version.ref = "assertj" }
+google-annotations = { module = "com.google.code.findbugs:annotations", version.ref = "google-annotations" }
+google-guava = { module = "com.google.guava:guava", version.ref = "guava" }
+junit-api = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "junit" }
+junit-engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junit" }
+kotlin-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
+kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlin" }
+kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
+mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockito" }
+mockito-junit = { module = "org.mockito:mockito-junit-jupiter", version.ref = "mockito" }
+retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
+retrofit-moshi-converter = { module = "com.squareup.retrofit2:converter-moshi", version.ref = "retrofit" }
+moshi = {module = "com.squareup.moshi:moshi", version.ref = "moshi"}
+moshi-kotlin = { module = "com.squareup.moshi:moshi-kotlin", version.ref = "moshi" }
+
+[plugins]
+dokka-plugin = { id = "org.jetbrains.dokka", version.ref = "dokka" }
+kotlin = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+spotbugs = { id = "com.github.spotbugs", version.ref = "spotbugs" }

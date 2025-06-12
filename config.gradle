@@ -1,0 +1,17 @@
+ext.mavenPublishProperties = [
+        "group"      : "co.infinum",
+        "artifactId" : "retromock",
+        "version"    : libs.versions.retromock.get(),
+        repository : [
+                url     : sonatype.url,
+                username: sonatype.username,
+                password: sonatype.password
+        ],
+        name       : "Retromock",
+        description: "Adapts Java interface created by Retrofit using annotations on declared methods to define response mocks.",
+        url        : "https://github.com/infinum/Retromock",
+        scm        : [
+                connection: "https://github.com/infinum/Retromock.git",
+                url       : "https://github.com/infinum/Retromock"
+        ]
+]

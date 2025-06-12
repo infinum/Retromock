@@ -1,0 +1,80 @@
+plugins {
+    id 'java'
+    id 'java-library'
+    id 'jacoco'
+    alias(libs.plugins.dokka.plugin)
+    alias(libs.plugins.kotlin)
+    alias(libs.plugins.spotbugs)
+}
+
+apply from: "$rootDir/config/quality.gradle"
+apply from: "$rootDir/dokka.gradle"
+apply from: "$rootDir/config.gradle"
+apply from: "$rootDir/maven-publish.gradle"
+
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+
+sourceSets {
+    test.java.srcDirs += 'src/test/kotlin'
+}
+
+compileTestKotlin {
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_17
+    }
+
+}
+
+test {
+    useJUnitPlatform()
+    testLogging {
+        events 'PASSED', 'FAILED', 'SKIPPED'
+    }
+    afterSuite { desc, result ->
+        if (!desc.parent) {
+            println "\nTest result: ${result.resultType}"
+            println "Test summary: ${result.testCount} tests, " +
+                    "${result.successfulTestCount} succeeded, " +
+                    "${result.failedTestCount} failed, " +
+                    "${result.skippedTestCount} skipped"
+        }
+    }
+    finalizedBy jacocoTestReport
+}
+
+jacoco {
+    toolVersion = "0.8.11"
+}
+
+dependencies {
+    implementation(libs.kotlin.stdlib)
+    implementation(libs.kotlin.coroutines)
+
+    implementation(libs.google.annotations)
+
+    implementation(libs.retrofit)
+
+    testImplementation(libs.junit.api)
+    testRuntimeOnly(libs.junit.engine)
+    testImplementation(libs.assertj.core)
+    testImplementation(libs.mockito.core)
+    testImplementation(libs.mockito.junit)
+    testCompileOnly(libs.google.annotations)
+    testImplementation(libs.kotlin.coroutines)
+    testImplementation(libs.kotlin.stdlib)
+    testImplementation(libs.kotlin.test)
+    testImplementation(libs.google.guava)
+}
+
+
+clean {
+    delete 'out'
+}
+
+apply from: "$rootDir/tasks.gradle"
+
+assemble.dependsOn 'generateReadme'

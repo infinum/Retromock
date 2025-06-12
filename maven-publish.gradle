@@ -1,0 +1,75 @@
+apply plugin: "maven-publish"
+apply plugin: "signing"
+
+
+task javadocsJar(type: Jar, dependsOn: "dokkaJavadoc") {
+    getArchiveClassifier().set("javadoc")
+    from dokkaJavadoc.outputDirectory
+}
+
+task sourcesJar(type: Jar) {
+    getArchiveClassifier().set("sources")
+    from sourceSets.main.allJava
+}
+
+
+afterEvaluate {
+
+    publishing {
+        def properties = project.ext.mavenPublishProperties
+
+        repositories {
+            maven {
+                name "SonatypeMavenCentral"
+                url properties.repository.url
+                credentials {
+                    username properties.repository.username
+                    password properties.repository.password
+                }
+            }
+        }
+        publications {
+            release(MavenPublication) {
+                from components.java
+
+                groupId = properties.group
+                version = properties.version
+                artifactId = properties.artifactId
+
+                artifact sourcesJar
+                artifact javadocsJar
+
+                pom {
+                    name = properties.name
+                    description = properties.description
+                    url = properties.url
+                    licenses {
+                        license {
+                            name = 'The Apache License, Version 2.0'
+                            url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                        }
+                    }
+                    organization {
+                        name = 'Infinum Inc.'
+                        url = 'https://infinum.com'
+                    }
+                    developers {
+                        developer {
+                            id = 'Infinum'
+                            name = 'Infinum Inc.'
+                            url = 'https://infinum.com'
+                        }
+                    }
+                    scm {
+                        connection.set(properties.scm.connection)
+                        developerConnection.set(properties.scm.connection)
+                        url.set(properties.scm.url)
+                    }
+                }
+                signing {
+                    sign publishing.publications.release
+                }
+            }
+        }
+    }
+}

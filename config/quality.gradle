@@ -1,0 +1,34 @@
+apply plugin: 'checkstyle'
+apply plugin: 'pmd'
+
+checkstyleMain {
+    configFile = rootProject.file('config/checkstyle.xml')
+    configProperties = [
+            'checkstyle.cache.file'      : rootProject.file('build/checkstyle.cache'),
+            'checkstyle.suppression.file': file("${rootProject.rootDir}/config/suppressions.xml")
+    ]
+}
+
+pmdMain {
+    ruleSetFiles = files("${project.rootDir}/config/pmd-ruleset.xml")
+    ignoreFailures = true // todo sort out PMD problems
+
+    source 'src'
+    include '**/*.java'
+    exclude '**/gen/**'
+
+    reports {
+        xml.required.set(false)
+        html.required.set(true)
+    }
+}
+
+spotbugsMain {
+    excludeFilter = file("${project.rootDir}/config/findbugs-filter.xml")
+    ignoreFailures = true
+
+    reports {
+        xml.required.set(false)
+        html.required.set(true)
+    }
+}

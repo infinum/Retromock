@@ -5,6 +5,8 @@ import co.infinum.retromock.Retromock
 import co.infinum.retromock.meta.Mock
 import co.infinum.retromock.meta.MockResponse
 import com.squareup.moshi.Json
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import kotlinx.coroutines.*
 import retrofit2.Response
 import retrofit2.Retrofit
@@ -41,9 +43,13 @@ class KotlinExample {
 
     companion object {
         @JvmStatic fun main(args: Array<String>) {
+            val moshi = Moshi.Builder()
+                .add(KotlinJsonAdapterFactory())
+                .build()
+
             val retrofit = Retrofit.Builder()
                     .baseUrl("https://www.google.com")
-                    .addConverterFactory(MoshiConverterFactory.create())
+                .addConverterFactory(MoshiConverterFactory.create(moshi))
                     .build()
             val retromock: Retromock = Retromock.Builder()
                     .retrofit(retrofit)
