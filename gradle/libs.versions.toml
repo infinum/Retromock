@@ -1,6 +1,7 @@
 [versions]
 assertj = "3.26.3"
 coroutines = "1.9.0"
+gradle-maven-publish = "0.32.0"
 dokka = "1.9.20"
 google-annotations = "3.0.1"
 guava = "33.3.1-jre"
@@ -33,3 +34,5 @@ moshi-kotlin = { module = "com.squareup.moshi:moshi-kotlin", version.ref = "mosh
 dokka-plugin = { id = "org.jetbrains.dokka", version.ref = "dokka" }
 kotlin = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 spotbugs = { id = "com.github.spotbugs", version.ref = "spotbugs" }
+gradle-maven-publish = { id = "com.vanniktech.maven.publish", version.ref = "gradle-maven-publish" }
+

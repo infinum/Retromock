@@ -1,3 +1,5 @@
+import com.vanniktech.maven.publish.SonatypeHost
+
 plugins {
     id 'java'
     id 'java-library'
@@ -5,13 +7,12 @@ plugins {
     alias(libs.plugins.dokka.plugin)
     alias(libs.plugins.kotlin)
     alias(libs.plugins.spotbugs)
+    alias(libs.plugins.gradle.maven.publish)
 }
 
 apply from: "$rootDir/config/quality.gradle"
 apply from: "$rootDir/dokka.gradle"
 apply from: "$rootDir/config.gradle"
-apply from: "$rootDir/maven-publish.gradle"
-
 
 java {
     sourceCompatibility = JavaVersion.VERSION_17
@@ -78,3 +79,48 @@ clean {
 apply from: "$rootDir/tasks.gradle"
 
 assemble.dependsOn 'generateReadme'
+
+// todo can be in separate file?
+// todo check if it is signed
+afterEvaluate {
+    def properties = project.ext.mavenPublishProperties
+
+    mavenPublishing {
+        publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
+        signAllPublications()
+        coordinates(properties.group, properties.artifactId, properties.version)
+
+        pom {
+            name = properties.name
+            description = properties.description
+            url = properties.url
+
+            licenses {
+                license {
+                    name = 'The Apache License, Version 2.0'
+                    url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    distribution = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                }
+            }
+
+            organization {
+                name = 'Infinum Inc.'
+                url = 'https://infinum.com'
+            }
+
+            developers {
+                developer {
+                    id = 'Infinum'
+                    name = 'Infinum Inc.'
+                    url = 'https://infinum.com'
+                }
+            }
+
+            scm {
+                url = properties.scm.url
+                connection = properties.scm.connection
+                developerConnection = properties.scm.connection
+            }
+        }
+    }
+}
