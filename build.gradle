@@ -1,19 +1,22 @@
-group = 'co.infinum'
-version = "$versions.retromock"
-
 buildscript {
-    apply from: 'versions.gradle'
-    apply from: "maven.gradle"
-
     repositories {
         google()
         mavenCentral()
     }
 }
+
+plugins {
+    alias(libs.plugins.kotlin) apply false
+    alias(libs.plugins.gradle.maven.publish) apply false
+    alias(libs.plugins.dokka.plugin) apply false
+}
+
+group = 'co.infinum'
+version = "${libs.versions.retromock.get()}"
+
 allprojects {
     repositories {
         google()
         mavenCentral()
     }
 }
-

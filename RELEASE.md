@@ -9,12 +9,10 @@ Be sure that [build.gradle](build.gradle), [Changelog](../CHANGELOG.md) and [Rea
 
 ### Run gradle task
 
-`./gradlew clean build javadoc jar sourceJar`
+`./gradlew clean :library:publishMavenPublicationToMavenCentralRepository`
 
-`./gradlew publish -PsonatypeUsername={yourMavenUsername} -PsonatypePassword={yourMavenPassword}`
-
-Replace `{sonatypeUsername}` with your username on Maven Central and `{yourMavenPassword}` with Maven Central password.
+Check [docs](https://vanniktech.github.io/gradle-maven-publish-plugin/central) to see if you have complete setup for publishing plugin on your computer.
 
 ### Maven Central publish
 
-Manually go to [Repository](https://oss.sonatype.org/#stagingRepositories), check that all 8 files are there and publish them if everything is OK.
+Manually go to [Maven Central](https://central.sonatype.com/publishing/deployments), check that all files are there and publish them if everything is OK.
