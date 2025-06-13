@@ -80,8 +80,6 @@ apply from: "$rootDir/tasks.gradle"
 
 assemble.dependsOn 'generateReadme'
 
-// todo can be in separate file?
-// todo check if it is signed
 afterEvaluate {
     def properties = project.ext.mavenPublishProperties
 

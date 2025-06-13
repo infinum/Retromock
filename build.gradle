@@ -6,11 +6,10 @@ buildscript {
 }
 
 plugins {
-    id 'org.jetbrains.kotlin.jvm' version '2.1.0' apply false
-    id 'com.vanniktech.maven.publish' version '0.32.0' apply false
-    id 'org.jetbrains.dokka' version "1.9.20" apply false // todo use libs.versions
+    alias(libs.plugins.kotlin) apply false
+    alias(libs.plugins.gradle.maven.publish) apply false
+    alias(libs.plugins.dokka.plugin) apply false
 }
-
 
 group = 'co.infinum'
 version = "${libs.versions.retromock.get()}"
@@ -21,4 +20,3 @@ allprojects {
         mavenCentral()
     }
 }
-
