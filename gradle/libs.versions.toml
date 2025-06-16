@@ -9,7 +9,7 @@ junit = "5.11.2"
 kotlin = "2.1.0"
 mockito = "5.14.1"
 retrofit = "2.11.0"
-retromock = "1.2.0"
+retromock = "1.2.1"
 moshi = "1.15.1"
 spotbugs = "6.0.27"
 
