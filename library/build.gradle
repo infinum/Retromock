@@ -52,10 +52,10 @@ jacoco {
 }
 
 dependencies {
-    implementation(libs.kotlin.stdlib)
-    implementation(libs.kotlin.coroutines)
+    compileOnly(libs.kotlin.stdlib)
+    compileOnly(libs.kotlin.coroutines)
 
-    implementation(libs.google.annotations)
+    compileOnly(libs.google.annotations)
 
     implementation(libs.retrofit)
 
