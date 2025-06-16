@@ -51,13 +51,13 @@ Then, you can include the library in your module's `build.gradle` or `build.grad
 **Groovy**
 
 ```groovy
-implementation 'com.infinum:retromock:1.2.0'
+implementation 'com.infinum:retromock:1.2.1'
 ```
 
 **KotlinDSL**
 
 ```kotlin
-implementation("com.infinum:retromock:1.2.0")
+implementation("com.infinum:retromock:1.2.1")
 ```
 
 ## Usage
