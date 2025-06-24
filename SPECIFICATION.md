@@ -5,7 +5,8 @@ Service declaration
 Use this annotation on a service method when you want to specify that the method should be mocked. It is possible to enable or disable method mock with the `value` parametar of type `boolean`.
 
 If annotation is not listed on a method or is disabled with the `value` parameter then the method will not be mocked.
-###### Example
+
+###### Java Example
 ```java
   @GET("/endpoint")
   Call<User> getUser();
@@ -16,18 +17,47 @@ If annotation is not listed on a method or is disabled with the `value` paramete
   Call<User> getUser();
 ``` 
 
+###### Kotlin Example
+
+```kotlin
+  @GET("/endpoint")
+  suspend fun getUser(): User
+``` 
+
+```kotlin
+  @Mock(false)
+  @GET("/endpoint")
+  suspend fun getUser(): User
+``` 
+
 Annotating the method without a `value` parameter and explicitly setting it to `true` will both result in mocked response since `true` is the default value.
-###### Example
+
+###### Java Example
 ```java
   @Mock
   @GET("/endpoint")
   Call<User> getUser();
 ``` 
+
 ```java
   @Mock(true)
   @GET("/endpoint")
   Call<User> getUser();
 ``` 
+
+###### Kotlin Example
+
+```kotlin
+  @Mock
+  @GET("/endpoint")
+  suspend fun getUser(): User
+``` 
+
+```kotlin
+  @Mock(true)
+  @GET("/endpoint")
+  suspend fun getUser(): User
+```
 
 #### `@MockResponse`
 Use this annotation to specify parameters for defining a mocked response.
@@ -41,7 +71,7 @@ Parameters and default values:
  - `headers` - `[]`
  - `bodyFactory` - _default body factory set in Retromock instance_
 
-###### Example
+###### Java Example
 ```java
   @Mock
   @MockResponse(body = "{\"name\":\"John\", \"surname\":\"Doe\"}")
@@ -49,8 +79,18 @@ Parameters and default values:
   Call<User> getUser();
 ```
 
+###### Kotlin Example
+
+```kotlin
+  @Mock
+  @MockResponse(body = "{\"name\":\"John\", \"surname\":\"Doe\"}")
+  @GET("/endpoint")
+  suspend fun getUser(): User
+```
+
 Headers can be declared as array of type `@MockHeader` (`name-value` pair) annotations.
-###### Example
+
+###### Java Example
 ```java
   @Mock
   @MockResponse(
@@ -58,9 +98,25 @@ Headers can be declared as array of type `@MockHeader` (`name-value` pair) annot
     headers = {
       @MockHeader(name = "Content-Type", value = "application/json"),
       @MockHeader(name = "AnyCustomHeader", value = "AnyCustomValue")
-  })
+    }
+  )
   @GET("/endpoint")
   Call<User> getUser();
+```
+
+###### Kotlin Example
+
+```kotlin
+  @Mock
+  @MockResponse(
+    body = "{\"name\":\"John\", \"surname\":\"Smith\"}",
+    headers = [
+      MockHeader(name = "Content-Type", value = "application/json"),
+      MockHeader(name = "AnyCustomHeader", value = "AnyCustomValue")
+    ]
+  )
+  @GET("/endpoint")
+  suspend fun getUser(): User
 ```
 
 Methods can have multiple `@MockResponse` annotations.
@@ -101,12 +157,22 @@ Retromock will produce random delay in range
 [durationMillis - durationDeviation, durationMillis + durationDeviation]
 ```
 Following example will produce random duration between `500ms` and `1500ms`.
-###### Example
+
+###### Java Example
 ```java
   @Mock
   @MockBehavior(durationDeviation = 500, durationMillis = 1000)
   @GET("/endpoint")
   Call<User> getUser();
+```
+
+###### Kotlin Example
+
+```kotlin
+  @Mock
+  @MockBehavior(durationDeviation = 500, durationMillis = 1000)
+  @GET("/endpoint")
+  suspend fun getUser(): User
 ```
 
 To produce a constant delay set `durationDeviation` parameter to zero. If not specifically set, Retromock will use defaults equivalent to
@@ -148,6 +214,27 @@ public class UserProvider {
 }
 ```
 
+###### Kotlin Example
+
+```kotlin
+// Service method
+@Mock
+@MockResponseProvider(UserProvider::class)
+@GET("/users")
+suspend fun getUser(@Query("id") userId: String): User
+
+// Provider class
+class UserProvider {
+  @ProvidesMock
+  fun getUser(userId: String): Response {
+    val body = "{\"id\":\"$userId\", \"name\":\"User $userId\"}"
+    return Response.Builder()
+        .body(body)
+        .build()
+  }
+}
+```
+
 ###### Example with multiple arguments
 
 ```java
@@ -171,13 +258,37 @@ public class SearchProvider {
 }
 ```
 
+###### Kotlin Example
+
+```kotlin
+// Service method
+@Mock
+@MockResponseProvider(SearchProvider::class)
+@GET("/search")
+suspend fun search(@Query("query") query: String, @Query("limit") limit: Int): SearchResult
+
+// Provider class
+class SearchProvider {
+  @ProvidesMock
+  fun search(query: String, limit: Int): Response {
+    val body = "{\"query\":\"$query\", \"limit\":$limit, \"results\":[]}"
+    return Response.Builder()
+        .code(200)
+        .message("OK")
+        .body(body)
+        .build()
+  }
+}
+```
+
 Retromock declaration
 -------
 #### `BodyFactory`
 
 By default `Retromock` mocks response body with the exact string provided in the `body` parameter of `@MockResponse` annotation.
 In order to provide a response body from a custom source create a `BodyFactory` implementation and set it with the `bodyFactory` parametar.
-###### Example
+
+###### Java Example
 1. Create an implementation of `BodyFactory` that loads a stream using application class loader.
 ```java
 class ResourceBodyFactory implements BodyFactory {
@@ -213,6 +324,41 @@ Retromock retromock = new Retromock.Builder()
   .addBodyFactory(new ResourceBodyFactory())
   .build();
 ```
+
+###### Kotlin Example
+
+```kotlin
+class ResourceBodyFactory : BodyFactory {
+
+  override fun create(input: String): InputStream? {
+    return ResourceBodyFactory::class.java.classLoader.getResourceAsStream(input)
+  }
+}
+```
+
+In Android, `BodyFactory` can load a response body from asset:
+
+```kotlin
+class AssetBodyFactory(private val assetManager: AssetManager) : BodyFactory {
+
+  override fun create(input: String): InputStream {
+    return assetManager.open(input)
+  }
+}
+```
+
+Or use any other implementation that suits your needs.
+
+2. Create a `Retromock` instance and add a body factory. Note: Body factory class cannot be
+   annonymous class because it is referenced later on.
+
+```kotlin
+val retromock = Retromock.Builder()
+  .retrofit(retrofit)
+  .addBodyFactory(ResourceBodyFactory())
+  .build()
+```
+
 3. Set body factory implementation class with `bodyFactory` parameter.
 ```java
 public interface Service {
@@ -221,6 +367,18 @@ public interface Service {
   @MockResponse(body = "smith.json", bodyFactory = ResourceBodyFactory.class)
   @GET("/")
   Call<User> getUser();
+}
+```
+
+###### Kotlin Example
+
+```kotlin
+interface Service {
+
+  @Mock
+  @MockResponse(body = "smith.json", bodyFactory = ResourceBodyFactory::class)
+  @GET("/")
+  suspend fun getUser(): User
 }
 ```
 
@@ -235,6 +393,15 @@ Retromock retromock = new Retromock.Builder()
   .defaultBodyFactory(new ResourceBodyFactory())
   .build();
 ```
+
+###### Kotlin Example
+
+```kotlin
+val retromock = Retromock.Builder()
+  .retrofit(retrofit)
+  .defaultBodyFactory(ResourceBodyFactory())
+  .build()
+```
 No need to set a body factory - default one will be used if non is provided.
 ```java
 public interface Service {
@@ -246,10 +413,22 @@ public interface Service {
 }
 ```
 
+###### Kotlin Example
+
+```kotlin
+interface Service {
+
+  @Mock
+  @MockResponse(body = "smith.json")
+  @GET("/")
+  suspend fun getUser(): User
+}
+```
+
 Note: if you set custom default body factory and do not declare a `bodyFactory` parameter in `@MockResponse` annotation your body factory will be called with value of `body` parameter.
 
-That also applies if you don't specificaly set `body` - in that case `body` is empty by default.
-If you wouldn't like to handle the case of empty `body` wrap your default body factory into `NonEmptyBodyFactory` class as follows:
+That also applies if you wouldn't like to handle the case of empty `body` wrap your default body
+factory into `NonEmptyBodyFactory` class as follows:
 ```java
 Retromock retromock = new Retromock.Builder()
   .retrofit(retrofit)
@@ -265,13 +444,23 @@ If you want to set a custom default delay implement this class and set it as `de
 If so, this behavior will be used on all service methods that do not have `@MockBehavior` annotation.
 
 If not set, Retromock uses default behavior that produces response delays randomly in uniform distribution between `500ms` and `1500ms`.
-###### Example
+
+###### Java Example
 Remove response delay
 ```java
 Retromock retromock = new Retromock.Builder()
   .retrofit(retrofit)
   .defaultBehavior(() -> 0)
   .build();
+```
+
+###### Kotlin Example
+
+```kotlin
+val retromock = Retromock.Builder()
+  .retrofit(retrofit)
+  .defaultBehavior { 0 }
+  .build()
 ```
 
 #### Executors
@@ -294,3 +483,4 @@ There are two overloads of `create` method:
 
 #### Call adapters and Converters
 There is no limit in usage of call adapters and converters - `Retromock` delegates parsing and adapting to `Retrofit`. Whatever works for `Retrofit` will work for `Retromock` too.
+
