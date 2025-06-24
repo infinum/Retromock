@@ -139,7 +139,7 @@ Call<User> getUser(@Query("id") String userId);
 // Provider class
 public class UserProvider {
   @ProvidesMock
-  public Response getUser(@Query("id") String userId) {
+  public Response getUser(String userId) {
     String body = "{\"id\":\"" + userId + "\", \"name\":\"User " + userId + "\"}";
     return new Response.Builder()
         .body(body)
@@ -160,7 +160,7 @@ Call<SearchResult> search(@Query("query") String query, @Query("limit") int limi
 // Provider class
 public class SearchProvider {
   @ProvidesMock
-  public Response search(@Query("query")String query, @Query("limit")int limit) {
+  public Response search(String query, int limit) {
     String body = "{\"query\":\"" + query + "\", \"limit\":" + limit + ", \"results\":[]}";
     return new Response.Builder()
         .code(200)

@@ -62,6 +62,8 @@ implementation("com.infinum:retromock:1.2.1")
 
 ## Usage
 
+Example code is in Java, but Kotlin examples (including coroutine support) can be found in [the full specification][specification].
+
 #### Initialize
 ```java
 Retromock retromock = new Retromock.Builder()
@@ -106,6 +108,30 @@ public interface Service {
   @MockResponse(body = "response.json")
   @GET("/endpoint")
   Call<User> getUser();
+}
+```
+
+##### Dynamic responses with MockResponseProvider
+
+For more complex scenarios where you need to generate responses based on method parameters or apply
+custom logic, use `@MockResponseProvider`:
+
+```java
+public interface Service {
+  @Mock
+  @MockResponseProvider(UserProvider.class)
+  @GET("/users")
+  Call<User> getUser(String userId);
+}
+
+public class UserProvider {
+  @ProvidesMock
+  public Response getUser(String userId) {
+    String body = "{\"id\":\"" + userId + "\", \"name\":\"User " + userId + "\"}";
+    return new Response.Builder()
+        .body(body)
+        .build();
+  }
 }
 ```
 
