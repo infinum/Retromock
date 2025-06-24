@@ -81,7 +81,7 @@ Methods can have multiple `@MockResponse` annotations.
     MockResponse(body = "Body example 3.")
   )
   @GET("/endpoint")
-  fun getResponseBody(): Call<ResponseBody>
+  suspend fun getResponseBody(): ResponseBody?
 ```
 By default, Retromock returns responses in the same order as annotations defined.
 
@@ -112,6 +112,63 @@ Following example will produce random duration between `500ms` and `1500ms`.
 To produce a constant delay set `durationDeviation` parameter to zero. If not specifically set, Retromock will use defaults equivalent to
 ```java
   @MockBehavior(durationDeviation = 500, durationMillis = 1000)
+```
+
+#### `@MockResponseProvider`
+
+Use this annotation to provide a class that has the ability to dynamically generate mock responses.
+This is useful when you need to create responses based on method parameters or when you need more
+complex logic for generating responses.
+
+The provider class should have exactly one method with the same signature as the service method,
+except the return type should be `Response`. The method must be annotated with `@ProvidesMock`.
+
+If a service method is annotated with `@MockResponseProvider`, Retromock will use it for each mock
+call to provide a response. Note: either `@MockResponseProvider` or `@MockResponse` annotation(s)
+should be used on a single service method, not both.
+
+###### Example with single argument
+
+```java
+// Service method
+@Mock
+@MockResponseProvider(UserProvider.class)
+@GET("/users")
+Call<User> getUser(@Query("id") String userId);
+
+// Provider class
+public class UserProvider {
+  @ProvidesMock
+  public Response getUser(@Query("id") String userId) {
+    String body = "{\"id\":\"" + userId + "\", \"name\":\"User " + userId + "\"}";
+    return new Response.Builder()
+        .body(body)
+        .build();
+  }
+}
+```
+
+###### Example with multiple arguments
+
+```java
+// Service method
+@Mock
+@MockResponseProvider(SearchProvider.class)
+@GET("/search")
+Call<SearchResult> search(@Query("query") String query, @Query("limit") int limit);
+
+// Provider class
+public class SearchProvider {
+  @ProvidesMock
+  public Response search(@Query("query")String query, @Query("limit")int limit) {
+    String body = "{\"query\":\"" + query + "\", \"limit\":" + limit + ", \"results\":[]}";
+    return new Response.Builder()
+        .code(200)
+        .message("OK")
+        .body(body)
+        .build();
+  }
+}
 ```
 
 Retromock declaration
