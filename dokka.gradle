@@ -15,7 +15,6 @@ dokka {
                 remoteUrl = uri("https://github.com/infinum/Retromock")
                 remoteLineSuffix = "#L"
             }
-            
             // JDK version for documentation links
             jdkVersion = 17
             
