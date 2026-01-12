@@ -112,7 +112,7 @@ class CallsTest {
     fun fakeCallRequestReturnsRaw() {
         val response = Response.success("")
         val call = Calls.FakeCall(response, null)
-        assertThat(call.request()).isEqualTo(response.raw().request())
+        assertThat(call.request()).isEqualTo(response.raw().request)
     }
 
     @Test
@@ -231,7 +231,7 @@ class CallsTest {
         val callable = mock<Callable<Call<String>>>()
         whenever(callable.call()).thenReturn(Calls.response(response))
         val call = Calls.DeferredCall(callable)
-        assertThat(call.request()).isEqualTo(response.raw().request())
+        assertThat(call.request()).isEqualTo(response.raw().request)
     }
 
     @Test

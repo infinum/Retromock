@@ -6,7 +6,6 @@ plugins {
     id 'jacoco'
     alias(libs.plugins.dokka.plugin)
     alias(libs.plugins.kotlin)
-    alias(libs.plugins.spotbugs)
     alias(libs.plugins.gradle.maven.publish)
 }
 
