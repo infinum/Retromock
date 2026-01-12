@@ -1,24 +1,32 @@
 apply plugin: "org.jetbrains.dokka"
 
-tasks.named("dokkaJavadoc") {
-    outputDirectory.set(file("$buildDir/javadoc"))
-
+// Dokka Gradle Plugin v2 configuration
+// K2 analysis is enabled by default in Dokka 2.1.0
+dokka {
+    dokkaPublications.html {
+        outputDirectory = layout.buildDirectory.dir("javadoc")
+    }
+    
     dokkaSourceSets {
-        named("main") {
-            includeNonPublic.set(false)
-            skipDeprecated.set(false)
-            reportUndocumented.set(true)
-            skipEmptyPackages.set(true)
-            platform.set(org.jetbrains.dokka.Platform.jvm)
+        main {
+            // Configure source links to GitHub  
             sourceLink {
-                localDirectory.set(file("src/main/java"))
-                remoteUrl.set(uri("https://github.com/infinum/Retromock"))
-                remoteLineSuffix.set("#L")
+                localDirectory = file("src/main/java")
+                remoteUrl = uri("https://github.com/infinum/Retromock")
+                remoteLineSuffix = "#L"
             }
-            jdkVersion.set(17)
-            noStdlibLink.set(false)
-            noAndroidSdkLink.set(false)
-            noJdkLink.set(false)
+            
+            // JDK version for documentation links
+            jdkVersion = 17
+            
+            // Report undocumented members
+            reportUndocumented = true
+            
+            // Skip deprecated members - set to false to include them
+            skipDeprecated = false
+            
+            // Skip empty packages
+            skipEmptyPackages = true
         }
     }
 }
