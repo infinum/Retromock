@@ -1,3 +1,2 @@
 include ':library', ':samples'
 rootProject.name = 'Retromock'
-

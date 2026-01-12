@@ -1,5 +1,3 @@
-import com.vanniktech.maven.publish.SonatypeHost
-
 plugins {
     id 'java'
     id 'java-library'
@@ -83,7 +81,6 @@ afterEvaluate {
     def properties = project.ext.mavenPublishProperties
 
     mavenPublishing {
-        publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
         signAllPublications()
         coordinates(properties.group, properties.artifactId, properties.version)
 

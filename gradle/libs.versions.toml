@@ -1,7 +1,7 @@
 [versions]
 assertj = "3.27.6"
 coroutines = "1.10.2"
-gradle-maven-publish = "0.32.0"
+gradle-maven-publish = "0.35.0"
 dokka = "1.9.20"
 google-annotations = "4.9.8"
 guava = "33.5.0-jre"
