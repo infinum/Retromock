@@ -9,7 +9,7 @@ dokka {
     
     dokkaSourceSets {
         main {
-            // Configure source links to GitHub  
+            // Configure source links to GitHub
             sourceLink {
                 localDirectory = file("src/main/java")
                 remoteUrl = uri("https://github.com/infinum/Retromock")
