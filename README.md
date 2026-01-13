@@ -6,7 +6,7 @@
 
 ## Description
 
-Adapts Java interface created by [Retrofit][retrofit] using annotations on declared methods to define response mocks.
+Library that adapts interface created by [Retrofit][retrofit] using annotations on declared methods to define response mocks.
 
 ## Table of contents
 
@@ -65,19 +65,40 @@ implementation("com.infinum:retromock:1.3.0")
 
 ## Usage
 
+Some examples are in Java, but Kotlin examples (including coroutine support) can be found in [the full specification][specification].
+
 #### Initialize
+
+Java
 ```java
 Retromock retromock = new Retromock.Builder()
   .retrofit(retrofit)
   .build();
 ```
 
+Kotlin
+```kotlin
+val retromock = Retromock.Builder()
+ .retrofit(retrofit)
+ .build()
+``` 
+
 #### Create a service class
+
+Java
 ```java
 Service service = retromock.create(Service.class);
 ```
 
+Kotlin
+```kotlin
+val service = retromock.create(Service::class.java)
+``` 
+
+
 #### Setup mocks
+
+Java
 ```java
 public interface Service {
 
@@ -88,13 +109,33 @@ public interface Service {
 }
 ```
 
+Kotlin
+```kotlin
+interface Service {
+    @Mock
+    @MockResponse(body = "{\"name\":\"John\", \"surname\":\"Doe\"}")
+    @GET("/endpoint")
+    suspend fun getUser(): User
+}
+``` 
+
+
 #### Use the service
+
+Java
 ```java
 Call<User> = service.getUser();
 ```
 
+Kotlin
+```kotlin
+val user = service.getUser()
+``` 
+
 ##### Load responses from streams
 If you would like to load response from a stream set a default body factory that loads a response stream by a body parameter(`response.json`) in annotation.
+
+Java
 ```java
 Retromock retromock = new Retromock.Builder()
   .retrofit(retrofit)
@@ -112,7 +153,34 @@ public interface Service {
 }
 ```
 
+##### Dynamic responses with MockResponseProvider
+
+For more complex scenarios where you need to generate responses based on method parameters or apply
+custom logic, use `@MockResponseProvider`:
+
+Java
+```java
+public interface Service {
+  @Mock
+  @MockResponseProvider(UserProvider.class)
+  @GET("/users")
+  Call<User> getUser(String userId);
+}
+
+public class UserProvider {
+  @ProvidesMock
+  public Response getUser(String userId) {
+    String body = "{\"id\":\"" + userId + "\", \"name\":\"User " + userId + "\"}";
+    return new Response.Builder()
+        .body(body)
+        .build();
+  }
+}
+```
+
 ##### Load responses from Android assets
+
+Java
 ```java
 Retromock retromock = new Retromock.Builder()
   .retrofit(retrofit)
@@ -146,6 +214,8 @@ applicationVariants.all { variant ->
 Note: if you set custom default body factory and do not declare a `bodyFactory` parameter in `@MockResponse` annotation your body factory will be called with value of `body` parameter.
 That also applies if you don't specificaly set a `body` - in that case `body` is empty by default.
 If you wouldn't like to handle the case of empty `body` wrap your default body factory into `NonEmptyBodyFactory` class as follows:
+
+Java
 ```java
 Retromock retromock = new Retromock.Builder()
   .retrofit(retrofit)

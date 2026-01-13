@@ -11,6 +11,10 @@ Version 1.3.0 *(2026-01-12)*
 * Fix: Add @Nonnull annotations to RetromockBodyFactory constructor
 * Fix: Correct IntelliJ IDEA Gradle project configuration
 
+Version 1.2.1 *(2025-06-16)*
+----------------------------
+* Fix potential dependency conflict
+
 Version 1.2.0 *(2025-06-13)*
 ----------------------------
 * New feature: Mock Response Provider Annotation (dynamic response)
