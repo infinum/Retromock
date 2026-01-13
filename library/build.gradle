@@ -1,12 +1,9 @@
-import com.vanniktech.maven.publish.SonatypeHost
-
 plugins {
     id 'java'
     id 'java-library'
     id 'jacoco'
     alias(libs.plugins.dokka.plugin)
     alias(libs.plugins.kotlin)
-    alias(libs.plugins.spotbugs)
     alias(libs.plugins.gradle.maven.publish)
 }
 
@@ -84,7 +81,6 @@ afterEvaluate {
     def properties = project.ext.mavenPublishProperties
 
     mavenPublishing {
-        publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
         signAllPublications()
         coordinates(properties.group, properties.artifactId, properties.version)
 

@@ -5,6 +5,7 @@ import co.infinum.retromock.helpers.mock
 import co.infinum.retromock.helpers.whenever
 import com.google.common.util.concurrent.MoreExecutors
 import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.ResponseBody
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
@@ -81,7 +82,7 @@ class RetromockCallTest {
     @Test
     fun http404Sync() {
         val body = "Response body content"
-        val delegate = Calls.response(Response.error<String>(404, ResponseBody.create(MediaType.parse("text/plain"), body)))
+        val delegate = Calls.response(Response.error<String>(404, ResponseBody.create("text/plain".toMediaTypeOrNull(), body)))
 
         retromockCall = RetromockCall(behavior, backgroundExecutor, callbackExecutor, delegate)
         whenever(behavior.delayMillis()).thenReturn(0)
@@ -95,7 +96,7 @@ class RetromockCallTest {
     @Test
     fun http404Async() {
         val body = "Response body content"
-        val delegate = Calls.response(Response.error<String>(404, ResponseBody.create(MediaType.parse("text/plain"), body)))
+        val delegate = Calls.response(Response.error<String>(404, ResponseBody.create("text/plain".toMediaTypeOrNull(), body)))
 
         val callback = mock<Callback<String>>()
 

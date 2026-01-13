@@ -19,7 +19,10 @@ Adapts Java interface created by [Retrofit][retrofit] using annotations on decla
 
 ## Requirements
 
-You need to use [Retrofit][retrofit] in your project
+- [Retrofit][retrofit] 3.0.0 or higher
+- Kotlin 1.9.0 or higher (if using Kotlin)
+- Java 17 or higher
+- Gradle 7.6.3 or higher
 
 ## Getting started
 
@@ -51,13 +54,13 @@ Then, you can include the library in your module's `build.gradle` or `build.grad
 **Groovy**
 
 ```groovy
-implementation 'com.infinum:retromock:1.2.1'
+implementation 'com.infinum:retromock:1.3.0'
 ```
 
 **KotlinDSL**
 
 ```kotlin
-implementation("com.infinum:retromock:1.2.1")
+implementation("com.infinum:retromock:1.3.0")
 ```
 
 ## Usage

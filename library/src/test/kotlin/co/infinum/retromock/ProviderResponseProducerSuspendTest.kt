@@ -409,7 +409,7 @@ class ProviderResponseProducerSuspendTest {
                 .code(100)
                 .message("test-message")
                 .headers(
-                    Headers.of(
+                    Headers.headersOf(
                         "test-header", "test-value",
                         "test-header2", "test-value2"
                     )
@@ -428,7 +428,7 @@ class ProviderResponseProducerSuspendTest {
         assertThat(params.code()).isEqualTo(100)
         assertThat(params.message()).isEqualTo("test-message")
         assertThat(params.headers()).isEqualTo(
-            Headers.of(
+            Headers.headersOf(
                 "test-header", "test-value",
                 "test-header2", "test-value2"
             )

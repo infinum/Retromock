@@ -1,6 +1,7 @@
 package co.infinum.retromock
 
 import okhttp3.Headers
+import okhttp3.Headers.Companion.toHeaders
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -23,9 +24,9 @@ class ResponseParamsTest {
 
     @Test
     fun parseContentType() {
-        val headers = Headers.of(mapOf(
+        val headers = mapOf(
             "Content-Type" to "text/plain"
-        ))
+        ).toHeaders()
         val params = ResponseParams.Builder()
             .headers(headers)
             .build()
@@ -37,9 +38,9 @@ class ResponseParamsTest {
 
     @Test
     fun parseNoContentType() {
-        val headers = Headers.of(mapOf(
+        val headers = mapOf(
             "Content-Type2" to "text/plain"
-        ))
+        ).toHeaders()
         val params = ResponseParams.Builder()
             .headers(headers)
             .build()
@@ -51,7 +52,7 @@ class ResponseParamsTest {
 
     @Test
     fun parseEmptyContentType() {
-        val headers = Headers.of(mapOf())
+        val headers = emptyMap<String, String>().toHeaders()
         val params = ResponseParams.Builder()
             .headers(headers)
             .build()
@@ -63,9 +64,9 @@ class ResponseParamsTest {
 
     @Test
     fun parseContentLength() {
-        val headers = Headers.of(mapOf(
+        val headers = mapOf(
             "Content-Length" to "1024"
-        ))
+        ).toHeaders()
         val params = ResponseParams.Builder()
             .headers(headers)
             .build()
@@ -77,9 +78,9 @@ class ResponseParamsTest {
 
     @Test
     fun parseNoContentLength() {
-        val headers = Headers.of(mapOf(
+        val headers = mapOf(
             "Content-Length2" to "1024"
-        ))
+        ).toHeaders()
         val params = ResponseParams.Builder()
             .headers(headers)
             .build()
@@ -91,7 +92,7 @@ class ResponseParamsTest {
 
     @Test
     fun parseEmptyContentLength() {
-        val headers = Headers.of(mapOf())
+        val headers = emptyMap<String, String>().toHeaders()
         val params = ResponseParams.Builder()
             .headers(headers)
             .build()
@@ -138,7 +139,7 @@ class ResponseParamsTest {
 
     @Test
     fun headersAreEqual() {
-        val headers = Headers.of()
+        val headers = Headers.Companion.headersOf()
         val params = ResponseParams.Builder()
             .headers(headers)
             .build()
@@ -157,7 +158,7 @@ class ResponseParamsTest {
 
         val actual = params.headers()
 
-        assertThat(actual).isEqualTo(Headers.of())
+        assertThat(actual).isEqualTo(Headers.Companion.headersOf())
     }
 
     @Test
@@ -166,7 +167,7 @@ class ResponseParamsTest {
             .code(200)
             .message("OK")
             .bodyFactory(retromockBodyFactory)
-            .headers(Headers.of())
+            .headers(Headers.headersOf())
             .build()
 
         val copy = params.newBuilder().build()
@@ -182,10 +183,12 @@ class ResponseParamsTest {
     @Test
     fun builderParsesSameAsInstance() {
         val params = ResponseParams.Builder()
-            .headers(Headers.of(mapOf(
-                "Content-Type" to "text/plain",
-                "Content-Length" to "1024"
-            )))
+            .headers(
+                mapOf(
+                    "Content-Type" to "text/plain",
+                    "Content-Length" to "1024"
+                ).toHeaders()
+            )
             .build()
 
         val builder = params.newBuilder()
@@ -197,9 +200,11 @@ class ResponseParamsTest {
     @Test
     fun invalidContentLengthProducesMinus1() {
         val params = ResponseParams.Builder()
-            .headers(Headers.of(mapOf(
-                "Content-Length" to "IamNotANumber"
-            )))
+            .headers(
+                mapOf(
+                    "Content-Length" to "IamNotANumber"
+                ).toHeaders()
+            )
             .build()
 
         assertThat(params.contentLength()).isEqualTo(-1)

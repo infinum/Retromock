@@ -1,6 +1,16 @@
 Change Log
 ==========
 
+Version 1.3.0 *(2026-01-12)*
+----------------------------
+* Update: Migrate to Dokka 2.1.0 with Gradle Plugin v2
+* Update: Bump Kotlin to 2.3.0
+* Update: Bump Retrofit to 3.0.0 (breaking change)
+* Update: Bump Gradle to 8.9
+* Update: Update all dependencies to latest versions
+* Fix: Add @Nonnull annotations to RetromockBodyFactory constructor
+* Fix: Correct IntelliJ IDEA Gradle project configuration
+
 Version 1.2.0 *(2025-06-13)*
 ----------------------------
 * New feature: Mock Response Provider Annotation (dynamic response)
