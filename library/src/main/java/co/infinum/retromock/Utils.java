@@ -25,7 +25,6 @@ import java.lang.reflect.WildcardType;
 import java.util.Arrays;
 import java.util.Objects;
 
-@SuppressWarnings("PMD")
 final class Utils {
   private Utils() {
     // No instances.

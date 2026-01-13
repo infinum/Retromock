@@ -10,7 +10,7 @@ import org.mockito.junit.jupiter.MockitoExtension
 class RetromockBodyFactoryTest {
 
     @Mock
-    lateinit var bodyFactory: BodyFactory
+    private lateinit var bodyFactory: BodyFactory
 
     @Test
     fun bodyFactoryCalled() {

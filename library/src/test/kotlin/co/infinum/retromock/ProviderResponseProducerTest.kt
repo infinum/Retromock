@@ -18,9 +18,10 @@ import retrofit2.http.Header
 class ProviderResponseProducerTest {
 
     val retromock: Retromock = Retromock.Builder()
-        .retrofit(Retrofit.Builder()
-            .baseUrl("http://infinum.co")
-            .build()
+        .retrofit(
+            Retrofit.Builder()
+                .baseUrl("http://infinum.co")
+                .build()
         )
         .build()
 
@@ -81,7 +82,12 @@ class ProviderResponseProducerTest {
         assertThat(producer.provider()).isInstanceOf(SingleArgProducer::class.java)
 
         assertThat(producer.providerMethod().declaringClass).isEqualTo(SingleArgProducer::class.java)
-        assertThat(producer.providerMethod()).isEqualTo(SingleArgProducer::class.java.getDeclaredMethod("singleArg", String::class.java))
+        assertThat(producer.providerMethod()).isEqualTo(
+            SingleArgProducer::class.java.getDeclaredMethod(
+                "singleArg",
+                String::class.java
+            )
+        )
     }
 
     @Test
@@ -101,7 +107,13 @@ class ProviderResponseProducerTest {
         assertThat(producer.provider()).isInstanceOf(MultipleArgsProducer::class.java)
 
         assertThat(producer.providerMethod().declaringClass).isEqualTo(MultipleArgsProducer::class.java)
-        assertThat(producer.providerMethod()).isEqualTo(MultipleArgsProducer::class.java.getDeclaredMethod("multipleArgs", String::class.java, String::class.java))
+        assertThat(producer.providerMethod()).isEqualTo(
+            MultipleArgsProducer::class.java.getDeclaredMethod(
+                "multipleArgs",
+                String::class.java,
+                String::class.java
+            )
+        )
     }
 
     @Test
@@ -121,7 +133,13 @@ class ProviderResponseProducerTest {
         assertThat(producer.provider()).isInstanceOf(MultipleDiffArgsProducer::class.java)
 
         assertThat(producer.providerMethod().declaringClass).isEqualTo(MultipleDiffArgsProducer::class.java)
-        assertThat(producer.providerMethod()).isEqualTo(MultipleDiffArgsProducer::class.java.getDeclaredMethod("multipleArgs", String::class.java, Int::class.java))
+        assertThat(producer.providerMethod()).isEqualTo(
+            MultipleDiffArgsProducer::class.java.getDeclaredMethod(
+                "multipleArgs",
+                String::class.java,
+                Int::class.java
+            )
+        )
     }
 
     @Test
@@ -141,7 +159,13 @@ class ProviderResponseProducerTest {
         assertThat(producer.provider()).isInstanceOf(MultipleArgsProducer::class.java)
 
         assertThat(producer.providerMethod().declaringClass).isEqualTo(MultipleArgsProducer::class.java)
-        assertThat(producer.providerMethod()).isEqualTo(MultipleArgsProducer::class.java.getDeclaredMethod("multipleArgs", String::class.java, String::class.java))
+        assertThat(producer.providerMethod()).isEqualTo(
+            MultipleArgsProducer::class.java.getDeclaredMethod(
+                "multipleArgs",
+                String::class.java,
+                String::class.java
+            )
+        )
     }
 
     @Test
@@ -161,7 +185,13 @@ class ProviderResponseProducerTest {
         assertThat(producer.provider()).isInstanceOf(MultipleArgsProducer::class.java)
 
         assertThat(producer.providerMethod().declaringClass).isEqualTo(MultipleArgsProducer::class.java)
-        assertThat(producer.providerMethod()).isEqualTo(MultipleArgsProducer::class.java.getDeclaredMethod("multipleArgs", String::class.java, Int::class.java))
+        assertThat(producer.providerMethod()).isEqualTo(
+            MultipleArgsProducer::class.java.getDeclaredMethod(
+                "multipleArgs",
+                String::class.java,
+                Int::class.java
+            )
+        )
     }
 
     @Test
@@ -355,10 +385,12 @@ class ProviderResponseProducerTest {
                 .bodyFactory(PassThroughBodyFactory::class.java)
                 .code(100)
                 .message("test-message")
-                .headers(Headers.of(
-                    "test-header", "test-value",
-                    "test-header2", "test-value2"
-                ))
+                .headers(
+                    Headers.headersOf(
+                        "test-header", "test-value",
+                        "test-header2", "test-value2"
+                    )
+                )
                 .build()
         }
 
@@ -372,10 +404,14 @@ class ProviderResponseProducerTest {
 
         assertThat(params.code()).isEqualTo(100)
         assertThat(params.message()).isEqualTo("test-message")
-        assertThat(params.headers()).isEqualTo(Headers.of(
-            "test-header", "test-value",
-            "test-header2", "test-value2"
-        ))
+        assertThat(params.headers()).isEqualTo(
+            Headers.headersOf(
+                "test-header",
+                "test-value",
+                "test-header2",
+                "test-value2"
+            )
+        )
         assertThat(params.bodyFactory()).isInstanceOf(RetromockBodyFactory::class.java)
     }
 
