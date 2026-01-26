@@ -1,5 +1,5 @@
 [versions]
-assertj = "3.27.6"
+assertj = "3.27.7"
 coroutines = "1.10.2"
 gradle-maven-publish = "0.35.0"
 dokka = "2.1.0"
