@@ -1,4 +1,4 @@
-name: Primary
+name: CI
 
 on:
   push:
@@ -21,7 +21,7 @@ concurrency:
 
 jobs:
   test:
-    name: Primary   # the required status check's name, so it must be unique in the repo
+    name: CI   # the required status check's name, so it must be unique in the repo
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
