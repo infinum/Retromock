@@ -1,5 +1,5 @@
 # Retromock
-[![Build Status](https://app.bitrise.io/app/7b832efc5bb97051/status.svg?token=S3Efgo8YEz6s8tFv2ocKzA&branch=master)](https://app.bitrise.io/app/7b832efc5bb97051)
+[![Primary](https://github.com/infinum/Retromock/actions/workflows/primary.yml/badge.svg)](https://github.com/infinum/Retromock/actions/workflows/primary.yml)
 [ ![Download](https://img.shields.io/maven-central/v/co.infinum/retromock) ](https://search.maven.org/artifact/co.infinum/retromock)
 
 <img src='./logo.svg' width='264'/>
