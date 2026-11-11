@@ -1,5 +1,5 @@
 # Retromock
-[![CI](https://github.com/infinum/Retromock/actions/workflows/CI.yml/badge.svg)](https://github.com/infinum/Retromock/actions/workflows/CI.yml)
+[![CI](https://github.com/infinum/Retromock/actions/workflows/ci.yml/badge.svg)](https://github.com/infinum/Retromock/actions/workflows/ci.yml)
 [ ![Download](https://img.shields.io/maven-central/v/co.infinum/retromock) ](https://search.maven.org/artifact/co.infinum/retromock)
 
 <img src='./logo.svg' width='264'/>
