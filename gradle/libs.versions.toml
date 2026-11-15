@@ -2,7 +2,7 @@
 assertj = "3.27.7"
 coroutines = "1.11.0"
 gradle-maven-publish = "0.37.0"
-dokka = "2.2.0"
+dokka = "2.3.0"
 google-annotations = "4.10.5"
 guava = "33.7.2-jre"
 junit = "6.1.3"
