@@ -30,7 +30,7 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Set up JDK 17
+      - name: Set up JDK
         uses: actions/setup-java@v6
         with:
           distribution: temurin

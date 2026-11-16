@@ -20,11 +20,10 @@ sourceSets {
     test.java.srcDirs += 'src/test/kotlin'
 }
 
-compileTestKotlin {
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_17
+kotlin {
+    compilerOptions {
+        jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17
     }
-
 }
 
 test {
