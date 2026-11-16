@@ -64,9 +64,11 @@ final class ProviderResponseProducer implements ParamsProducer {
         Method providerMethod = null;
         for (Class<?> c = providerClass; c != Object.class; c = c.getSuperclass()) {
             for (Method method : c.getDeclaredMethods()) {
+                if (!method.isAnnotationPresent(ProvidesMock.class)) {
+                    continue;
+                }
                 CallWrapper callWrapper = retromock.findCallWrapper(method);
-                if (method.isAnnotationPresent(ProvidesMock.class)
-                        && Response.class.equals(callWrapper.getActualType())
+                if (Response.class.equals(callWrapper.getActualType())
                         && isMethodApplicable(method, serviceMethod)) {
                     if (providerMethod == null) {
                         providerMethod = method;
